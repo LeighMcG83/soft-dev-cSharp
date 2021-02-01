@@ -16,10 +16,7 @@ namespace worksheet3_switch_q4_cards
 {
     class Program
     {
-        ////enum CardValues
-        //{
-        //    "Two" = 2, "Three", 4 = "Four", 5 = "Five" 6 = "Six", 7 = "Seven", 8 = "Eight", 9 -= "Nine", 10 = "Ten"
-        //}
+        
         static void Main(string[] args)
         {
             string card = "";
