@@ -9,11 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "worksheet3_switch_q2_orderC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "worksheet3_switch_q3_gamer", "..\worksheet3_switch_q3_gamer\worksheet3_switch_q3_gamer.csproj", "{300FD719-02C6-46E5-89CA-A54BC731D866}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "worksheet3_switch_q4_cards", "..\worksheet3_switch_q4_cards\worksheet3_switch_q4_cards.csproj", "{4382F3AC-84CE-408E-BED3-9C139AF3FA61}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "worksheet3_switch_q5_vowels", "..\worksheet3_switch_q5_vowels\worksheet3_switch_q5_vowels.csproj", "{2565EC85-13C1-4C01-BCAE-AB66880E9BA9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "worksheet3_switch_q6_tempConv", "..\worksheet3_switch_q6_tempConv\worksheet3_switch_q6_tempConv.csproj", "{EC45648B-5EC9-48D1-9D85-1E5E7AD1DB78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "worksheet3_switch_q4_cards", "..\worksheet3_switch_q4_cards\worksheet3_switch_q4_cards.csproj", "{4382F3AC-84CE-408E-BED3-9C139AF3FA61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +33,6 @@ Global
 		{4382F3AC-84CE-408E-BED3-9C139AF3FA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4382F3AC-84CE-408E-BED3-9C139AF3FA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4382F3AC-84CE-408E-BED3-9C139AF3FA61}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2565EC85-13C1-4C01-BCAE-AB66880E9BA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2565EC85-13C1-4C01-BCAE-AB66880E9BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2565EC85-13C1-4C01-BCAE-AB66880E9BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2565EC85-13C1-4C01-BCAE-AB66880E9BA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC45648B-5EC9-48D1-9D85-1E5E7AD1DB78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC45648B-5EC9-48D1-9D85-1E5E7AD1DB78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC45648B-5EC9-48D1-9D85-1E5E7AD1DB78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC45648B-5EC9-48D1-9D85-1E5E7AD1DB78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
