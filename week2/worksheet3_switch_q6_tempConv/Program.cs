@@ -26,24 +26,25 @@ using System;
 namespace worksheet3_switch_q6_tempConv
 {
     class Program
-    {
-        // declare display tabels
-
+    {       
 
         static void Main(string[] args)
-        {
+        {            
+            const string TITLE = "\tCelcius to Fahrenheit Conversion Chart\n";  // declare program title
+
+
+            Console.WriteLine(TITLE);                    // Diplay program title           
+            Console.WriteLine("Celcius\t\tFahrenheit");  // print column headers
 
             // start loop 
-
-                // 
-
-            // convert cel. to fah.
+            for (int cel = 0; cel <= 100; cel += 10)     // increment celcius by 10 degrees on each iteration
+            {               
+                int fah = (cel * 9 / 5) + 32;            // convert cel. to fah.
+                Console.WriteLine($"{cel}\t\t{fah}");    // write cel and fah (to 0 places) to console
+            } //END: for()
             
-            // print column headers
+        }// END: Main()
 
+    }// //END: class Program
 
-
-
-        }
-    }
-}
+} // END: namespace

@@ -20,6 +20,7 @@ namespace worksheet3_switch_q3_gamer
     {
         static double score;
         static string msg;
+
         static void Main(string[] args)
         {
             // declare loop-control varialbe
