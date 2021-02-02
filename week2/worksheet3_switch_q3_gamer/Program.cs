@@ -53,7 +53,9 @@ namespace worksheet3_switch_q3_gamer
                         case double i when score >= 0: msg = "Don’t give up the day job dude"; break;
                         default: msg = "\n\tInvalid score entered\n"; break;
                     } //END: switch(score)
-                }                
+                }
+
+              
 
                     // quick - action - promt's suggested switch expression below
                 //string msg = score switch
