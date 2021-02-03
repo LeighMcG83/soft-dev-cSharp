@@ -32,7 +32,6 @@ namespace worksheet3_advLoops_q2_rainfall
         {
             // declare and initialise constants for format tables 
             const string INPUTTAB = "{0, 25}{1, -5}";
-            const string OUTPUTTAB = "{0, 10]{1, -20}{2, 20}";
 
             // declare and initialize constant for program title.
             const string PROG_TITLE = "--------- Monthly & Annual Rainfall Calculator ----------";
@@ -45,16 +44,18 @@ namespace worksheet3_advLoops_q2_rainfall
             Console.WriteLine(PROG_TITLE);                          // write program title to console
 
             Console.Write(INPUTTAB, "Enter number of years", ": "); // ask user to input number of years
-           input = Console.ReadLine();
+            input = Console.ReadLine();
 
-            // validate user input for years
-            int.TryParse(input, out years);                         // try to parse 'input' and assign to years if success                                                              //Console.WriteLine(years.GetType());                     // Test- chect datatype of years
-
-            // calculate the number of months
-            months = years * 12;
+            /* validate user input for years : try to parse 
+             * 'input' and assign to years if succeeds */
+            int.TryParse(input, out years);  
+            
+            //Console.WriteLine(years.GetType());                   // Test- check datatype of years
+                      
+            months = years * 12;                                    // calculate the number of months           
 
             // outer for-loop loops while < number of years
-            for (int i = 1; i <= years; i++)
+            for (int i = 1; i <= years; i++)            
             {
                 // inner for-loop loops while < number of months
                 for (int monthNumber = 1; monthNumber <= months; monthNumber++)
