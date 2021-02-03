@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "worksheet3_advLoops_q1_speed", "worksheet3_advLoops_q1_speed.csproj", "{7A2FF96B-A283-4F3E-A49D-45C151E26A9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "worksheet3_advLoops_q3_organisms", "..\workdheet3_advLoops_q3_organisms\worksheet3_advLoops_q3_organisms.csproj", "{A59F82AC-FA91-46B4-B764-78CBC8FEDB1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "worksheet3_advLoops_q3_organisms", "..\workdheet3_advLoops_q3_organisms\worksheet3_advLoops_q3_organisms.csproj", "{A59F82AC-FA91-46B4-B764-78CBC8FEDB1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "worksheet3_advLoops_q2_rainfall", "..\worksheet3_advLoops_q2_rainfall\worksheet3_advLoops_q2_rainfall.csproj", "{284CC65F-3403-4B5A-A052-FC2D737E9742}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A59F82AC-FA91-46B4-B764-78CBC8FEDB1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A59F82AC-FA91-46B4-B764-78CBC8FEDB1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A59F82AC-FA91-46B4-B764-78CBC8FEDB1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{284CC65F-3403-4B5A-A052-FC2D737E9742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{284CC65F-3403-4B5A-A052-FC2D737E9742}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{284CC65F-3403-4B5A-A052-FC2D737E9742}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{284CC65F-3403-4B5A-A052-FC2D737E9742}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

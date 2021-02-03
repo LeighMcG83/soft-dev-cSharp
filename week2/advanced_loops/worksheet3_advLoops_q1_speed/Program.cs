@@ -37,37 +37,52 @@ namespace worksheet3_advLoops_q1_speed
 
         static void Main(string[] args)
         {
+            // declare variables
             bool isValid = true;
-            double speed = 0, time = 0, distance = 0;
+            int speed = 0, distance = 0;
+            int distPerHr = 0, hours = 0;
             try
-            {
-                Console.WriteLine($"Enter the vehicle speed", ": ");
-                speed = Convert.ToDouble(Console.ReadLine());                
+            {               
+                Console.Write(INPUTTAB, $"Enter the vehicle speed", ": ");     // ask user for the speed and convert to an int
+                speed = Convert.ToInt32(Console.ReadLine());                
             }
             catch (Exception)
             {
-                isValid = false;
+                isValid = false;                                         // set isValid to false when the speed input is invalid
                 Console.WriteLine("Invalid Entry. Speed must be a number greater than 0"); 
-            }
+            } // END: try-catch - speed input
             
-            if (isValid)
+            if (isValid)    // if speed input was valid
             {
                 try
                 {
-                    Console.WriteLine($"Enter the time travelled in hours", ": ");
-                    time = Convert.ToDouble(Console.ReadLine());
+                    Console.Write(INPUTTAB, $"Enter the time travelled in hours", ": ");
+                    hours = Convert.ToInt32(Console.ReadLine());
                 }
                 catch (Exception)               
                 {
+                    isValid = false;
                     Console.WriteLine("Invalid Entry. Speed must be a number greater than 0;"); 
-                }
-                distance = speed * time;
+                } // END; try-catch - time input
+
+                if (isValid)
+                {
+                    distance = speed * hours;                                    // calculate total distance
+                    distPerHr = Convert.ToInt32(distance / hours);               // calculate distance travelled per hour
+                    Console.WriteLine(OUTPUTTAB, "Hour", "Distance Travelled"); // print column headers
+
+                    /* for will loop while the counter is less than the number of hours.
+                     * increment distPerHr to accumulate the distance on each iteration */
+                    for (int i = 1; i <= hours; i++, distPerHr += distPerHr)    
+                    {
+                        Console.WriteLine(OUTPUTTAB, $"{i}", $"{distPerHr}");  // print the time and distance to console
                     
+                    }//END: for()
+                
+                }// END: if() 
+            }// END: if()
+                
+        } // END: Main()
 
-                //Console.WriteLine($"Travelling at {speed}km/h for {time} hours will het you {distance}kms.");
-            }
-
-
-        }
-    }
+    } // End: class Program
 }
