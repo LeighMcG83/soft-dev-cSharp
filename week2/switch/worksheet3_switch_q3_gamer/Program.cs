@@ -46,11 +46,11 @@ namespace worksheet3_switch_q3_gamer
                 {                    
                     switch (score)
                     {
-                        case double i when score >= 80: msg = "Awesome dude"; break;
-                        case double i when score >= 70: msg = "Your good dude"; break;
-                        case double i when score >= 60: msg = "Some potential here dude"; break;
-                        case double i when score >= 50: msg = "Back to the training ground dude"; break;
-                        case double i when score >= 0: msg = "Don’t give up the day job dude"; break;
+                        case double score when score >= 80: msg = "Awesome dude"; break;
+                        case double score when score >= 70: msg = "Your good dude"; break;
+                        case double score when score >= 60: msg = "Some potential here dude"; break;
+                        case double score when score >= 50: msg = "Back to the training ground dude"; break;
+                        case double score when score >= 0: msg = "Don’t give up the day job dude"; break;
                         default: msg = "\n\tInvalid score entered\n"; break;
                     } //END: switch(score)
                 }
@@ -60,11 +60,11 @@ namespace worksheet3_switch_q3_gamer
                     // quick - action - promt's suggested switch expression below
                 //string msg = score switch
                 //{
-                //    double i when score >= 80 => "Awesome dude",
-                //    double i when score >= 70 => "Awesome dude",
-                //    double i when score >= 60 => "Awesome dude",
-                //    double i when score >= 50 => "Awesome dude",
-                //    double i when score >= 0 => "Awesome dude",
+                //    double score when score >= 80 => "Awesome dude",
+                //    double score when score >= 70 => "Awesome dude",
+                //    double score when score >= 60 => "Awesome dude",
+                //    double score when score >= 50 => "Awesome dude",
+                //    double score when score >= 0 => "Awesome dude",
                 //    _ => "Invalid score entered",
                 //};
                 Console.WriteLine(msg);
