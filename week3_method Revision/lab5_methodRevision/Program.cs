@@ -155,9 +155,9 @@ namespace lab5_methodRevision
             {
                 for (int j = 1; j < numArray.Length; j++)
                 {
-                    if (numArray[i] == numArray[j])
+                    if (numArray[i] == numArray[j]) 
                     {
-                        areDiff = false;
+                        areDiff = false; 
                     }
                     
                 } //END: inner for()
@@ -179,7 +179,7 @@ namespace lab5_methodRevision
             return areDiff;
         } //END: CheckAreSame()
 
-
+       
 
 
 
