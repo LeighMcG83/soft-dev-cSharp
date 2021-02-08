@@ -1,6 +1,6 @@
 ﻿/* ===================================================================
  * Worksheet: |  Lab 5 - Methods
- * Program:   |  lab5_methodRevision.cs
+ * Program:   |  lab5_methodRevision_q3.cs
  * Author:    |  Leigh McGuinness - s00183063
  * Date:      |  03/02/21
  * _ _ _ _ _ _| _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -41,21 +41,26 @@ namespace lab5_methodRevision
                 Console.WriteLine(numberArray[i]);
             }
 
-            double minValue = GetSmallest(numberArray);         // pass number array to method and return smallest number
+            double minValue = GetSmallest(numberArray);                  // pass number array to method and return smallest number
             Console.WriteLine($"\nSmallest number in array: {minValue}");// write the min value to console
 
-            double maxValue = GetBiggest(numberArray);          // pass number array as arg and return max value
+            double maxValue = GetBiggest(numberArray);                   // pass number array as arg and return max value
             Console.WriteLine($"\nBiggest number in array: {maxValue}"); // write the maxValue to console
 
-            double averageValue = GetAverage(numberArray);      // pass number array as arg and return avg value
+            double averageValue = GetAverage(numberArray);                                   // pass number array as arg and return avg value
             Console.WriteLine($"\nThe average of the numbers in the array: {averageValue}"); // write the average to console
 
-            bool areAllSame = CheckAreSame(numberArray);        // pass number array as arg and return tue if all vas are equal
-            Console.WriteLine($"\nAll values in array are equal: {areAllSame}"); // write result to screen
+            bool areAllSame = CheckAreSame(numberArray);                               // pass number array as arg and return tue if all vas are equal
+            Console.WriteLine($"\nAll values in array are equal: {areAllSame}");       // write result to screen
 
-            bool areAllDifferent = CheckAreDifferent(numberArray);  // pass number array as arg and return tue if all vas are equal
+            bool areAllDifferent = CheckAreDifferent(numberArray);                     // pass number array as arg and return tue if all vas are equal
             Console.WriteLine($"\nAll values in array are unique: {areAllDifferent}"); // write result to screen
 
+            Console.Write("\nOriginal Array: ");              
+            DisplayArray(numberArray);                                                 // display the original
+            Console.Write("\nSorted Array: ");                        
+            SortArray(numberArray);                                                    // Sort the array
+            DisplayArray(numberArray);                                                 // display the new sorted array
 
         } //END: Main()
 
@@ -147,21 +152,24 @@ namespace lab5_methodRevision
         // or false if not all values are equal
         static public bool CheckAreDifferent(double[] numArray)
         {
-            bool areDiff = true;                      // var to track boolean state of areDiff
-            Array.Sort(numArray);                     // Sort the array with built-in method
-            //int previousIndex = 0;                    // var for the previous index checked
+            bool areDiff = true;                                // var to track boolean state of areDiff
 
-            for (int i = 0; i < numArray.Length; i++) // iterate over all elems in array
+            for (int i = 0; i < numArray.Length; i++)           // iterate over all elems in array
             {
-                for (int j = 1; j < numArray.Length; j++)
+                double currentIndexValue = numArray[i];         // assign variable tto check 'i' against on each iteration
+
+                for (int j = i + 1; j < numArray.Length; j++)   // let j = next index value
                 {
-                    if (numArray[i] == numArray[j]) 
+                    if (currentIndexValue == numArray[i])
                     {
-                        areDiff = false; 
+                        areDiff = false;
                     }
-                    
                 } //END: inner for()
+
             } //END: outer for()
+
+           
+
 
             //for (int i = 1; i < numArray.Length; i++) // iterate over all elems in array
             //{
@@ -175,13 +183,40 @@ namespace lab5_methodRevision
             //    }
             //    previousIndex++;
             //} //END: for(lenArray)
-            
+
             return areDiff;
         } //END: CheckAreSame()
 
-       
+       // method to sort an array in ascending order
+       static public Array SortArray(double[] originalArray)         // arrays automatically passed by ref
+        {
+            double[] sortedArray = new double[originalArray.Length]; // create new array to store the values in order
+            int length = sortedArray.Length;                   
+            double currentIndexValue = 0;
 
+            for (int i = 0; i < length; i++)                  
+            {
+                for (int j = i + 1; j < length; j++)
+                {
+                    if (originalArray[i] < originalArray[j])    // if current value < next value
+                    {
+                        currentIndexValue = originalArray[i];   // assign the value so we can use it 
+                        originalArray[i] = originalArray[j];    // assign the next value to this index
+                        originalArray[j] = currentIndexValue;   // assign the next index this value (swap the values)
+                    }
+                } // END: for()
+            } // END: for()
+            return originalArray;       // return orignail array - as it was passed by reference, original array is sorted
+        } // END: SortArray()
 
+        // method to diaplay elems of an array passedas an argument
+        static public void DisplayArray(double[] dblArray)
+        {
+            for (int i = 0; i < dblArray.Length; i++)
+            {
+                Console.Write(dblArray[i] + " ");
+            }
+        } //END: DisplayArray()
 
 
     } //END: class Program

@@ -20,27 +20,30 @@ namespace worksheet3_switch_q5_vowels
     {
         static void Main(string[] args)
         {            
-            char[] Vowels = { 'a', 'e', 'i', 'o', 'u'};         // declare and initialize an array to store vowewls
+            char[] Vowels = { 'a', 'e', 'i', 'o', 'u' };        // declare and initialize an array to store vowewls
+            int vowelLength = Vowels.Length;                    // assign the length of the array for use in for loop
             int vowelCount = 0;                                 // initialize counter variable
 
             Console.WriteLine("Enter a word or sentance : ");   // prompt user to input a string
             string inputString = Console.ReadLine().ToLower();  // convert to lowercase and assign to var.
-            int length = inputString.Length;                    // get legth of the arrray
+            int wordLength = inputString.Length;                // get length of the arrray
+            
 
-            for (int i = 0; i < length; i++)                    // iterate over the string
+
+            for (int i = 0; i < wordLength; i++)                // iterate over the string
             {
-                for (int j = 0; j < length; j++)                // iterate over array of vowels
+                for (int j = 0; j < vowelLength; j++)           // iterate over array of vowels
                 {
                     if (inputString[i] == Vowels[j])            // compare the letters in the string to the vowels in the array
                     {
                         vowelCount++;                           // increment the counter
                     }
-                } // END: for(vowel in array)         
-            } // END: for(letter in string)
+                } //END: for(vowel in array)         
+            } //END: for(letter in string)
 
             Console.WriteLine($"There are {vowelCount} vowels in the word / sentance.");    // Display the number of vowels
 
         } //END: Main()
 
-    } // ENDclass Program
+    } //ENDclass Program
 }
