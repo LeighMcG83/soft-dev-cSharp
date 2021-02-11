@@ -27,16 +27,24 @@ namespace arrays_worksheet
     {
         static void Main(string[] args)
         {
-            int[] testArray = { 7, 3, 6, 2, 9 };        // creates array initialised with values
-            int biggest = GetBiggest(testArray);
-            int smallest = GetSmallest(testArray);
-            SortArray(testArray);
-            Console.WriteLine($"Biggest : {biggest}");
-            Console.WriteLine($"Smallest  :  {smallest}");
-            foreach (int elem in testArray)
-            {
-                Console.Write(elem + " ");
-            }
+            int[] testArray = { 7, 3, 6, 2, 9 };            // creates array initialised with values to test methods
+            
+            // Call GetBiggest, return result and wwrite to console
+            Console.WriteLine($"Biggest : {GetBiggest(testArray)}"); 
+
+            //call GetSmallest, pass the test array, return the smalles value and write to console
+            Console.WriteLine($"Smallest  :  {GetSmallest(testArray)}");
+
+            // pass array to check if it is in ascending order
+            Console.WriteLine($"Array in ascending order  : {CheckIsSorted(testArray)}"); 
+            
+            // Pass array as arg to method, calc. average of every 3rd element, return result and write to console
+            Console.WriteLine($"The Average of every third element is : {Average3rds(testArray)}");
+
+            // Pass array as arg to method, calc. standard deviation of the elements, return result and write to console
+            Console.WriteLine($"The standard deviation(3 decimal places) in the array elements is :  {GetStandDeviation(testArray):f3}");
+
+
 
         }// END: Main()
 
@@ -84,27 +92,52 @@ namespace arrays_worksheet
             return avg;
         }
 
-        // method to sort an array in ascending order
-        static public void SortArray(int[] originalArray)         // arrays automatically passed by ref
+        // method to check if an array is sorted in ascending order
+        static public bool CheckIsSorted(int[] arr)         // NOTE: arrays automatically passed by ref
         {
-            int[] sortedArray = new int[originalArray.Length]; // create new array to store the values in order
-            int length = sortedArray.Length;
-            int currentIndexValue = 0;
+            int length = arr.Length;
+            bool isSorted = true;
+            for (int i = 0; i < length; i++)
+            { 
+                if (i < (length - 1))           // only check if i will not send search out of bounds
+                { 
+                    if (arr[i] > arr[i + 1])    // if current value > next value
+                    {
+                        isSorted = false;
+                    }
+                }//END: while()   
+            } // END: for()
+
+            return isSorted;
+        } // END: SortArray()
+
+        //method returns the average of every third elem in array
+        static double Average3rds(int[] arr)
+        {            
+            int count = 0;  //track number of times we add a number
+            double total = 0; 
+            int length = arr.Length;
+
+            for (int i = 0; i < length; i += 3)
+            {
+                total += arr[i];
+                count++;
+            }//END: for(len of arr)
+            return total / count;
+        }//END: Average3rds()
+
+        //method returns the standard deviation of a passed-in array
+        static double GetStandDeviation(int[] arr)
+        {
+            int length = arr.Length;
+            double  total = 0;
 
             for (int i = 0; i < length; i++)
             {
-                for (int j = i + 1; j < length; j++)
-                {
-                    if (originalArray[i] < originalArray[j])    // if current value < next value
-                    {
-                        currentIndexValue = originalArray[i];   // assign the value so we can use it 
-                        originalArray[i] = originalArray[j];    // assign the next value to this index
-                        originalArray[j] = currentIndexValue;   // assign the next index this value (swap the values)
-                    }
-                } // END: for()
-            } // END: for()
-
-        } // END: SortArray()
+                total += arr[i];
+            }
+            return Math.Sqrt(total / length);   // calculate and return the standard deviation
+        }//END: GetStandDeviation()
 
     }//END: class
 }
