@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "arrays_worksheet_q1_arrayMe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "array_worksheet_q2_PlayerGoals", "..\array_worksheet_q2\array_worksheet_q2_PlayerGoals.csproj", "{546084E2-C8CE-4423-94E3-6373508E6021}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "array_worksheet_q3_salesRanges", "..\array_worksheet_q3_salesRanges\array_worksheet_q3_salesRanges.csproj", "{A3F5A7DC-0475-4DAC-B4F0-A6C23753584C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{546084E2-C8CE-4423-94E3-6373508E6021}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{546084E2-C8CE-4423-94E3-6373508E6021}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{546084E2-C8CE-4423-94E3-6373508E6021}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3F5A7DC-0475-4DAC-B4F0-A6C23753584C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3F5A7DC-0475-4DAC-B4F0-A6C23753584C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3F5A7DC-0475-4DAC-B4F0-A6C23753584C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3F5A7DC-0475-4DAC-B4F0-A6C23753584C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
