@@ -11,23 +11,36 @@ namespace test_2D_arrays
             double[,] dblNums = { { 1, 2, 3, 3 },
                                   { 5, 6 , 6, 5 },
                                   { 7, 8, 9, 2 } };
+            
+            double[,] empty = { { } };
+            Console.WriteLine($"empty array Length = {empty.GetLength(1)}");
+
+            int[,] a1 = { { 1, 2, 3 },
+                          {7, 4 , 6 },
+                          { 7, 8, 9 } };
+
+            int[,] a2 = { { 1, 2, 3 },
+                          {7, 4 , 6 },
+                          { 7, 8, 9 } };
+
             bool isFound = false;
+            isFound = FindIn2DArray(numbers);
 
-            //isFound = FindIn2DArray(numbers);
+            Console.WriteLine(isFound + "\n");
 
-            //Console.WriteLine(isFound + "\n");
+            Console.WriteLine($"number is at column {GetColumnIndex(13, numbers)}");
+            Console.WriteLine($"number is at row {GetRowIndex(13, numbers)}");
+            //double avg = GetRowAverage(1, dblNums);
+            double avg = GetRowAverage(0, empty);
 
-            //Console.WriteLine($"number is at column {GetColumnIndex(13, numbers)}");
-            //Console.WriteLine($"number is at row {GetRowIndex(13, numbers)}");
-            double avg = GetRowAverage(0, dblNums);
+
             Console.WriteLine(avg);
 
-            avg = GetRowAverage(1, dblNums);
-            Console.WriteLine(avg);
+            Console.Write(Multipliable(a1, a2));
 
-            avg = GetRowAverage(2, dblNums);
-            Console.WriteLine(avg);
-        }
+        }//END: Main()
+
+
         static bool FindIn2DArray(int[,] inputArray)
         {
             // only need the method body here
@@ -79,19 +92,50 @@ namespace test_2D_arrays
             return -1;
         }
 
+
         static double GetRowAverage(int row, double[,] table)
         {
-            double total = 0, average = 0;
-            for (int r = row; r == row; r++)
+            double total = 0, avg = -1;
+            int length = table.GetLength(row);
+            Console.WriteLine($"Length: {length}");
+
+            if ((length -1)== 0)
             {
-                for (int col = 0; col < table.GetLength(1); col++)
-                {
-                    total += table[row, col];
-                }
-                average = total / table.GetLength(0);
-                return average;
+                return avg;
             }
-            return -1;
+
+            else
+            {
+                for (int i = row; i == row; i++)
+                {
+                    for (int j = 0; j < length; j++)
+                    {
+                        total += table[i, j];
+                        avg = total / length;
+                    }
+                }
+            }
+            return avg;
         }
+
+
+        static bool Multipliable(int[,] a1, int[,] a2)
+        {
+            int length = a1.GetLength(0);
+            bool isSuitable = false;
+
+            for (int row = 0; row < length; row++)
+            {
+                if (a1.GetLength(row) == a2.GetLength(row))
+                {                
+                    isSuitable = true;
+                }
+            }
+
+            return isSuitable;
+        }
+
+
+
     }
 }
