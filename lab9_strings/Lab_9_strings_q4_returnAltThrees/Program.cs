@@ -1,6 +1,6 @@
 ﻿/* ===================================================================
  * Worksheet: |  Lab 9 Strings
- * Program:   |  lab_9_strings_q3_findXandY.cs
+ * Program:   |  Lab_9_strings_q4_returnAltThrees.cs
  * Author:    |  Leigh McGuinness - s00183063
  * Created:   |  20/02/21
  * _ _ _ _ _ _| _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
