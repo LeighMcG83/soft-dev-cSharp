@@ -40,28 +40,30 @@ namespace lab_11_data_validation
         static void Main(string[] args)
         {
             string[] details = new string[4];
-            double taxFreeAllowance = 0, taxrate = 0, grossPay, nettPay, taxPayable;
+            double taxFreeAllowance = 0, taxRate = 0, grossPay, nettPay, taxPayable;
 
             Console.WriteLine("Enter Employee's Details:\n");
             GetEmployeeDetails(details);
-
-            LoadingMethod();
-
+            LoadingMethod();                        //simulate a timelapse for payslip generation
             grossPay = CalculateGross(details);
-            taxPayable = CalculateTax(grossPay, taxrate);
+            taxPayable = CalculateTaxableIncome(grossPay, ref taxRate, ref taxFreeAllowance);
             nettPay = CalculateNettPay(grossPay, taxPayable);
 
-            /*  Ambuigity in question:
+            /*  possoble misinterpretation of question:
              *  - limit on hours worked and hourly rate of pay mean that certain tax bands can never be reached.
              *  Should displayed details be yearly?
              *  */
-            DisplayPayslip(details, taxFreeAllowance, taxrate, grossPay, nettPay, taxPayable);
+            DisplayPayslip(details, taxFreeAllowance, taxRate, grossPay, nettPay, taxPayable);
 
         }//END:  Main()
 
+
+        /// <summary>
+        /// simulates 'loading' of payslip
+        /// </summary>
         private static void LoadingMethod()
         {
-            Console.Write("Generating payslip"); //use a sleep tmer of 0.25sec to simulate generation of a payslip
+            Console.Write("\nGenerating payslip"); //use a sleep tmer of 0.25sec to simulate generation of a payslip
             for (int i = 0; i < 10; i++)
             {
                 Thread.Sleep(250);
@@ -73,21 +75,25 @@ namespace lab_11_data_validation
 
 
         //method displays a yearly summary of the employees pay based on the weekly detials entered earlier
-        private static void DisplayPayslip(string[] details, double taxFreeAllowance, double taxrate, double gross, double nettPay, double taxPayable)
+        private static void DisplayPayslip(string[] details, double taxFreeAllowance, double taxRate, double gross, double nettPay, double taxPayable)
         {
-            const string DISPLAY_TAB = "{0,10}{1,-20}{2,10}";           //use to format the displayed employee details 
-            const string PAGE_DIVIDER = "--------------------------";
+            const string DISPLAY_TAB = "{0,15}{1,-25}{2,-10}";          //use to format the displayed employee details 
+            const string PAGE_DIVIDER = 
+                "------------------------------------------------------"; //formatting 
             Console.OutputEncoding = System.Text.Encoding.UTF8;         //allow printing of unicode characters such as €
 
+            Console.WriteLine("\n" + PAGE_DIVIDER);     
             Console.WriteLine($"Yearly pay summery for {details[0]}:");
             Console.WriteLine(PAGE_DIVIDER);
             Console.WriteLine(DISPLAY_TAB, " ", "Name", $": {details[0]}");
-            Console.WriteLine(DISPLAY_TAB, " ", "EMployee ID", $": {details[1]}");
+            Console.WriteLine(DISPLAY_TAB, " ", "Employee ID", $": {details[1]}");
             Console.WriteLine(DISPLAY_TAB, " ", "Hours worked", $": {details[2]}");
             Console.WriteLine(DISPLAY_TAB, " ", "Hourly Rate of Pay", $": {details[3]:c2}\n");
             Console.WriteLine(PAGE_DIVIDER);
+            
+            /*ome of following details displayed yearly, see note line52 above*/
             Console.WriteLine(DISPLAY_TAB, " ", "Total Gross Pay", $": {gross * 52:c2}");
-            Console.WriteLine(DISPLAY_TAB, " ", "Rate of Tax", $": {taxrate:p2}");
+            Console.WriteLine(DISPLAY_TAB, " ", "Rate of Tax", $": {taxRate:p2}");
             Console.WriteLine(DISPLAY_TAB, " ", "Tax Free Allowance", $": {taxFreeAllowance:c2}");
             Console.WriteLine(DISPLAY_TAB, " ", "Total Tax Paid", $": {(taxPayable * 52):c2}");
             Console.WriteLine(PAGE_DIVIDER);
@@ -104,15 +110,16 @@ namespace lab_11_data_validation
 
 
         //method calculate the tax payable of the employee
-        private static double CalculateTax(double gross, double taxRate)
+        private static double CalculateTaxableIncome(double gross, ref double taxRate, ref double taxFreeAllowance)
         {
-            double taxable, taxFreeAllowance = 3000;
+            taxFreeAllowance = 3000;
+            double taxPayable;
 
             switch (gross)
             {
                 case double pay when gross >= 0 && gross <= 3000:
-                    return 0;                       //taxable income is zero if earnings below 3000
-                    
+                    taxRate = 0;
+                    return 0;                       //taxable income is zero if earnings below 3000                    
                 case double pay when gross <= 34000: 
                     taxRate = 0.2;
                     break;
@@ -124,9 +131,9 @@ namespace lab_11_data_validation
                     break;
             }//END: switch(gross)
 
-            taxable = (gross - taxFreeAllowance) * taxRate;
+            taxPayable = (gross - taxFreeAllowance) * taxRate;
 
-            return taxable;
+            return taxPayable;
         }//END: CalculateTax()
 
 
@@ -141,37 +148,43 @@ namespace lab_11_data_validation
         private static void GetEmployeeDetails(string[] details)
         {
             const string INPUT_TAB = "{0,-19}{1,5}";
-
-            bool nameValid = false, idValid = false;
-            bool hoursValid = false, rateValid = false, allValid = false;
-
+            bool isValid = false;
             string strInput;
             const int MIN_HRS = 10, MAX_HRS = 50, MIN_PAY = 10, MAX_PAY = 65;
 
             
-            while (!allValid)
+            while (!isValid)
             {               
-                strInput = GetName(INPUT_TAB);
-                nameValid = ValidateName(strInput);
+                strInput = GetName(INPUT_TAB);           
+                isValid = ValidateName(strInput);
+                details[0] = strInput;
 
-                if (nameValid)
+                if (isValid)
                 {
-                    strInput = GetID(INPUT_TAB);
-                    idValid = ValidateID(strInput);
-                    if (idValid)
+                    isValid = false;                     //reset isValid for next loop
+                    while (!isValid)                     //loop while the input is invalid
+                    {                       
+                        strInput = GetID(INPUT_TAB);
+                        isValid = ValidateID(strInput);
+                        details[1] = strInput;
+                    }
+                    if (isValid)
                     {
-                        details[2] = GetHours(INPUT_TAB);
-                        hoursValid = ValidateHours(details[2], MIN_HRS, MAX_HRS);
-
-                        if (hoursValid)
+                        isValid = false;                 
+                        while (!isValid)
                         {
-                            details[3] = GetRate(INPUT_TAB);
-                            rateValid = ValidatePay(details[3], MIN_PAY, MAX_PAY);
-                            if (rateValid)
+                            details[2] = GetHours(INPUT_TAB);
+                            isValid = ValidateHoursOrPay(details[2], MIN_HRS, MAX_HRS);
+                        }
+                        if (isValid)
+                        {
+                            isValid = false;                 
+                            while (!isValid)
                             {
-                                Console.WriteLine("\nAll valid");
-                                allValid = true;                                
+                                details[3] = GetRate(INPUT_TAB);
+                                isValid = ValidateHoursOrPay(details[3], MIN_PAY, MAX_PAY);
                             }
+                            
 
                         }//END:if(hoursValid)      
                     }//END: if(idValid)
@@ -181,7 +194,11 @@ namespace lab_11_data_validation
         }//END: GetEmployeeDetails()
 
 
-        //methods to retreive the details of the employee
+        /// <summary>
+        ///  retreive the details of the employee
+        /// </summary>
+        /// <param name="INPUT_TAB"></param>
+        /// <returns></returns>
         private static string GetRate(string INPUT_TAB)
         {           
             Console.Write(INPUT_TAB, "Hourly rate", ": ");
@@ -203,12 +220,18 @@ namespace lab_11_data_validation
             return Console.ReadLine();           
         }
 
-
-
-        //method validate hours worked (present, 10 <= hours <= 50)
-        private static bool ValidateHours(string input, int minValue, int maxValue)
+        /// <summary>
+        /// validate hours worked (present, 10 <= hours <= 50) or 
+        /// validate hourly pay (present, 10 <= hourlyPay <= 65)
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param lowerRange="minValue"></param>
+        /// <param upperRange="maxValue"></param>
+        /// <returns>true if input is oarseable as double and in acceptable value range</returns>
+        private static bool ValidateHoursOrPay(string input, double minValue, double maxValue)
         {
-            
+            //check if the input that was obtainen will parse as a double
+            //when needed for calculations later
             bool isValidDouble = double.TryParse(input, out double hours);
 
             if (isValidDouble = true && hours >= minValue && hours <= maxValue)
@@ -218,17 +241,6 @@ namespace lab_11_data_validation
             return false;
         }
 
-        //method validate hours worked (present, 10 <= hours <= 50)
-        private static bool ValidatePay(string input, int minValue, int maxValue)
-        {
-            bool isValidDouble = double.TryParse(input, out double rate);
-
-            if (isValidDouble = true && rate >= minValue && rate <= maxValue)
-            {
-                return true;
-            }
-            return false;
-        }
 
         //method validates the employee's ID number
         private static bool ValidateID(string input)
@@ -254,7 +266,6 @@ namespace lab_11_data_validation
         private static bool ValidateName(string name)
         {
             char[] digits = "0123456789".ToCharArray();            //make a char[] from a string of digits to search input for
-            //if ((!String.IsNullOrEmpty(name)) && name != String.Empty) //disallow a space or blank entry
             if (name != String.Empty)
             {
                 if (name.IndexOfAny(digits) == -1)                   //disallow digits

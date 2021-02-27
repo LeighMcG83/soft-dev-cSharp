@@ -134,13 +134,9 @@ namespace lab_10_more_string_handling
             //Question 18 - Cheque Writer
             string[] chequeDetails = new string[3];     //date, name, amount
             decimal pay = 0.0m;
-            GetChequeDetails(chequeDetails, ref pay);
-            DisplayChequeDetials(chequeDetails);
-
-
-
 
         }//END: Main()
+
 
         //method asks user for password
         private static string GetPassword()
