@@ -44,9 +44,9 @@ namespace lab_10_more_string_handling
             string input = "";
             char prompt = '>';
 
-            ////Question 1. - unsure what question asks for....do i read in a random string from a user?            
-            //string output = ReadInput(prompt);      
-            //Console.WriteLine(output + "\n");
+            //Question 1. - unsure what question asks for....do i read in a random string from a user?            
+            string output = ReadInput(prompt);
+            Console.WriteLine(output + "\n");
 
             ////Question 2.
             //input = GetUserInput();
@@ -475,9 +475,10 @@ namespace lab_10_more_string_handling
 
             decimal pay = Convert.ToDecimal(chequeDetails[2]);
             string[] denominations = { "hundred", "thousand" };
-            string[] values = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-                    "teen", "twenty", "Thirty", "forty", "fifty", "sixty", "seventy","eighty","nienty"};
-            string stringPay = string.Empty;                            //will concat to this string t build the pay in words
+            string[] values = { "one", "two", "three ", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve" };
+            string[] teens = {"teen", "twenty", "thirty", "forty", "fifty", "sixty", "seventy","eighty","nienty"};
+            
+            string stringPay = " hundred euros cent";                            //will concat to this string t build the pay in words
             int[] intPayValues = new int[chequeDetails[2].Length];      //will store the int value of the numbers in the string of pay
 
             Console.WriteLine("\nPay Cheque");
