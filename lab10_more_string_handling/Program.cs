@@ -41,12 +41,12 @@ namespace lab_10_more_string_handling
         static void Main(string[] args)
         {
             //setup
-            string input = "";
-            char prompt = '>';
+            //string input = "";
+            //char prompt = '>';
 
-            //Question 1. - unsure what question asks for....do i read in a random string from a user?            
-            string output = ReadInput(prompt);
-            Console.WriteLine(output + "\n");
+            ////Question 1. - unsure what question asks for....do i read in a random string from a user?            
+            //string output = ReadInput(prompt);
+            //Console.WriteLine(output + "\n");
 
             ////Question 2.
             //input = GetUserInput();
@@ -129,19 +129,66 @@ namespace lab_10_more_string_handling
             //    {
             //        Console.WriteLine("Invalid Password.....");
             //    }
-            //}//END: while(notValid
+            //}//END: while(notValid)
 
+
+            /* 
+             * DisplayValueInWords() not working - out of ranfe except.
+             * also posibble logic error lines 537 - 546
             //Question 18 - Cheque Writer
             string[] chequeDetails = new string[3];     //date, name, amount
             decimal pay = 0.0m;
 
+            //GetChequeDetails(chequeDetails, ref pay);
+
+            //test data
+            chequeDetails[0] = "27/02/21";
+            chequeDetails[1] = "Leigh";
+            chequeDetails[2] = "1212.56";
+
+            DisplayChequeDetails(chequeDetails);
+            //DisplayChequeValueWords(chequeDetails);
+            Console.WriteLine(DisplayValueInWords(Convert.ToDouble(chequeDetails[2])));
+            */
+
+            //Question 19.            
+            Console.WriteLine("Enter a series of numbers seperated by commas: ");
+            string inputString = Console.ReadLine();
+            Console.WriteLine($"Total: {SumNumbers(inputString)}"); 
+
         }//END: Main()
+
+        /// <summary>
+        /// takes a string argument, converts its chars to type double and totals their values
+        /// </summary>
+        /// <param name="stringInput"></param>
+        /// <returns><double>The total of the numbers contained in a string</double></returns>
+        private static double SumNumbers(string input)
+        {
+            int total = 0;
+            int commaPosition = 0;
+            for(int i = 0; i < input.Length; i++)
+            {
+                commaPosition = input.IndexOf(',');
+                if (commaPosition != -1)                
+                {   
+                    input = input.Remove(commaPosition, 1);
+                }
+            }
+
+            string[] numArr = new string[input.Length];     
+            for (int i = 0; i < input.Length; i++)
+            {
+                numArr[i] = Convert.ToString(input[i]); //convert to strings as char -> double is  invalid cast
+                total += Convert.ToInt32(numArr[i]);
+            }
+            return total;
+        }//END: SumNumbers()
 
 
         //method asks user for password
         private static string GetPassword()
         {
-
             Console.Write("Enter you password (must be at least 6 long, contain upper & lower case and a number):");
             string input = Console.ReadLine();
             return input;
@@ -265,7 +312,12 @@ namespace lab_10_more_string_handling
 
 
         //question8
-        //method counts all occurances of a char in a string
+        /// <summary>
+        /// Method counts all occurances of a char in a string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="c"></param>
+        /// <returns>The number of times the specified char appears in the string</returns>
         static int FindAllOccurance(string str, char c)
         {
             int count = 0;
@@ -358,7 +410,10 @@ namespace lab_10_more_string_handling
 
 
         //question12.
-        //method counts and outputs number of vowels in a string
+        /// <summary>
+        /// Method Counts vowels in a atring
+        /// </summary>
+        /// <param name="str"></param>
         private static void CountVowels(string str)
         {
             
@@ -431,7 +486,6 @@ namespace lab_10_more_string_handling
         }//END: ValidatePassword()
 
         //question 18
-
         //method gets details of a cheque and stores in an array
         private static void GetChequeDetails(string[] chequeDetails, ref decimal pay)
         {
@@ -462,43 +516,119 @@ namespace lab_10_more_string_handling
 
         }//END: GetChequeDetials()
         
-        //method displays cehque details
-        private static void DisplayChequeDetials(string[] chequeDetails)
+        //method displays cheque details
+        private static void DisplayChequeDetails(string[] chequeDetails)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             const string DISPLAY_ONE = "{0, -10}{1, -25}";
-            const string DISPLAY_TWO = "{0, -10}{1, -25}{2, 10}";
-
-            decimal pay = Convert.ToDecimal(chequeDetails[2]);
-            string[] denominations = { "hundred", "thousand" };
-            string[] values = { "one", "two", "three ", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve" };
-            string[] teens = {"teen", "twenty", "thirty", "forty", "fifty", "sixty", "seventy","eighty","nienty"};
-            
-            string stringPay = " hundred euros cent";                            //will concat to this string t build the pay in words
-            int[] intPayValues = new int[chequeDetails[2].Length];      //will store the int value of the numbers in the string of pay
+            const string DISPLAY_TWO = "{0, -10}{1, -15}{2, 10}";
 
             Console.WriteLine("\nPay Cheque");
             Console.WriteLine(DISPLAY_ONE, "Date:", $"{chequeDetails[0]}");
-            Console.WriteLine(DISPLAY_TWO, "Pay to:", $"{chequeDetails[1]}", $"{pay:c2}");
+            Console.WriteLine(DISPLAY_TWO, "Pay to:", $"{chequeDetails[1]}", $"{Convert.ToDouble(chequeDetails[2]):c2}");
 
-            for (int i = 0; i < chequeDetails[2].Length; i++)        //iterate over the string digits in the pay
-            {
-                if (int.TryParse(chequeDetails[2].Substring(i,1), out int value))   //pull the value from the string - parse as int
-                {
-                    intPayValues[i] = value;
-                }
-                else
-                {
-                    intPayValues[i] = -1;           //when we read from this array convert -1 to a '.'
-                }
-            }//END: for()
+        }//END: DisplayChequeDetials()
 
 
-            //test print the int values
-            foreach (var item in intPayValues)
-            {
-                Console.WriteLine(item);
+        /// <summary>
+        /// displays the value of the cheque in words
+        /// </summary>
+        /// <param name="chequeDetails"></param>
+        /// <param name="stringPay"></param>
+        /// <param name="intPayValues"></param>
+        private static void DisplayChequeValueWords(string[] chequeDetails)
+        {
+            decimal pay = Convert.ToDecimal(chequeDetails[2]);
+            string[] valuesUnder20 = { "zero", "one ", "two ", "three ", "fou r", "five ", "six ", "seven ", "eight ", "nine ",
+                "ten ", "eleven ", "twelve ", "thirteen " ,"fourteen ", "fifteen ", "sixteen ", "seventeen ", "eighteen", "nineteen"};
+            string[] valueTens = { "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "nienty" };
+
+            string payString = "euros cent";                            //will concat to this string t build the pay in words
+            int[] intPayValues = new int[chequeDetails[2].Length];      //will store the int value of the numbers in the string of pay
+
+        
+
+
+            //ATTEMPT 2
+            //build the string of words
+            //split on a '.' if present to find number of euros and cent
+            string amount = chequeDetails[2];
+            string[] euroAndCentArr = new string[2];
+
+            if (amount.Contains('.'))
+            {                               
+                euroAndCentArr = amount.Split(Convert.ToChar(amount.IndexOf('.') - 2), '.');         //split the string @ '.' into the euors and cents
+                payString = payString.Insert(payString.IndexOf(' ') + 1, euroAndCentArr[1] + " ");   //inserts the number of cents plus a ' ' before the space in the string
             }
+            else
+            {
+                euroAndCentArr[0] = amount;                                       //place the amount of euros in array[0] to itterate over in for loop
+                payString = payString.Insert(payString.IndexOf(' ') + 1, "00 ");  //inserts a 00 if there were no decimal places
+            }
+
+            ////test-print
+            //foreach (var item in euroAndCentArr)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            //Console.WriteLine("Length of [0]: {0}", euroAndCentArr[0].Length);
+
+            int length = euroAndCentArr[0].Length;
+
+            if (Convert.ToInt32(euroAndCentArr[0].Substring(length - 2)) < 20)
+            {
+                //iterate over the array that stores the values in word-form (i.e. values[1] = "one")
+                for (int i = 1; i < valuesUnder20.Length; i++)
+                {
+                    //get substrings in lengths of -2: where value = 1234, the substring will be 34
+                    if (euroAndCentArr[0].Substring(length - 3, 2) == Convert.ToString(valuesUnder20[i]))
+                    {
+                        payString = payString.Insert(0, Convert.ToString(valuesUnder20[i]));
+                        //break;  //break for testing
+                    }
+                }
+            }
+            else
+            {
+                //if the number is > 20
+            }
+            
+
+
+            //if length is 3 without the decimal point and cents insert "hundred" at beginning
+
+            //insert string representation of number of hundreds e.g. "5"
+
+            //if length  is 4 without the decimal point and cents insert "thousand" at beginning
+
+            //insert string representation of number of thounsands e.g. "1"
+
+
+            Console.WriteLine(payString);
+
+
+
+            //ATTEMPT 1
+            /*following commented out - will not use
+             * 
+            //for (int i = 0; i < chequeDetails[2].Length; i++)                        //iterate over the string digits in the pay
+            //{
+            //    if (int.TryParse(chequeDetails[2].Substring(i, 1), out int value))   //pull the value from the string - parse as int
+            //    {
+            //        intPayValues[i] = value;
+            //    }
+            //    else
+            //    {
+            //        intPayValues[i] = -1;           //when we read from this array convert -1 to a '.'
+            //    }
+            //}//END: for()
+
+
+            ////test print the int values
+            //foreach (var item in intPayValues)
+            //{
+            //    Console.WriteLine(item);
+            //}
 
             //for (int i = 0; i < intPayValues.Length; i++)
             //{
@@ -518,12 +648,63 @@ namespace lab_10_more_string_handling
             //            break;
             //    }//END: witch()
             //}//END: for()
+            */
+        }//END: DisplayInWords()
 
-            Console.WriteLine(stringPay);
+        /// <summary>
+        /// displaye the chequw value in words, €123 = one hundred and twenty three euros
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string DisplayValueInWords(double value)
+            {
+                if (value == 0)
+                    return "zero";
 
-        }//END: DisplayChequeDetials()
+                if (value < 0)
+                    return "minus " + DisplayValueInWords(Math.Abs(value));
 
+                string words = "";
 
+                if ((value / 1000000) > 0)
+                {
+                    words += DisplayValueInWords(value / 1000000) + " million ";
+                    value %= 1000000;
+                }
+
+                if ((value / 1000) > 0)
+                {
+                    words += DisplayValueInWords(value / 1000) + " thousand ";
+                    value %= 1000;
+                }
+
+                if ((value / 100) > 0)
+                {
+                    words += DisplayValueInWords(value / 100) + " hundred ";
+                    value %= 100;
+                }
+
+                if (value > 0)
+                {
+                    if (words != "")
+                        words += "and ";
+
+                    string[] unitsMap = new[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
+                    string[] tensMap = new[] { "zero", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
+
+                    if (value < 20)
+                        words += unitsMap[Convert.ToInt32(value)];
+                    else
+                    {
+                        words += tensMap[Convert.ToInt32(value) / 10];
+                        if ((value % 10) > 0)
+                            words += "-" + unitsMap[Convert.ToInt32(value) % 10];
+                    }
+                }
+                return words;
+            }//END: NumberToWords*()
+
+        
     }//END: class
 
 }//END: namespace
