@@ -139,8 +139,7 @@ namespace lab_10_more_string_handling
              */
             //Question 18 - Cheque Writer
             string[] chequeDetails = new string[3];     //date, name, amount
-            decimal pay = 0.0m;
-            
+            decimal pay = 0.0m;           
 
             Console.WriteLine("Q18 - Run in debug mode?  (\"Y\" / blank to use test data)");
             input = Console.ReadLine().ToUpper();
@@ -159,18 +158,18 @@ namespace lab_10_more_string_handling
 
             DisplayChequeDetails(chequeDetails);
             DisplayChequeValueWords(chequeDetails);
-            Console.WriteLine(DisplayValueInWords(Convert.ToDouble(chequeDetails[2])));
-            
+            //Console.WriteLine(DisplayValueInWords(Convert.ToDouble(chequeDetails[2])));
 
-            ////Question 19.            
-            //Console.WriteLine("Enter a series of numbers seperated by commas: ");
-            //input = Console.ReadLine();
-            //Console.WriteLine($"Total: {SumNumbers(inputString)}");
 
-            ////Question 20.
-            //Console.WriteLine("Enter a series of numbers seperated by commas: ");
-            //input = Console.ReadLine();
-            //Console.WriteLine(SumNumbers(input));
+            //Question 19.            
+            Console.WriteLine("Enter a series of numbers seperated by commas: ");
+            input = Console.ReadLine();
+            Console.WriteLine($"Total: {SumNumbers(inputString)}");
+
+            //Question 20.
+            Console.WriteLine("Enter a series of numbers seperated by commas: ");
+            input = Console.ReadLine();
+            Console.WriteLine(SumNumbers(input));
 
 
 
