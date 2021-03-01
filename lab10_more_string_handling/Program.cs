@@ -40,9 +40,10 @@ namespace lab_10_more_string_handling
     {
         static void Main(string[] args)
         {
+
             //setup
-            //string input = "";
-            //char prompt = '>';
+            string input = "";
+            char prompt = '>';
 
             ////Question 1. - unsure what question asks for....do i read in a random string from a user?            
             //string output = ReadInput(prompt);
@@ -92,11 +93,11 @@ namespace lab_10_more_string_handling
 
             ////Question 9.
             //char[] alphabet =  { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            //                     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}; 
+            //                     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
             //ShowAplaphabetOccurances(alphabet, "programming");
 
-            //Question 10.
+            ////Question 10.
             //input = GetUserInput();
             //Console.Write($"{input} = \"I Love Sligo\": {CheckEquality(input)}");
 
@@ -104,14 +105,14 @@ namespace lab_10_more_string_handling
             //input = GetUserInput();
             //BreakString(input);
 
-            //Question 13.
+            ////Question 13.
             //input = GetUserInput();
             //CountVowels(input);
 
-            //Question 14. - skipped
-            //count and display consonant
+            ////Question 14. - skipped
+            ////count and display consonant
 
-            //Question 15.
+            ////Question 15.
             //string encryptedString = EncrpytString("bats");     //will change a to b and t to s
             //Console.WriteLine(encryptedString);
 
@@ -135,26 +136,43 @@ namespace lab_10_more_string_handling
             /* 
              * DisplayValueInWords() not working - out of ranfe except.
              * also posibble logic error lines 537 - 546
+             */
             //Question 18 - Cheque Writer
             string[] chequeDetails = new string[3];     //date, name, amount
             decimal pay = 0.0m;
+            
 
-            //GetChequeDetails(chequeDetails, ref pay);
-
-            //test data
-            chequeDetails[0] = "27/02/21";
-            chequeDetails[1] = "Leigh";
-            chequeDetails[2] = "1212.56";
+            Console.WriteLine("Q18 - Run in debug mode?  (\"Y\" / blank to use test data)");
+            input = Console.ReadLine().ToUpper();
+            
+            if (input == string.Empty || input == "Y")
+            {
+                //test data - avoid re-entering data while debugging
+                chequeDetails[0] = "27/02/21";
+                chequeDetails[1] = "Leigh";
+                chequeDetails[2] = "1212.56";
+            }
+            else
+            {
+                GetChequeDetails(chequeDetails, ref pay);
+            }
 
             DisplayChequeDetails(chequeDetails);
-            //DisplayChequeValueWords(chequeDetails);
+            DisplayChequeValueWords(chequeDetails);
             Console.WriteLine(DisplayValueInWords(Convert.ToDouble(chequeDetails[2])));
-            */
+            
 
-            //Question 19.            
-            Console.WriteLine("Enter a series of numbers seperated by commas: ");
-            string inputString = Console.ReadLine();
-            Console.WriteLine($"Total: {SumNumbers(inputString)}"); 
+            ////Question 19.            
+            //Console.WriteLine("Enter a series of numbers seperated by commas: ");
+            //input = Console.ReadLine();
+            //Console.WriteLine($"Total: {SumNumbers(inputString)}");
+
+            ////Question 20.
+            //Console.WriteLine("Enter a series of numbers seperated by commas: ");
+            //input = Console.ReadLine();
+            //Console.WriteLine(SumNumbers(input));
+
+
 
         }//END: Main()
 
@@ -632,77 +650,26 @@ namespace lab_10_more_string_handling
 
             //for (int i = 0; i < intPayValues.Length; i++)
             //{
-            //    switch (chequeDetails[i])
-            //    {
-            //        case int num when intPayValues[i] == 1: stringPay += values[0]; break;
-            //        case int num when intPayValues[i] == 2: stringPay += values[1]; break;
-            //        case int num when intPayValues[i] == 3: stringPay += values[2]; break;
-            //        case int num when intPayValues[i] == 4: stringPay += values[3]; break;
-            //        case int num when intPayValues[i] == 5: stringPay += values[4]; break;
-            //        case int num when intPayValues[i] == 6: stringPay += values[5]; break;
-            //        case int num when intPayValues[i] == 7: stringPay += values[6]; break;
-            //        case int num when intPayValues[i] == 8: stringPay += values[7]; break;
-            //        case int num when intPayValues[i] == 9: stringPay += values[8]; break;
-            //        case int num when intPayValues[i] == 0: stringPay += values[0]; break;
-            //        default:
-            //            break;
-            //    }//END: witch()
-            //}//END: for()
+                switch (chequeDetails[i])
+                {
+                    case int num when intPayValues[i] == 1: stringPay += values[0]; break;
+                    case int num when intPayValues[i] == 2: stringPay += values[1]; break;
+                    case int num when intPayValues[i] == 3: stringPay += values[2]; break;
+                    case int num when intPayValues[i] == 4: stringPay += values[3]; break;
+                    case int num when intPayValues[i] == 5: stringPay += values[4]; break;
+                    case int num when intPayValues[i] == 6: stringPay += values[5]; break;
+                    case int num when intPayValues[i] == 7: stringPay += values[6]; break;
+                    case int num when intPayValues[i] == 8: stringPay += values[7]; break;
+                    case int num when intPayValues[i] == 9: stringPay += values[8]; break;
+                    case int num when intPayValues[i] == 0: stringPay += values[0]; break;
+                    default:
+                        break;
+                }//END: witch()
+            }//END: for()
             */
         }//END: DisplayInWords()
 
-        /// <summary>
-        /// displaye the chequw value in words, €123 = one hundred and twenty three euros
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static string DisplayValueInWords(double value)
-            {
-                if (value == 0)
-                    return "zero";
-
-                if (value < 0)
-                    return "minus " + DisplayValueInWords(Math.Abs(value));
-
-                string words = "";
-
-                if ((value / 1000000) > 0)
-                {
-                    words += DisplayValueInWords(value / 1000000) + " million ";
-                    value %= 1000000;
-                }
-
-                if ((value / 1000) > 0)
-                {
-                    words += DisplayValueInWords(value / 1000) + " thousand ";
-                    value %= 1000;
-                }
-
-                if ((value / 100) > 0)
-                {
-                    words += DisplayValueInWords(value / 100) + " hundred ";
-                    value %= 100;
-                }
-
-                if (value > 0)
-                {
-                    if (words != "")
-                        words += "and ";
-
-                    string[] unitsMap = new[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
-                    string[] tensMap = new[] { "zero", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
-
-                    if (value < 20)
-                        words += unitsMap[Convert.ToInt32(value)];
-                    else
-                    {
-                        words += tensMap[Convert.ToInt32(value) / 10];
-                        if ((value % 10) > 0)
-                            words += "-" + unitsMap[Convert.ToInt32(value) % 10];
-                    }
-                }
-                return words;
-            }//END: NumberToWords*()
+       
 
         
     }//END: class
