@@ -63,7 +63,7 @@ namespace lab_10_more_string_handling
             ////Question 4.
             //Console.Write(prompt);
             //input = GetUserInput();
-            //string upper = ConvertToUpper(input);
+            string upper = ConvertToUpper(input);
             //Console.WriteLine(upper);
 
             ////Question 5.
@@ -268,7 +268,7 @@ namespace lab_10_more_string_handling
         static string ConvertToUpper(string str)
         {
             //create an array of chars from the string that we can convert 
-            //each to a hex val individually
+            //each to a bytes val individually
             char[] values = str.ToCharArray();
             char letter = ' ';
             string upperStr = "";
@@ -279,7 +279,7 @@ namespace lab_10_more_string_handling
                 byte code = (byte)str[i];       //cast the current letter as a byte type
                 code -= 32;                     //-32 -> 32 places between a capital and the lowercase on ASCII chart
                 letter = (char)code;            //re-cast as a char - will now be uppercase
-                values[i] = letter;             //assign the letter to the char array
+                lvaues[i] = letter;             //assign the letter to the char array
             }
 
             foreach (char c in values)          //loop over the values array to get each letter
