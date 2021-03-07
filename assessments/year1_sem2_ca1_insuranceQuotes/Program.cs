@@ -49,33 +49,33 @@ namespace year1_sem2_CA1
             decimal quote = 0, average = 0;
             string[] details = new string[4];
             decimal[] quoteArray = new decimal[100];
+            decimal quotesUnder25 = 0m, quotesOver25 = 0m;
+            int menuChoice = 0;
+            const int QUIT = 3;
 
-            char menuChoice = ' ';
-
-            //display the menu
             do
             {
                 menuChoice = PrintMenu();
                 switch (menuChoice)
                 {
-                    case '1':
-                        GetCustomerDetails();                           // call method to get details                        
-                        quote = CalculateQuote(details);                // get a quote 
+                    case 1:
+                        GetCustomerDetails();                                             
+                        quote = CalculateQuote(details, under25s, over25s);             
                         Console.WriteLine($"This quote is {quote:c2}");
                         quoteArray[quoteArray.Length - 1] = quote;      // put quote at end of array
                         break;
-                    case '2':
+                    case 2:
                         average = CalculateAverage(quoteArray);
                         PrintStatistics(average, under25s, over25s);
                         break;
-                    case '3':
+                    case 3:
                         Console.WriteLine("You have chosen to exit the program");
                         break;
                     default:
                         Console.WriteLine("Invalid option chosen");
                         break;
                 }
-            } while (menuChoice != '3');
+            } while (menuChoice != QUIT);
 
 
 
@@ -83,9 +83,10 @@ namespace year1_sem2_CA1
 
 
         //method to print the menu
-        static char PrintMenu()
+        static int PrintMenu()
         {
-            char menuChoice = ' ';
+            int menuChoice = 0;
+            string userInput = "";
             bool isValid = false;               // set isValid to false
             while (!isValid)                    // loop while the input was not valid
             {
@@ -94,10 +95,10 @@ namespace year1_sem2_CA1
                 Console.WriteLine(MENUTAB, "", "1. Calculate Quote");
                 Console.WriteLine(MENUTAB, "", "2. Print Statistics");
                 Console.WriteLine(MENUTAB, "", "3. Exit");
-                menuChoice = Convert.ToChar(Console.ReadLine());
+                userInput = Console.ReadLine();
 
                 //check if input was valid option, if was 3 we break inside main()
-                if (menuChoice == '1' || menuChoice == '2' || menuChoice == '3')
+                if (IsPresent(userInput) && IsPositiveInt(userInput, "Menu Choice") && int.TryParse(userInput, out menuChoice))
                 {
                     isValid = true;
                     return menuChoice;
@@ -112,18 +113,56 @@ namespace year1_sem2_CA1
         {
             //string value, age, noClaims, points = "";               // declare and initialize variables to store details to base quote on
             int length = customerDetails.Length;                    // calc. length of array to use in for loop
+            string input = string.Empty;
+            bool isValid = false;
+            string[] details = { "Enter Vehicle value", "Enter Age", "Enter No Claims Bonus", "Enter Penalty points" };
 
-            Console.Write(INPUTTAB, "Enter Vehicle value", ": ");
-            customerDetails[0] = Console.ReadLine();
-            Console.Write(INPUTTAB, "Enter age", ": ");
-            int age = Convert.ToInt32(Console.ReadLine());
+            for (int i = 0; i < length; i++)
+            {
+                do
+                {
+                    Console.Write(INPUTTAB, details[i], ": ");
+                    input = Console.ReadLine();
+
+                    if (i == 0)     //value                     
+                        isValid = IsPresent(input) && IsDouble(input, details[i]) && IsInRange(input);                    
+                    else if (i == 1) //age                    
+                        isValid = IsPresent(input) && IsPositiveInt(input, details[i]) && IsInRange(input, 18, 25);                    
+                    else            //noClaims || penalty points                    
+                        isValid = IsPresent(input) && IsPositiveInt(input, details[i]) && IsInRange(input, 0, 12);    
+                    
+                    customerDetails[i] = input;
+
+                    Console.WriteLine($"{details[i]} : {customerDetails[i]}");
+
+                } while (!isValid);
+                
+            }
+
+            int age = Convert.ToInt32(input);
             if (age > 18)
             {
-                Console.Write(INPUTTAB, "Enter Years No Claims Bonus", ": ");
-                customerDetails[2] = Console.ReadLine();
-                Console.WriteLine(INPUTTAB, "Enter Penalty points", ": ");
-                customerDetails[3] = Console.ReadLine();
-            }
+                do
+                {
+                    Console.Write(INPUTTAB, "Enter Years No Claims Bonus", ": ");
+                    input = Console.ReadLine();
+                    isValid = IsPresent(input) && IsPositiveInt(input, "NoClaims") && IsInRange(input, 0, 25);
+                } while (!isValid);
+                customerDetails[2] = input;
+                Console.WriteLine($"In array[2]: {customerDetails[2]}");
+
+                //if (isValid)
+                //{
+                //    do
+                //    {
+                //        Console.WriteLine(INPUTTAB, , ": ");
+                //        input = Console.ReadLine();
+                //        isValid = IsPresent(input) && IsPositiveInt(input, "Penalty Points");
+                //    } while (!isValid);
+                //    customerDetails[3] = input;
+                //    Console.WriteLine($"In array[3]: {customerDetails[3]}");
+                //}               
+            }//END: if(>18)
             else
             {
                 Console.WriteLine("No quote POSSIBLE");
@@ -133,9 +172,49 @@ namespace year1_sem2_CA1
 
         } //END: GetCustomerDetails()
 
+        /// <summary>
+        /// Method validates a user input by checking it is greater than zero
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>True if input is greater than zero</returns>
+        private static bool IsInRange(string input)
+        {
+            const int MIN = 0;
+            int intChoice = Convert.ToInt32(input);
+            bool isValid = false;
+
+            if (intChoice > MIN)
+            {
+                isValid = true;
+            }
+
+            return isValid;
+        }//END: IsInRange()
+
+
+
+        /// <summary>
+        /// Method validates a user input by checking it is between a min and max value
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>True if input is between min and mas range allowed</returns>
+        private static bool IsInRange(string choice, int minValue, int maxValue)
+        {
+            int intChoice = Convert.ToInt32(choice);
+            bool isValid = false;
+
+            if (intChoice >= minValue && intChoice <= maxValue)
+            {
+                isValid = true;
+            }
+
+            return isValid;
+        }//END: IsInRange()
+
+
 
         //method to calculate a quote
-        static public decimal CalculateQuote(string[] details)
+        static public decimal CalculateQuote(string[] details, decimal quotesUnder25, decimal quotesOver25)
         {
             decimal premium = 0.0m;
             decimal quote = 0, discount = 0;
@@ -146,8 +225,6 @@ namespace year1_sem2_CA1
             int noClaims = Convert.ToInt32(details[2]);
             int points = Convert.ToInt32(details[3]);
 
-            decimal quotesUnder25 = 0, quotesOver25 = 0;
-
             if (age < 18)
             {
                 return -1;                             // if under 18 we will return -1
@@ -155,12 +232,10 @@ namespace year1_sem2_CA1
             else if (age >= 18 && age < 25)
             {
                 premium = 0.13m;                        // set premium to the higher rate   
-                under25s++;
             }
             else
             {
                 premium = 0.03m;                        // set premium to the higher rate            
-                over25s++;
             }
 
 
@@ -176,11 +251,12 @@ namespace year1_sem2_CA1
             {
                 quote += (value * premium) - discount;
                 quotesUnder25 += quote;
+                under25s++;
             }
             else
             {
                 quote += (value * premium) - discount;
-                quotesUnder25 += quote;
+                quotesOver25++;
             }
 
             return quote;                                // return the quote to main
@@ -207,6 +283,66 @@ namespace year1_sem2_CA1
             Console.WriteLine(OUTPUTTAB, "18 - 25", $"{under25s}", $"{average}");
             Console.WriteLine(OUTPUTTAB, "Over25", $"{over25s}", $"{average}");
         }
+
+
+        /// <summary>
+        /// Method checks if a string input can be converted to an integer,
+        /// takes string input and string label for the input.
+        /// Gives the user a tip if invalid inout is entered
+        /// </summary>
+        /// <param name="textIn"></param>
+        /// <param name="name"></param>
+        /// <returns>true, if input can be converted to an int, else returns false</returns>
+        static bool IsPositiveInt(string textIn, string name)
+        {
+            int num;
+            if (int.TryParse(textIn, out num) == true) // all went ok
+                return true;
+            else // there was a problem
+                Console.WriteLine(name + " must be an integer value.", "Entry Error");
+            return false;
+        }//END:  IsInt()
+
+
+        /// <summary>
+        /// Method checks if a string input can be converted to a double,
+        /// takes string input and string label for the input.
+        /// Gives the user a tip if invalid inout is entered
+        /// </summary>
+        /// <param name="inout"></param>
+        /// <param name="name"></param>
+        /// <returns>true, if input can be converted to an int, else returns false</returns>
+        static bool IsDouble(string inout, string name)
+        {
+            double num;
+            if (double.TryParse(inout, out num) == true) // all went ok
+            {
+                return true;
+            }
+            else // there was a problem
+            {
+                Console.WriteLine(name + " must be a real (decimal) value.", "Entry Error");
+            }
+            return false;
+        }//END:  IsInt()
+
+
+        /// <summary>
+        /// Method check if the passed string argument id an empty string
+        /// Takes 1 parameter no overloads
+        /// </summary>
+        /// <param name="userInput"></param>
+        /// <returns>True if string is not empty, or false if it is</returns>
+        private static bool IsPresent(string userInput)
+        {
+            if (!String.IsNullOrEmpty(userInput))
+            {
+                return true;
+            }
+            return false;
+        }//END: IsPresent();
+
+
     } //END: Program class
 
 } //END: namespace
