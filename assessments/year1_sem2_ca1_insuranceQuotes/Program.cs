@@ -36,9 +36,10 @@ namespace year1_sem2_CA1
         public const string MENUTAB = "{0, -15}{1,0}";     // first column is blank to indent second column
         public const string OUTPUTTAB = "{0, -10}{1, 25}{2, 15}";
 
-        public static int under25s = 0, over25s = 0;
+        public static int numUnder25s = 0, numOver35s = 0;
+        static decimal quotesValuesUnder25 = 0m, quotesValuesOver25 = 0m;
 
-        static public string[] customerDetails = new string[4];               // define array to store the customers details in
+        static public string[] customerDetails = new string[4];    //stores the customers details
 
         static void Main(string[] args)
         {
@@ -49,9 +50,8 @@ namespace year1_sem2_CA1
             decimal quote = 0, average = 0;
             string[] details = new string[4];
             decimal[] quoteArray = new decimal[100];
-            decimal quotesUnder25 = 0m, quotesOver25 = 0m;
             int menuChoice = 0;
-            const int QUIT = 3;
+            const int QUIT = 3;                         //sentinel
 
             do
             {
@@ -60,13 +60,18 @@ namespace year1_sem2_CA1
                 {
                     case 1:
                         GetCustomerDetails();                                             
-                        quote = CalculateQuote(details, under25s, over25s);             
+                        quote = CalculateQuote(details, ref quotesValuesUnder25, ref numUnder25s, ref quotesValuesOver25, ref numOver35s);             
                         Console.WriteLine($"This quote is {quote:c2}");
                         quoteArray[quoteArray.Length - 1] = quote;      // put quote at end of array
+                        Console.WriteLine($"quteArray:");
+                        foreach (var q in quoteArray)
+                        {                             
+                            Console.Write(q + " ");
+                        }
                         break;
                     case 2:
                         average = CalculateAverage(quoteArray);
-                        PrintStatistics(average, under25s, over25s);
+                        PrintStatistics(average, numUnder25s, numOver35s);
                         break;
                     case 3:
                         Console.WriteLine("You have chosen to exit the program");
@@ -95,6 +100,7 @@ namespace year1_sem2_CA1
                 Console.WriteLine(MENUTAB, "", "1. Calculate Quote");
                 Console.WriteLine(MENUTAB, "", "2. Print Statistics");
                 Console.WriteLine(MENUTAB, "", "3. Exit");
+                Console.Write("Enter: ");
                 userInput = Console.ReadLine();
 
                 //check if input was valid option, if was 3 we break inside main()
@@ -126,21 +132,28 @@ namespace year1_sem2_CA1
 
                     if (i == 0)     //value                     
                         isValid = IsPresent(input) && IsDouble(input, details[i]) && IsInRange(input);                    
-                    else if (i == 1) //age                    
-                        isValid = IsPresent(input) && IsPositiveInt(input, details[i]) && IsInRange(input, 18, 25);                    
+                    else if (i == 1) //age                                        
+                        isValid = IsPresent(input) && IsPositiveInt(input, details[i]);                    
                     else            //noClaims || penalty points                    
-                        isValid = IsPresent(input) && IsPositiveInt(input, details[i]) && IsInRange(input, 0, 12);    
-                    
-                    customerDetails[i] = input;
+                        isValid = IsPresent(input) && IsPositiveInt(input, details[i]) && IsInRange(input, 0, 12);
+                    if (isValid)
+                    {
+                        customerDetails[i] = input;
+                    }
+                       
 
-                    Console.WriteLine($"{details[i]} : {customerDetails[i]}");
+                    //Console.WriteLine($"{details[i]} : {customerDetails[i]}");
 
                 } while (!isValid);
                 
             }
 
             int age = Convert.ToInt32(input);
-            if (age > 18)
+            if (age <= 18)
+            {
+                Console.WriteLine("No quote POSSIBLE");
+            }
+            else
             {
                 do
                 {
@@ -151,22 +164,7 @@ namespace year1_sem2_CA1
                 customerDetails[2] = input;
                 Console.WriteLine($"In array[2]: {customerDetails[2]}");
 
-                //if (isValid)
-                //{
-                //    do
-                //    {
-                //        Console.WriteLine(INPUTTAB, , ": ");
-                //        input = Console.ReadLine();
-                //        isValid = IsPresent(input) && IsPositiveInt(input, "Penalty Points");
-                //    } while (!isValid);
-                //    customerDetails[3] = input;
-                //    Console.WriteLine($"In array[3]: {customerDetails[3]}");
-                //}               
             }//END: if(>18)
-            else
-            {
-                Console.WriteLine("No quote POSSIBLE");
-            }
 
             return customerDetails;
 
@@ -214,7 +212,7 @@ namespace year1_sem2_CA1
 
 
         //method to calculate a quote
-        static public decimal CalculateQuote(string[] details, decimal quotesUnder25, decimal quotesOver25)
+        static public decimal CalculateQuote(string[] details, ref decimal quotesUnder25, ref int under25s, ref decimal quotesOver25, ref int over25s)
         {
             decimal premium = 0.0m;
             decimal quote = 0, discount = 0;
@@ -238,7 +236,6 @@ namespace year1_sem2_CA1
                 premium = 0.03m;                        // set premium to the higher rate            
             }
 
-
             if (noClaims > 0)                           // if customer has noClaims bonus,apply a discount
             {
                 for (int i = 0; i <= noClaims; i++)     // apply disc. for every year of noClaims
@@ -247,20 +244,23 @@ namespace year1_sem2_CA1
                 }//END: (for(noCalims > 0)
             }
 
-            if (age >= 18 && age <= 25)                 // if customer older that 18 calc. quote
+            if (age >= 18 && age <= 25)                 
             {
                 quote += (value * premium) - discount;
-                quotesUnder25 += quote;
-                under25s++;
+                quotesUnder25 += quote;                 //accumulate the value of quotes for the under 25s
+                under25s++;                             //increment the number if quotes given to under 25s
             }
             else
             {
                 quote += (value * premium) - discount;
-                quotesOver25++;
+                quotesOver25 += quote;                  //accumulate the value of quotes for the under 25s
+                over25s++;                              //increment the number if quotes given to under 25s
             }
 
-            return quote;                                // return the quote to main
+            return quote;
         }
+
+
 
         //method to calculate the average quote
         static decimal CalculateAverage(decimal[] quotesArray)
@@ -280,8 +280,8 @@ namespace year1_sem2_CA1
         {
             int totalCount = over25s + under25s;
             Console.WriteLine(OUTPUTTAB, "Age", "Number of Quotes", "Average Quote");
-            Console.WriteLine(OUTPUTTAB, "18 - 25", $"{under25s}", $"{average}");
-            Console.WriteLine(OUTPUTTAB, "Over25", $"{over25s}", $"{average}");
+            Console.WriteLine(OUTPUTTAB, "18 - 25", $"{under25s}", $"{quotesValuesUnder25 / under25s}");
+            Console.WriteLine(OUTPUTTAB, "Over25", $"{over25s}", $"{quotesValuesOver25 / over25s}");
         }
 
 
@@ -319,9 +319,10 @@ namespace year1_sem2_CA1
             {
                 return true;
             }
+
             else // there was a problem
             {
-                Console.WriteLine(name + " must be a real (decimal) value.", "Entry Error");
+                Console.WriteLine($"{name} must be a real (decimal) value greater than zero.\n");
             }
             return false;
         }//END:  IsInt()
@@ -339,6 +340,8 @@ namespace year1_sem2_CA1
             {
                 return true;
             }
+            else
+                Console.WriteLine("Entry cannot be blank!\n");
             return false;
         }//END: IsPresent();
 
