@@ -45,120 +45,120 @@ namespace lab_10_more_string_handling
             string input = "";
             char prompt = '>';
 
-            ////Question 1. - unsure what question asks for....do i read in a random string from a user?            
-            //string output = ReadInput(prompt);
-            //Console.WriteLine(output + "\n");
+            //Question 1. - unsure what question asks for....do i read in a random string from a user?            
+            string output = ReadInput(prompt);
+            Console.WriteLine(output + "\n");
 
-            ////Question 2.
-            //input = GetUserInput();
-            //int lengthOfString = GetLengthOfString(input);
-            //Console.WriteLine($"That string is {lengthOfString} chars long.\n");
+            //Question 2.
+            input = GetUserInput();
+            int lengthOfString = GetLengthOfString(input);
+            Console.WriteLine($"That string is {lengthOfString} chars long.\n");
 
-            ////Question 3.
-            //Console.Write(prompt);
-            //input = GetUserInput();
-            //string trimmed = TrimString(input);
-            //Console.WriteLine(prompt + trimmed);
+            //Question 3.
+            Console.Write(prompt);
+            input = GetUserInput();
+            string trimmed = TrimString(input);
+            Console.WriteLine(prompt + trimmed);
 
-            ////Question 4.
-            //Console.Write(prompt);
-            //input = GetUserInput();
-            //string upper = ConvertToUpper(input);
-            //Console.WriteLine(upper);
+            //Question 4.
+            Console.Write(prompt);
+            input = GetUserInput();
+            string upper = ConvertToUpper(input);
+            Console.WriteLine(upper);
 
-            ////Question 5.
-            //Console.Write(prompt);
-            //input = GetUserInput();
-            //string lower = ConvertToLower(input);
-            //Console.WriteLine(lower);
+            //Question 5.
+            Console.Write(prompt);
+            input = GetUserInput();
+            string lower = ConvertToLower(input);
+            Console.WriteLine(lower);
 
-            ////Question 6.
-            //Console.Write(prompt);
-            //input = GetUserInput();
-            //Console.Write(prompt);
-            //Console.WriteLine($"The first occurance of 'g' in that string is at position {FindFirstOccurance(input, 'g')}");
+            //Question 6.
+            Console.Write(prompt);
+            input = GetUserInput();
+            Console.Write(prompt);
+            Console.WriteLine($"The first occurance of 'g' in that string is at position {FindFirstOccurance(input, 'g')}");
 
-            ////Question 7.
-            //Console.Write(prompt);
-            //input = GetUserInput();
-            //Console.Write(prompt);
-            //Console.WriteLine($"The last occurance of 'g' in that string is at position {input.LastIndexOf('g')}");
+            //Question 7.
+            Console.Write(prompt);
+            input = GetUserInput();
+            Console.Write(prompt);
+            Console.WriteLine($"The last occurance of 'g' in that string is at position {input.LastIndexOf('g')}");
 
 
-            ////Question 8.
-            //Console.Write(prompt);
-            //input = GetUserInput();
-            //Console.Write(prompt);
-            //Console.WriteLine($"The letter g occurs {FindAllOccurance(input, 'g')} times in total");
+            //Question 8.
+            Console.Write(prompt);
+            input = GetUserInput();
+            Console.Write(prompt);
+            Console.WriteLine($"The letter g occurs {FindAllOccurance(input, 'g')} times in total");
 
-            ////Question 9.
-            //char[] alphabet =  { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            //                     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+            //Question 9.
+            char[] alphabet =  { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                                 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-            //ShowAplaphabetOccurances(alphabet, "programming");
+            ShowAplaphabetOccurances(alphabet, "programming");
 
-            ////Question 10.
-            //input = GetUserInput();
-            //Console.Write($"{input} = \"I Love Sligo\": {CheckEquality(input)}");
+            //Question 10.
+            input = GetUserInput();
+            Console.Write($"{input} = \"I Love Sligo\": {CheckEquality(input)}");
 
-            ////Question 12.
-            //input = GetUserInput();
-            //BreakString(input);
+            //Question 12.
+            input = GetUserInput();
+            BreakString(input);
 
-            ////Question 13.
-            //input = GetUserInput();
-            //CountVowels(input);
+            //Question 13.
+            input = GetUserInput();
+            CountVowels(input);
 
-            ////Question 14. - skipped
-            ////count and display consonant
+            //Question 14. - skipped
+            //count and display consonant
 
-            ////Question 15.
-            //string encryptedString = EncrpytString("bats");     //will change a to b and t to s
-            //Console.WriteLine(encryptedString);
+            //Question 15.
+            string encryptedString = EncrpytString("bats");     //will change a to b and t to s
+            Console.WriteLine(encryptedString);
 
-            ////Question 16 - Password Vallidation
-            //bool valid = false;
-            //while (!valid)
-            //{
-            //    string password = GetPassword();
-            //    valid = ValidatePassword(password);
-            //    if (valid)
-            //    {
-            //        Console.WriteLine("that is a valid password");
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Invalid Password.....");
-            //    }
-            //}//END: while(notValid)
+            //Question 16 - Password Vallidation
+            bool valid = false;
+            while (!valid)
+            {
+                string password = GetPassword();
+                valid = ValidatePassword(password);
+                if (valid)
+                {
+                    Console.WriteLine("that is a valid password");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Password.....");
+                }
+            }//END: while(notValid)
 
 
             /* 
              * DisplayValueInWords() not working - out of ranfe except.
              * also posibble logic error lines 537 - 546
              */
-            //Question 18 - Cheque Writer
-            string[] chequeDetails = new string[3];     //date, name, amount
-            decimal pay = 0.0m;           
+            ////Question 18 - Cheque Writer
+            //string[] chequeDetails = new string[3];     //date, name, amount
+            //decimal pay = 0.0m;
 
-            Console.WriteLine("Q18 - Run in debug mode?  (\"Y\" / blank to use test data)");
-            input = Console.ReadLine().ToUpper();
-            
-            if (input == string.Empty || input == "Y")
-            {
-                //test data - avoid re-entering data while debugging
-                chequeDetails[0] = "27/02/21";
-                chequeDetails[1] = "Leigh";
-                chequeDetails[2] = "1212.56";
-            }
-            else
-            {
-                GetChequeDetails(chequeDetails, ref pay);
-            }
+            //Console.WriteLine("Q18 - Run in debug mode?  (\"Y\" / blank to use test data)");
+            //input = Console.ReadLine().ToUpper();
 
-            DisplayChequeDetails(chequeDetails);
-            DisplayChequeValueWords(chequeDetails);
-            //Console.WriteLine(DisplayValueInWords(Convert.ToDouble(chequeDetails[2])));
+            //if (input == string.Empty || input == "Y")
+            //{
+            //    //test data - avoid re-entering data while debugging
+            //    chequeDetails[0] = "27/02/21";
+            //    chequeDetails[1] = "Leigh";
+            //    chequeDetails[2] = "1212.56";
+            //}
+            //else
+            //{
+            //    GetChequeDetails(chequeDetails, ref pay);
+            //}
+
+            //DisplayChequeDetails(chequeDetails);
+            //DisplayChequeValueWords(chequeDetails);
+            ////Console.WriteLine(DisplayValueInWords(Convert.ToDouble(chequeDetails[2])));
 
 
             //Question 19.            
@@ -267,7 +267,7 @@ namespace lab_10_more_string_handling
         static string ConvertToUpper(string str)
         {
             //create an array of chars from the string that we can convert 
-            //each to a hex val individually
+            //each to a bytes val individually
             char[] values = str.ToCharArray();
             char letter = ' ';
             string upperStr = "";
@@ -278,7 +278,7 @@ namespace lab_10_more_string_handling
                 byte code = (byte)str[i];       //cast the current letter as a byte type
                 code -= 32;                     //-32 -> 32 places between a capital and the lowercase on ASCII chart
                 letter = (char)code;            //re-cast as a char - will now be uppercase
-                values[i] = letter;             //assign the letter to the char array
+                lvaues[i] = letter;             //assign the letter to the char array
             }
 
             foreach (char c in values)          //loop over the values array to get each letter

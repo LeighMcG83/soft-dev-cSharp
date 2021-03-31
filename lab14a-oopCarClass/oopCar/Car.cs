@@ -25,6 +25,7 @@ namespace oopCar
 
         public string Make
         {
+<<<<<<< HEAD
             get { return _make; }
 
             set
@@ -37,6 +38,24 @@ namespace oopCar
         }
 
 
+=======
+            get
+            {
+                return _make;
+            }
+            set
+            {
+                if (value.ToLower() == "vw" || value.ToLower() == "audi" || value.ToLower() == "bmw")
+                {
+                    _make = value;
+                }
+                else
+                {
+                    throw new Exception("Invalid Brand Name, must be Volkwagon, BMV or Audi");
+                }
+            }
+        }
+>>>>>>> bf9f848c96c015a5e436bfbc1be0f595ffff41b8
         public string  Model { get { return _model; } set { Model = _model; } }
 
         public string Color { get { return _color; } set { Color = _color; } }
@@ -51,6 +70,7 @@ namespace oopCar
             regCounter++;
         }
 
+<<<<<<< HEAD
         public Car(string make)
         {
             _make = make;
@@ -70,6 +90,11 @@ namespace oopCar
         public Car(string make, string model, string color)
         {
             _make = make;
+=======
+        public Car(string make, string model, string color)
+        {
+            Make = make;
+>>>>>>> bf9f848c96c015a5e436bfbc1be0f595ffff41b8
             _model = model;
             _color = color;
             _regNo = "DL " + regCounter.ToString();
