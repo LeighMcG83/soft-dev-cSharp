@@ -31,8 +31,8 @@ namespace CA3
 {
     class Team
     {
+
         //attributes
-<<<<<<< HEAD
         private string _name;
 
         private int _scored;
@@ -49,7 +49,7 @@ namespace CA3
 
         private int _draw;
 
-        private int _loss;
+        private int _lost;
 
         //static variable used to generae unique team ID's
         static int teamCounter = 0;
@@ -70,11 +70,11 @@ namespace CA3
             set { _draw = value; }
         }
 
-        public int Loss
+        public int Lost
         {
-            get { return _loss; }
+            get { return _lost; }
 
-            set { _loss = value; }
+            set { _lost = value; }
         }
 
         public int Pld
@@ -100,29 +100,6 @@ namespace CA3
         }
 
 
-=======
-        string _name = "";
-
-        int _scored;
-
-        int _conceeded;
-
-        int _pts;
-
-        int _pld;
-
-        int _teamID;
-
-
-        //properties
-        public string Name
-        {
-            get { return _name; }
-
-            set { _name = value; }
-        }
-
->>>>>>> bf9f848c96c015a5e436bfbc1be0f595ffff41b8
         public int Scored
         {
             get { return _scored; }
@@ -130,7 +107,6 @@ namespace CA3
             set { _scored = value; }
         }
 
-<<<<<<< HEAD
         public string Name
         {
             get { return _name; }
@@ -144,20 +120,10 @@ namespace CA3
 
             private set { _teamID = value; }
         }
-=======
-        public int Conceeded { get; set; }
-
-        public int Pts { get; set; }
-
-        public int Pld { get; set; }
-
-        public int TeamID { get; private set; }
->>>>>>> bf9f848c96c015a5e436bfbc1be0f595ffff41b8
 
 
         //ctors
         public Team()
-<<<<<<< HEAD
         {            
             _teamID = teamCounter;
             teamCounter++;
@@ -177,22 +143,11 @@ namespace CA3
             _conceeded = conceeded;
             _teamID = teamCounter;
             teamCounter++;
-=======
-        {
-            _teamID += 1;
-        }
-
-        public Team(string name)
-        {
-            _teamID += 1;
-            Name = name;
->>>>>>> bf9f848c96c015a5e436bfbc1be0f595ffff41b8
         }
 
 
         //methods
         public void AddMatchResult(int scored, int conceeded)
-<<<<<<< HEAD
         {            
             _scored += scored;
             _conceeded += conceeded;
@@ -210,7 +165,7 @@ namespace CA3
             }
 
             else
-                _loss++;
+                _lost++;
 
             _pld++;
 
@@ -227,31 +182,12 @@ namespace CA3
 
         public override string ToString()       
         {
+            const string DIVIDER = "---------------------------------------------------------------";
             const string DISPLAY_TAB = "{0,-5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}";
-            return String.Format(DISPLAY_TAB, $"[{_teamID}]", $" {_name}", $" {_pld}", $" {_won}", $" {_draw}", $" {_loss}", 
-                $" {_scored}", $" {_conceeded}", $" {GoalDifference()}", $" {_pts}");
-=======
-        {
-            _pld++;
-            _scored += scored;
-            _conceeded += conceeded;
 
-            if(scored > conceeded)
-            {
-                _pts += 2;
-            }
-
-            if(scored == conceeded)
-            {
-                _pts += 1;
-            }
-
-        }//END: AddMatchResult()
-
-        public override string ToString()       //virtual???
-        {
-            return String.Format($"{_teamID}", $" {this.Name}", $" {_pld}", $" {_scored}", $" {_conceeded}", $" {this.Pts}" );
->>>>>>> bf9f848c96c015a5e436bfbc1be0f595ffff41b8
+            Console.WriteLine(DIVIDER);
+            return String.Format(DISPLAY_TAB, $"[{_teamID}]", $" {_name}", $" {_pld}", $" {_won}", $" {_draw}", $" {_lost}", 
+                                              $" {_scored}", $" {_conceeded}", $" {GoalDifference()}", $" {_pts}");
         }
 
     }//END: Team class 
