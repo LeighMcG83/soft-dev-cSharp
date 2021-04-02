@@ -41,7 +41,7 @@ namespace CA3
 
         private int _pts;
 
-        private int _pld;
+        private int _gamesPlayed;
 
         private int _teamID;
 
@@ -77,11 +77,11 @@ namespace CA3
             set { _lost = value; }
         }
 
-        public int Pld
+        public int GamesPlayed
         {
-            get { return _pld; }
+            get { return _gamesPlayed; }
 
-            set { _pld = value; }
+            set { _gamesPlayed = value; }
         }
 
         public int Pts
@@ -147,7 +147,7 @@ namespace CA3
 
 
         //methods
-        public void AddMatchResult(int scored, int conceeded)
+        public virtual void AddMatchResult(int scored, int conceeded)
         {            
             _scored += scored;
             _conceeded += conceeded;
@@ -167,7 +167,7 @@ namespace CA3
             else
                 _lost++;
 
-            _pld++;
+            _gamesPlayed++;
 
         }//END: AddMatchResult()
 
@@ -175,7 +175,7 @@ namespace CA3
         /// Calculates a teams' total goal difference
         /// </summary>
         /// <returns>An int of a team-type objects' goal difference</returns>
-        public int GoalDifference()
+        public int Get_GoalDifference()
         {
             return _scored - _conceeded;
         }
@@ -186,8 +186,8 @@ namespace CA3
             const string DISPLAY_TAB = "{0,-5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}";
 
             Console.WriteLine(DIVIDER);
-            return String.Format(DISPLAY_TAB, $"[{_teamID}]", $" {_name}", $" {_pld}", $" {_won}", $" {_draw}", $" {_lost}", 
-                                              $" {_scored}", $" {_conceeded}", $" {GoalDifference()}", $" {_pts}");
+            return String.Format(DISPLAY_TAB, $"[{_teamID}]", $" {_name}", $" {_gamesPlayed}", $" {_won}", $" {_draw}", $" {_lost}", 
+                                              $" {_scored}", $" {_conceeded}", $" {Get_GoalDifference()}", $" {_pts}");
         }
 
     }//END: Team class 
