@@ -191,8 +191,6 @@ namespace CA3
 
                         teams[selected - 1].AddMatchResult(goalFor, goalAgainst);
 
-                        
-
                     } while (!isValid);
                     //while (home score !valid)
 
