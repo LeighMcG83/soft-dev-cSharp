@@ -306,7 +306,10 @@ namespace CA3
         /// <summary>
         /// Method validates a user input by checking it is between a min and max value (inclusive)
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="choice"></param>
+        /// <param name="inputLabel"></param>
+        /// <param name="minValue"></param>
+        /// <param name="maxValue"></param>
         /// <returns>True if input is between min and mas range allowed</returns>
         private static bool IsInRange(string choice, string inputLabel, int minValue, int maxValue)
         {
