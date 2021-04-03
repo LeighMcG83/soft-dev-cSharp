@@ -39,23 +39,26 @@ namespace CA3
             bool validChoice = false;
             int goalFor = 0, goalAgainst = 0;       //will taake values for each game's score (pass by ref to GetScore())
             Console.ForegroundColor = ConsoleColor.White;
-
             Team[] teams = new Team[5];
-            //{
-            //    teams[0].Name = "Manchester United";
-            //    teams[1].Name = "Oman";
-            //    teams[2].Name = "Brazil";
-            //    teams[3].Name = "Ireland";
-            //    teams[4].Name = "Cruzeiro";
-            //};
+            
+            string leagueType = DecideDefaultOrCustomTeams();
 
-
-            GetTeams(teams);
-
+            switch (leagueType)
+            {
+                case "1":
+                    CreateDefaultLeague(teams);
+                    break;
+                case "2": CreateCustomLeague(teams);
+                    break;
+                default:
+                    PrintErrorMsg("[ERROR]: Teams setup error.");
+                    break;
+            }
+           
             //main loop
             while (menuChoice != QUIT && !validChoice)
             {
-                menuChoice = GetValidMenuChoice();
+                menuChoice = PrintMainMenu();
 
                 switch (menuChoice)
                 {
@@ -75,7 +78,7 @@ namespace CA3
                         validChoice = true;
                         break;
                     default:
-                        menuChoice = GetValidMenuChoice();
+                        menuChoice = PrintMainMenu();
                         break;
 
                 }//END: switch(menuChoice)
@@ -83,6 +86,100 @@ namespace CA3
             }//END: while(!Quit)
 
         }//END: Main()
+
+
+
+        /// <summary>
+        /// Method ceates a leagefrom predetermind array of teams
+        /// </summary>
+        /// <param name="teams"></param>
+        private static void CreateDefaultLeague(Team[] teams)
+        {
+            string[] teamNames = { "Rep. of Ireland", "Oman", "Brazil", "Scotland", "England" };
+
+            for (int i = 0; i < teams.Length; i++)
+            {
+                teams[i] = new Team();
+                teams[i].Name = teamNames[i];
+            }
+            PrintSuccessMessage("[SUCCESS]: All teams entered in league");
+        }
+
+        
+        private static void CreateCustomLeague(Team[] teams)
+        {
+            for (int i = 0; i < teams.Length; i++)            
+                teams[i] = new Team();            
+
+            bool isValid;
+            Console.WriteLine("Initial League Setup");
+            Console.WriteLine(DIVIDER);
+            Console.WriteLine("Enter team names....\n");
+
+            for (int i = 0; i < teams.Length; i++)
+            {
+                do
+                {
+                    teams[i] = new Team();      //initialise objs -> team[i] will not point to ull obj when asssigning to Name
+                    Console.Write(INPUT_TAB, $"Enter Team {i + 1}'s name", ": ");
+                    string input = Console.ReadLine();
+                    isValid = IsPresent(input, "Team Name");
+                    if (isValid)                    
+                        teams[i].Name = input;                        
+                    
+                } while (!isValid);
+                
+            }//END: for(all teams)
+
+            PrintSuccessMessage("\n[SUCCESS]: All teams entered in league");
+
+        }//END: CreateCustomLeague()
+
+
+        /// <summary>
+        /// Prints a message that the action was successful. Takes a message string as param 
+        /// </summary>
+        /// <param name="msg"></param>
+        private static void PrintSuccessMessage(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.White;
+            Thread.Sleep(2000);
+            Console.Clear();
+        }
+
+
+        /// <summary>
+        /// Prints a color-coded error message to console window. Takes the string to display as message as param.
+        /// </summary>
+        /// <param name="msg"></param>
+        private static void PrintErrorMsg(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        /// <summary>
+        /// Method ask the user to use default teams or enter customised team names
+        /// </summary>
+        /// <returns>A validated string of users' choice/returns>
+        private static string DecideDefaultOrCustomTeams()
+        {
+            bool isValid = false;
+            string input;
+            do
+            {
+                Console.WriteLine(DIVIDER);
+                Console.WriteLine(MENU_TAB, "", "1. Use Default League");
+                Console.WriteLine(MENU_TAB, "", "2. Create Custom League");
+                input = Console.ReadLine();
+                isValid = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 2);
+            } while (!isValid);
+
+            return input;
+        }//END: DecideCustomOrDefault()
 
 
         /// <summary>
@@ -255,7 +352,7 @@ namespace CA3
         /// Method displays the main menu options
         /// </summary>
         /// <returns>A string of valid menu choice</returns>
-        private static string GetValidMenuChoice()
+        private static string PrintMainMenu()
         {
             bool isValid;
             string choice; 
@@ -289,15 +386,10 @@ namespace CA3
         private static bool IsPresent(string menuChoice, string inputLabel)
         {
             if (menuChoice != String.Empty)
-            {
-                return true;
-            }
+                return true;            
             else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\n[ERROR]: {inputLabel} cannot be blank\n");
-                Console.ForegroundColor = ConsoleColor.White;
-
+            { 
+                PrintErrorMsg($"\n[ERROR]: {inputLabel} cannot be blank\n");
                 return false;
             }
         }//END: IsPresent();
@@ -322,9 +414,7 @@ namespace CA3
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\n[ERROR]: {inputLabel} must be a number between {minValue} & {maxValue}\n");
-                Console.ForegroundColor = ConsoleColor.White;
+                PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number between {minValue} & {maxValue}\n");
             }
 
             return isValid;
@@ -341,20 +431,18 @@ namespace CA3
         /// <returns>true, if input can be converted to an int, else returns false</returns>
         static bool IsPostiveInt(string textIn, string inputLabel)
         {
-            if (int.TryParse(textIn, out int num) == true)
+            bool isPositive = false;
+
+            if (int.TryParse(textIn, out int num) == true) 
             {
-                if (num >= 0)                
+                if (num >= 0)
                     return true;
-                
+                //isPositive = num >= 0 ? true : false;
             }
             else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\n[ERROR]: " + inputLabel + " must be a number.\n");
-                Console.ForegroundColor = ConsoleColor.White;
-            }
+                PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number greater than zero.\n");
 
-            return false;
+            return isPositive;
         }//END:  IsInt()
 
 
