@@ -27,53 +27,45 @@ namespace CA3
     {
         const string DIVIDER = "---------------------------------------------------------------";
         const string INPUT_TAB = "{0, -35}{1, 5}";
-        const string MENU_TAB = "{0, 10}{1, -20}";
+        const string INDENTED_TAB = "{0, 10}{1, -20}";
         const string DISPLAY_TAB = "{0, -5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}";
 
 
         static void Main(string[] args)
         {
             //setup
-            const string QUIT = "3";
+            const string QUIT = "Q";
             string menuChoice = "";
             bool validChoice = false;
             int goalFor = 0, goalAgainst = 0;       //will taake values for each game's score (pass by ref to GetScore())
             Console.ForegroundColor = ConsoleColor.White;
             Team[] teams = new Team[5];
-            
-            string leagueType = DecideDefaultOrCustomTeams();
 
-            switch (leagueType)
-            {
-                case "1":
-                    CreateDefaultLeague(teams);
-                    break;
-                case "2": CreateCustomLeague(teams);
-                    break;
-                default:
-                    PrintErrorMsg("[ERROR]: Teams setup error.");
-                    break;
-            }
-           
+            string leagueType = DecideDefaultOrCustomTeams();
+            BuildLeagueTable(teams, leagueType);
+
             //main loop
-            while (menuChoice != QUIT && !validChoice)
+            while (menuChoice.ToUpper() != QUIT && !validChoice)
             {
                 menuChoice = PrintMainMenu();
 
                 switch (menuChoice)
                 {
                     case "1":
-                        int selectedTeam = GetTeamToEnterResultsFor(teams);  //return an index for the selected team
+                        int selectedTeam = GetTeamIndex(teams);  //return an index for the selected team
                         GetScore(ref goalFor, ref goalAgainst, selectedTeam, teams);
                         validChoice = false;    //reset to loop back into menu
                         break;
                     case "2":
-                        Console.Clear();
-                        Console.WriteLine("\n" + DIVIDER);
                         PrintLeagueTable(teams);
                         validChoice = false;
                         break;
                     case "3":
+                        DisplayTeamNames(teams);
+                        leagueType = DecideDefaultOrCustomTeams();
+                        BuildLeagueTable(teams, leagueType);
+                        break;
+                    case "4":
                         Console.WriteLine("You chose to Exit");
                         validChoice = true;
                         break;
@@ -86,6 +78,28 @@ namespace CA3
             }//END: while(!Quit)
 
         }//END: Main()
+
+
+        /// <summary>
+        /// Method creates a league table. Takes parameters for the teams to enter and league type, default or custom
+        /// </summary>
+        /// <param name="teams"></param>
+        /// <param name="leagueType"></param>
+        private static void BuildLeagueTable(Team[] teams, string leagueType)
+        {
+            switch (leagueType)
+            {
+                case "1":
+                    CreateDefaultLeague(teams);
+                    break;
+                case "2":
+                    CreateCustomLeague(teams);
+                    break;
+                default:
+                    PrintErrorMsg("\n[ERROR]: Teams setup error.\n");
+                    break;
+            }
+        }//END:BuildLeagueTable()
 
 
 
@@ -102,7 +116,7 @@ namespace CA3
                 teams[i] = new Team();
                 teams[i].Name = teamNames[i];
             }
-            PrintSuccessMessage("[SUCCESS]: All teams entered in league");
+            PrintSuccessMessage("\n[SUCCESS]: All teams entered in league\n");
         }
 
         
@@ -131,7 +145,7 @@ namespace CA3
                 
             }//END: for(all teams)
 
-            PrintSuccessMessage("\n[SUCCESS]: All teams entered in league");
+            PrintSuccessMessage("\n[SUCCESS]: All teams entered in league\n");
 
         }//END: CreateCustomLeague()
 
@@ -172,10 +186,14 @@ namespace CA3
             do
             {
                 Console.WriteLine(DIVIDER);
-                Console.WriteLine(MENU_TAB, "", "1. Use Default League");
-                Console.WriteLine(MENU_TAB, "", "2. Create Custom League");
+                Console.WriteLine(INDENTED_TAB, "", "League Teams Setup");
+                Console.WriteLine(DIVIDER);
+                Console.WriteLine(INDENTED_TAB, "", "1. Use Default League");
+                Console.WriteLine(INDENTED_TAB, "", "2. Create Custom League");
+                Console.WriteLine(INDENTED_TAB, "", "3. Back");
+                Console.Write(INDENTED_TAB, "", "\nChoice:");
                 input = Console.ReadLine();
-                isValid = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 2);
+                isValid = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 3);
             } while (!isValid);
 
             return input;
@@ -188,15 +206,22 @@ namespace CA3
         /// <param name="teams"></param>
         private static void PrintLeagueTable(Team[] teams)
         {
+            Console.Clear();
+            Console.WriteLine("\n" + DIVIDER);
+            Console.WriteLine(INDENTED_TAB, "", "League Table");
+            Console.WriteLine(DIVIDER);
             Console.WriteLine(DISPLAY_TAB, "ID", "Team Name", "Pld", "Won", "Drawn", "Lost", "For", "Agt", "+/-", "Pts");
 
-            foreach (var team in teams)
-            {
+            foreach (var team in teams)            
                 Console.WriteLine(team.ToString());
-            }
+
+            Console.WriteLine(INDENTED_TAB, "", "\nPress any key to return to Main Menu");
+            Console.Read();
         }
 
 
+        /*
+         * ***** COMMENTED OUT - USING CreateCustomLeague
         /// <summary>
         /// Method prompts user to enter all teams in the league
         /// </summary>
@@ -222,17 +247,14 @@ namespace CA3
                     {
 
                     }
-                
+
                 }//END: if)input valid)
 
             }
-
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("\n[SUCCESS]: All teams entered in league");
-            Console.ForegroundColor = ConsoleColor.White;
-
-
+        
+            PrintSuccessMsg("\n[SUCCESS]: All teams entered in league"):
         }
+        */
 
 
         /// <summary>
@@ -260,7 +282,7 @@ namespace CA3
                     
                     do
                     {
-                        Console.Write(MENU_TAB, "", "Home: ");
+                        Console.Write(INDENTED_TAB, "", "Home: ");
                         string input = Console.ReadLine();
                         isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
                         if (isValid)
@@ -268,7 +290,7 @@ namespace CA3
                             goalFor = Convert.ToInt32(input);
                             do
                             {
-                                Console.Write(MENU_TAB, "", "Away: ");
+                                Console.Write(INDENTED_TAB, "", "Away: ");
                                 input = Console.ReadLine();
                                 isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
 
@@ -305,7 +327,7 @@ namespace CA3
         /// Method displays the list oof teams in the league and asks user to select one
         /// </summary>
         /// <returns>The team number of a team in the league</returns>
-        private static int GetTeamToEnterResultsFor(Team[] teams)
+        private static int GetTeamIndex(Team[] teams)
         {
             Console.Clear();
             DisplayTeamNames(teams);
@@ -336,16 +358,14 @@ namespace CA3
         /// <param name="teams"></param>
         private static void DisplayTeamNames(Team[] teams)
         {
-            Console.WriteLine();
+            Console.Clear();
+            Console.WriteLine("\n" + DIVIDER);
             for (int i = 0; i < teams.Length; i++)
             {
                 Console.WriteLine($"{i + 1}. " +  teams[i].Name);
             }
             Console.WriteLine();
         }
-
-
-
 
 
         /// <summary>
@@ -356,18 +376,21 @@ namespace CA3
         {
             bool isValid;
             string choice; 
+
             do
             {
+                Console.Clear();
                 Console.WriteLine("\n" + DIVIDER);
-                Console.WriteLine(MENU_TAB, "", "MAIN MENU");
+                Console.WriteLine(INDENTED_TAB, "", "MAIN MENU");
                 Console.WriteLine(DIVIDER);
-                Console.WriteLine(MENU_TAB, "", "1. Add Results");
-                Console.WriteLine(MENU_TAB, "", "2. View League Table");
-                Console.WriteLine(MENU_TAB, "", "3. Exit");
+                Console.WriteLine(INDENTED_TAB, "", "1. Add Results");
+                Console.WriteLine(INDENTED_TAB, "", "2. View League Table");
+                Console.WriteLine(INDENTED_TAB, "", "3. Modify Entered Teams");
+                Console.WriteLine(INDENTED_TAB, "", "4. Exit");
                 Console.WriteLine("\n");
-                Console.Write(MENU_TAB, "", "Select option: ");
+                Console.Write(INDENTED_TAB, "", "Select option: ");
                 choice = Console.ReadLine();
-                isValid = IsPresent(choice, "Menu Choice") && IsPostiveInt(choice, "Menu Choice") && IsInRange(choice, "Menu Choice", 1, 3);
+                isValid = IsPresent(choice, "Menu Choice") && IsPostiveInt(choice, "Menu Choice") && IsInRange(choice, "Menu Choice", 1, 4);
 
             } while (!isValid);
 
@@ -406,16 +429,11 @@ namespace CA3
         private static bool IsInRange(string choice, string inputLabel, int minValue, int maxValue)
         {
             int intChoice = Convert.ToInt32(choice);
-            bool isValid = false;
 
-            if (intChoice >= minValue && intChoice <= maxValue)
-            {
-                isValid = true;
-            }
-            else
-            {
+            bool isValid = intChoice >= minValue && intChoice <= maxValue ? true : false;
+            
+            if(!isValid)
                 PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number between {minValue} & {maxValue}\n");
-            }
 
             return isValid;
         }//END: IsInRange()
@@ -434,13 +452,11 @@ namespace CA3
             bool isPositive = false;
 
             if (int.TryParse(textIn, out int num) == true) 
-            {
-                if (num >= 0)
-                    return true;
-                //isPositive = num >= 0 ? true : false;
+            {                
+                isPositive = num >= 0 ? true : false;
+                if(!isPositive)
+                    PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number greater than zero.\n");
             }
-            else
-                PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number greater than zero.\n");
 
             return isPositive;
         }//END:  IsInt()
