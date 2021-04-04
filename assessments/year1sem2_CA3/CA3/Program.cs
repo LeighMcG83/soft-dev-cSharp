@@ -41,7 +41,12 @@ namespace CA3
             Console.ForegroundColor = ConsoleColor.White;
             Team[] teams = new Team[5];
 
+
+            string leagueAge = DecideLeagueAge();
+
             string leagueType = DecideDefaultOrCustomTeams();
+            //BuildLeagueTable(teams, leagueType, leagueAge);
+
             BuildLeagueTable(teams, leagueType);
 
             //main loop
@@ -78,6 +83,26 @@ namespace CA3
             }//END: while(!Quit)
 
         }//END: Main()
+
+
+
+        private static string DecideLeagueAge()
+        {
+            bool isValid = false;
+            string input = "";
+            do
+            {
+                Console.WriteLine("What type of League do you want to create?");
+                Console.WriteLine(INDENTED_TAB, "", "1. Senior League");
+                Console.WriteLine(INDENTED_TAB, "", "2. Junior League");
+                Console.Write(INDENTED_TAB, "", "Choice: ");
+                input = Console.ReadLine();
+                isValid = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 2);
+            } while (!isValid);
+
+            return input;
+        }
+
 
 
         /// <summary>
@@ -210,7 +235,7 @@ namespace CA3
             Console.WriteLine("\n" + DIVIDER);
             Console.WriteLine(INDENTED_TAB, "", "League Table");
             Console.WriteLine(DIVIDER);
-            Console.WriteLine(DISPLAY_TAB, "ID", "Team Name", "Pld", "Won", "Drawn", "Lost", "For", "Agt", "+/-", "Pts");
+            Console.WriteLine(DISPLAY_TAB, "ID", "Team Name", "Pld", "Won", "Drawn", "Lost", "For", "Agst", "+/-", "Pts");
 
             foreach (var team in teams)            
                 Console.WriteLine(team.ToString());
@@ -309,6 +334,19 @@ namespace CA3
                         }//END: if(home == valid)
 
                         teams[selected - 1].AddMatchResult(goalFor, goalAgainst);
+
+
+                        /* below stores match details for every team as if they are the away team*/
+
+                        //for (int j = 0; j < teams.Length; j++)
+                        //{
+                        //    if (teams[j] != null && j != (selected - 1) && j != selected)
+                        //    {
+                        //        teams[j].AddMatchResult(goalAgainst, goalFor);
+                        //    }
+                            
+                        //}
+                        
 
                     } while (!isValid);
                     //while (home score !valid)

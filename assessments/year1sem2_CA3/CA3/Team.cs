@@ -121,7 +121,6 @@ namespace CA3
             private set { _teamID = value; }
         }
 
-
         //ctors
         public Team()
         {            
