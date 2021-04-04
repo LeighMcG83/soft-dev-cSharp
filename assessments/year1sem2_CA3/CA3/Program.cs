@@ -38,7 +38,9 @@ namespace CA3
             string menuChoice = "";
             bool validChoice = false;
             int goalFor = 0, goalAgainst = 0;       //will taake values for each game's score (pass by ref to GetScore())
-            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.WriteLine("TEST");
+            //Console.ForegroundColor = ConsoleColor.White;
             Team[] teams = new Team[5];
 
 
@@ -85,14 +87,19 @@ namespace CA3
         }//END: Main()
 
 
-
+        /// <summary>
+        /// Method prompts the user to enter teams to compete in the league
+        /// </summary>
+        /// <returns>A validated string for league choice</returns>
         private static string DecideLeagueAge()
         {
             bool isValid = false;
             string input = "";
             do
             {
+                Console.WriteLine(DIVIDER);
                 Console.WriteLine("What type of League do you want to create?");
+                Console.WriteLine(DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "1. Senior League");
                 Console.WriteLine(INDENTED_TAB, "", "2. Junior League");
                 Console.Write(INDENTED_TAB, "", "Choice: ");
@@ -101,7 +108,7 @@ namespace CA3
             } while (!isValid);
 
             return input;
-        }
+        }//END: DecideLeagueAge()
 
 
 
@@ -144,7 +151,10 @@ namespace CA3
             PrintSuccessMessage("\n[SUCCESS]: All teams entered in league\n");
         }
 
-        
+        /// <summary>
+        /// Method creates a league made of user entered teams
+        /// </summary>
+        /// <param name="teams"></param>
         private static void CreateCustomLeague(Team[] teams)
         {
             for (int i = 0; i < teams.Length; i++)            
@@ -162,7 +172,7 @@ namespace CA3
                     teams[i] = new Team();      //initialise objs -> team[i] will not point to ull obj when asssigning to Name
                     Console.Write(INPUT_TAB, $"Enter Team {i + 1}'s name", ": ");
                     string input = Console.ReadLine();
-                    isValid = IsPresent(input, "Team Name");
+                    isValid = IsPresent(input, "Team Name") && !IsNumeric(input, "Team Name");
                     if (isValid)                    
                         teams[i].Name = input;                        
                     
@@ -499,8 +509,27 @@ namespace CA3
             return isPositive;
         }//END:  IsInt()
 
+        /// <summary>
+        /// Method checks if a string is numeric only
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="inputLabel"></param>
+        /// <returns>Returns true if string contains only numeric chars, else returns false</returns>
+        private static bool IsNumeric(string input, string inputLabel)
+        {
+            string letter = "";
+            for (int i = 0; i < input.Length; i++)
+            {
+                letter = Convert.ToString(input[i]);
+                if (int.TryParse(letter, out int result))
+                    return true;                
+            }
 
-       
+            PrintErrorMsg($"\n{inputLabel} must not be only numeric.\n");
+            return false;
+
+        }//END: IsNumeric()
+
 
     }//END: class Program
 }
