@@ -50,46 +50,47 @@ namespace CA3
             do
             {
                 leagueAge = DecideLeagueAge(ref validChoice);
-                if (validChoice)                
-                    leagueType = DecideDefaultOrCustomTeams(ref validChoice);                               
-                                
-                if (leagueType != QUIT && validChoice)
+                if (leagueAge != QUIT && validChoice)
                 {
-                    BuildLeagueTable(teams, leagueType);
-                    //BuildLeagueTable(teams, leagueType, leagueAge);
-
-                    //main loop
-                    while (menuChoice.ToUpper() != QUIT && !validChoice)
+                    leagueType = DecideDefaultOrCustomTeams(ref validChoice);
+                    if (leagueType != QUIT)
                     {
-                        menuChoice = PrintMainMenu();
+                        BuildLeagueTable(teams, leagueType);
+                        //BuildLeagueTable(teams, leagueType, leagueAge);
+                        menuChoice = leagueType;
 
-                        switch (menuChoice)
+                        while (menuChoice != QUIT && !validChoice)
                         {
-                            case "1":
-                                int selectedTeam = GetTeamIndex(teams);  //return an index for the selected team
-                                GetScore(ref goalFor, ref goalAgainst, selectedTeam, teams);
-                                validChoice = false;    //reset to loop back into menu
-                                break;
-                            case "2":
-                                PrintLeagueTable(teams);
-                                validChoice = false;
-                                break;
-                            case "3":
-                                DisplayTeamNames(teams);
-                                leagueType = DecideDefaultOrCustomTeams(ref validChoice);
-                                BuildLeagueTable(teams, leagueType);
-                                break;
-                            case "4":
-                                Console.WriteLine("You chose to Exit");
-                                validChoice = true;
-                                break;
-                            default:
-                                menuChoice = PrintMainMenu();
-                                break;
+                            menuChoice = PrintMainMenu();
 
-                        }//END: switch(menuChoice)
+                            switch (menuChoice)
+                            {
+                                case "1":
+                                    int selectedTeam = GetTeamIndex(teams);  //return an index for the selected team
+                                    GetScore(ref goalFor, ref goalAgainst, selectedTeam, teams);
+                                    validChoice = false;    //reset to loop back into menu
+                                    break;
+                                case "2":
+                                    PrintLeagueTable(teams);
+                                    validChoice = false;
+                                    break;
+                                case "3":
+                                    DisplayTeamNames(teams);
+                                    leagueType = DecideDefaultOrCustomTeams(ref validChoice);
+                                    BuildLeagueTable(teams, leagueType);
+                                    break;
+                                case "4":
+                                    Console.WriteLine("You chose to Exit");
+                                    validChoice = true;
+                                    break;
+                                default:
+                                    menuChoice = PrintMainMenu();
+                                    break;
 
-                    }//END: while(!Quit && !valid)            
+                            }//END: switch(menuChoice)
+
+                        }//END: while(!Quit && !valid)      
+                    }
                 }//END: if(  )
 
             } while (leagueAge != "3");
@@ -105,20 +106,19 @@ namespace CA3
         /// <returns>A validated string for league choice</returns>
         private static string DecideLeagueAge(ref bool validChoice)
         {
-            bool isValid = false;
             string input = "";
             do
             {
                 Console.WriteLine(DIVIDER);
-                Console.WriteLine("What type of League do you want to create?");
+                Console.WriteLine(INDENTED_TAB, "", "What type of League do you want to create?");
                 Console.WriteLine(DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "1. Senior League");
                 Console.WriteLine(INDENTED_TAB, "", "2. Junior League");
                 Console.WriteLine(INDENTED_TAB, "", "3. Exit\n");
                 Console.Write(INDENTED_TAB, "", "Choice: ");
                 input = Console.ReadLine();
-                isValid = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 3);
-            } while (!isValid);
+                validChoice = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 3);
+            } while (!validChoice);
 
             return input;
         }//END: DecideLeagueAge()
@@ -142,6 +142,8 @@ namespace CA3
                     break;
                 default:
                     PrintErrorMsg("\n[ERROR]: Teams setup error.\n");
+                    Console.WriteLine("Closing Program");
+                    Thread.Sleep(3000);
                     break;
             }
         }//END:BuildLeagueTable()
@@ -234,7 +236,7 @@ namespace CA3
                 Console.WriteLine(DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "League Teams Setup");
                 Console.WriteLine(DIVIDER);
-                Console.WriteLine(INDENTED_TAB, "", "1. Use Default League");
+                Console.WriteLine(INDENTED_TAB, "", "1. Use Default Teams");
                 Console.WriteLine(INDENTED_TAB, "", "2. Create Custom League");
                 Console.WriteLine(INDENTED_TAB, "", "3. Back\n");
                 Console.Write(INDENTED_TAB, "", "Choice:");
