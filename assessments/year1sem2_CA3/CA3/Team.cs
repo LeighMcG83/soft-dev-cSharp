@@ -91,14 +91,12 @@ namespace CA3
             set { _pts = value; }
         }
 
-
         public int Conceeded
         {
             get { return _conceeded; }
 
             set { _conceeded = value; }
         }
-
 
         public int Scored
         {
@@ -114,12 +112,6 @@ namespace CA3
             set { _name = value; }
         }
 
-        public int TeamID
-        {
-            get { return _teamID; }
-
-            private set { _teamID = value; }
-        }
 
         //ctors
         public Team()
@@ -169,6 +161,7 @@ namespace CA3
             _gamesPlayed++;
 
         }//END: AddMatchResult()
+
 
         /// <summary>
         /// Calculates a teams' total goal difference

@@ -11,59 +11,63 @@ namespace lab14_opp
         private string _gender;
         private string _name;
         private int _employeeNumber;
-        private string _nationality;    
-        private decimal _tax, _salary;      //should these be Properties or attributes???
+        private string _nationality;
+        private decimal _tax;
+        private decimal _salary;
+        private decimal _hourlyRate;
+        private int _hours;
 
         // static variable belong to class, no individual object has this
         public static int lastEmployeeNumber;
         
+
         // Name property used to get and set the name attribute of an object
+
+        public int Hours
+        {
+            get { return _hours; }
+            set { _hours = value; }
+        }
+
         public string Name
         {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
+            get { return _name; }
+            set { _name = value; }
         }
         
         public string Nationality
         {
-            get
-            {
-                return _nationality;
-            }
+            get  {  return _nationality;  }
             set
             {
                 if (value == "British")         //if the string "British" is passed as arg @ instantiation
-                    value = "Visa Required";
+                    _nationality = "Visa Required";
+                else
+                    _nationality = value;
             }
         }
 
         // Gender property used to get and set the gender attribute of an object
         public string Gender
         {
-            get
-            {
-                return _gender;
-            }
-            set
-            {
-                _gender = value;
-            }
+            get  {  return _gender; }
+            set {  _gender = value; }
+        }
+
+        public decimal HourlyRate
+        {
+            get { return _hourlyRate; }
+            set { _hourlyRate = value; }
         }
 
         //ctors
-
         /// <summary>
         /// Default Contructor
         /// </summary>
         public Employee()
         {
-
+            _employeeNumber = lastEmployeeNumber + 1;
+            lastEmployeeNumber++;
         }
 
         /// <summary>
@@ -72,19 +76,44 @@ namespace lab14_opp
         /// <param name="nationality"></param>
         public Employee(string nationality)
         {
+            _employeeNumber = lastEmployeeNumber + 1;
+            lastEmployeeNumber++;
             _nationality = nationality;
         }
 
         public Employee(decimal salary)
         {
+            _employeeNumber = lastEmployeeNumber + 1;
+            lastEmployeeNumber++;
             _salary = salary;
         }
 
         public Employee(int number)
         {
+            _employeeNumber = lastEmployeeNumber + 1;
+            lastEmployeeNumber++;
             _employeeNumber = number;
         }
-        
+
+        public Employee(string name, string gender, decimal hourly)
+        {
+            _employeeNumber = lastEmployeeNumber + 1;
+            lastEmployeeNumber++;
+            _name = name;
+            _gender = gender;
+            _hourlyRate = hourly;
+        }
+
+        public Employee(string name, string gender, decimal hourly, int hours)
+        {
+            _employeeNumber = lastEmployeeNumber + 1;
+            lastEmployeeNumber++;
+            _name = name;
+            _gender = gender;
+            _hourlyRate = hourly;
+            _hours = hours;
+        }
+
         //class Methods
 
         /// <summary>
@@ -94,7 +123,17 @@ namespace lab14_opp
         /// <returns>The tax due, calculated at 40%</returns>
         public decimal CalcTax(decimal salary)
         {
-            return salary * 0.4m; 
+            _tax = salary * 0.4m;
+            return _tax; 
+        }
+
+        /// <summary>
+        /// Method subtracts tax to basic salary
+        /// </summary>
+        /// <returns>Decimal of the Nett Pay</returns>
+        public virtual decimal CalcPay()
+        {
+            return _salary - _tax;
         }
 
         /// <summary>

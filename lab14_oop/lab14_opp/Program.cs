@@ -47,11 +47,11 @@ namespace lab14_opp
             {
                 Console.WriteLine($"Radius of circle {i + 1}: {circles[i].Radius}");
             }
-            
+
             //q2 (xi)
             Console.WriteLine();
             Console.WriteLine($"Area of first circle: {circles[0].GetArea()}");
-            Console.WriteLine($"Area of last circle: {circles[circles.Length - 1].GetArea()}");        
+            Console.WriteLine($"Area of last circle: {circles[circles.Length - 1].GetArea()}");
 
             //q2.(xii)
             Console.WriteLine($"3rd circle details: {circles[2].ToString()}");
@@ -66,7 +66,7 @@ namespace lab14_opp
 
             //q3.1 (iii)
             //default .ToString()
-            Console.WriteLine($"\nNew employees details: {newEmployee.ToString()}"); 
+            Console.WriteLine($"\nNew employees details: {newEmployee.ToString()}");
 
             //q3.1 (iv)
             Employee employee2 = new Employee();
@@ -91,6 +91,79 @@ namespace lab14_opp
             Console.WriteLine($"Tax: {employee4.CalcTax(20000):c2}");
 
 
+
+            //LAB14 2.2 - Inheritance
+            Employee[] AllEmployees = new Employee[4];
+
+            AllEmployees[0] = new PartTimeEmployee("frank", "male", 20, 10);
+            AllEmployees[1] = new PartTimeEmployee("owen", "male", 20, 15);
+            AllEmployees[2] = new Employee("tara", "female", 50);
+            AllEmployees[3] = new PartTimeEmployee();
+
+            for (int i = 0; i < 4; i++)
+            {
+                Console.WriteLine(AllEmployees[i].ToString());
+                Console.WriteLine("Your pay = " + AllEmployees[i].CalcPay());
+
+            }
+
+            Console.WriteLine("\n----------------------------------------\n");
+            // •	Create an array of 5 employees, add two Employees and three part time employees to the array
+            Employee[] AllEmployees2 = new Employee[5];
+
+            for (int i = 0; i < AllEmployees2.Length; i++)
+            {
+                if (i < 3)
+                {
+                    string gender = GetGender();
+                    string name = GetEmployeeName();
+                    decimal rate = GetHourlyRate();
+                    int hours = GetHoursWorked();
+                    AllEmployees2[i] = new PartTimeEmployee(gender, name, rate, hours);
+                }
+                else
+                {
+                    string gender = GetGender();
+                    string name = GetEmployeeName();
+                    decimal rate = GetHourlyRate();
+                    int hours = GetHoursWorked();
+                    AllEmployees2[i] = new Employee(gender, name, rate, hours);
+                }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                Console.WriteLine(AllEmployees2[i].ToString());
+                Console.WriteLine("Your pay = " + AllEmployees2[i].CalcPay());
+
+            }
+
         }//END: Main()
+
+        private static string GetGender()
+        {
+            Console.Write("Enter Employee gender: ");
+            return Console.ReadLine();
+        }
+
+        public static string GetEmployeeName()
+        {
+            Console.Write("Enter Employee name: ");
+            return Console.ReadLine();
+
+        }
+
+        public static decimal GetHourlyRate()
+        {
+            Console.Write("Enter Hourly Rate of pay: ");
+            return Convert.ToDecimal(Console.ReadLine());
+        }
+
+        public static int GetHoursWorked()
+        {
+            Console.Write("Enter Hours worked: ");
+            return Convert.ToInt32(Console.ReadLine());
+        }
+
     }
 }

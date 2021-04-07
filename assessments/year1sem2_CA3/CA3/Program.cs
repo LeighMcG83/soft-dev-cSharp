@@ -11,7 +11,10 @@
  *            |  Add: print league table in descending order (pts, then goal diff_
  *            |  Add: 
  * -----------|-----------------------------------------------------------------------------------
- * BUGS:      | 
+ * BUGS:      | AddMatchResults() in GetScores():  stores match details for every team as if they 
+ *            |                                    are the away team
+ *            |  Error messaf=ge not printing id home goals is alpha
+ *            |  Fix AddTeam()
  * -----------|-----------------------------------------------------------------------------------*/
 
 
@@ -20,6 +23,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CA3
 {
@@ -34,22 +38,21 @@ namespace CA3
         static void Main(string[] args)
         {
             //setup
-            const string QUIT = "Q";
+            const string QUIT = "3";
             string menuChoice = "";
             bool validChoice = false;
             int goalFor = 0, goalAgainst = 0;       //will taake values for each game's score (pass by ref to GetScore())
+            string leagueAge = "";
 
-            Console.WriteLine("TEST");
-            //Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.White;
             Team[] teams = new Team[5];
-
-
-            string leagueAge = DecideLeagueAge();
+            
+            leagueAge = DecideLeagueAge();
 
             string leagueType = DecideDefaultOrCustomTeams();
-            //BuildLeagueTable(teams, leagueType, leagueAge);
-
+           
             BuildLeagueTable(teams, leagueType);
+            //BuildLeagueTable(teams, leagueType, leagueAge);
 
             //main loop
             while (menuChoice.ToUpper() != QUIT && !validChoice)
@@ -82,7 +85,7 @@ namespace CA3
 
                 }//END: switch(menuChoice)
 
-            }//END: while(!Quit)
+            }//END: while(!Quit && !valid)            
 
         }//END: Main()
 
@@ -102,9 +105,10 @@ namespace CA3
                 Console.WriteLine(DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "1. Senior League");
                 Console.WriteLine(INDENTED_TAB, "", "2. Junior League");
+                Console.WriteLine(INDENTED_TAB, "", "3. Exit\n");
                 Console.Write(INDENTED_TAB, "", "Choice: ");
                 input = Console.ReadLine();
-                isValid = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 2);
+                isValid = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 3);
             } while (!isValid);
 
             return input;
@@ -132,7 +136,6 @@ namespace CA3
                     break;
             }
         }//END:BuildLeagueTable()
-
 
 
         /// <summary>
@@ -172,7 +175,7 @@ namespace CA3
                     teams[i] = new Team();      //initialise objs -> team[i] will not point to ull obj when asssigning to Name
                     Console.Write(INPUT_TAB, $"Enter Team {i + 1}'s name", ": ");
                     string input = Console.ReadLine();
-                    isValid = IsPresent(input, "Team Name") && !IsNumeric(input, "Team Name");
+                    isValid = IsPresent(input, "Team Name") && IsAlpha(input, "Team Name");
                     if (isValid)                    
                         teams[i].Name = input;                        
                     
@@ -250,46 +253,9 @@ namespace CA3
             foreach (var team in teams)            
                 Console.WriteLine(team.ToString());
 
-            Console.WriteLine(INDENTED_TAB, "", "\nPress any key to return to Main Menu");
+            Console.WriteLine(INDENTED_TAB, "", "\nPress Enter key to return to Main Menu");
             Console.Read();
         }
-
-
-        /*
-         * ***** COMMENTED OUT - USING CreateCustomLeague
-        /// <summary>
-        /// Method prompts user to enter all teams in the league
-        /// </summary>
-        /// <param name="teams"></param>
-        private static void GetTeams(Team[] teams)
-        {
-            bool isValid;
-            Console.WriteLine("Initial League Setup");
-            Console.WriteLine(DIVIDER);
-            Console.WriteLine("Enter team names....\n");
-
-            for (int i = 0; i < teams.Length; i++)  //initialise objs -> team[i] will not point to ull obj when asssigning to Name
-            {
-                teams[i] = new Team();
-                Console.Write(INPUT_TAB, $"Enter Team {i + 1}'s name", ": ");
-                string input = Console.ReadLine();
-                isValid = IsPresent(input, "Team Name");
-                if (isValid)
-                {
-                    teams[i].Name = input;
-
-                    for (int j = 0; j < teams.Length; j++)
-                    {
-
-                    }
-
-                }//END: if)input valid)
-
-            }
-        
-            PrintSuccessMsg("\n[SUCCESS]: All teams entered in league"):
-        }
-        */
 
 
         /// <summary>
@@ -407,10 +373,12 @@ namespace CA3
         private static void DisplayTeamNames(Team[] teams)
         {
             Console.Clear();
-            Console.WriteLine("\n" + DIVIDER);
+            Console.WriteLine(DIVIDER);
+            Console.WriteLine(INDENTED_TAB, "", "Currently entered teams");
+            Console.WriteLine(DIVIDER);
             for (int i = 0; i < teams.Length; i++)
             {
-                Console.WriteLine($"{i + 1}. " +  teams[i].Name);
+                Console.WriteLine(INDENTED_TAB, "", $"{i + 1}. " +  teams[i].Name);
             }
             Console.WriteLine();
         }
@@ -515,20 +483,24 @@ namespace CA3
         /// <param name="input"></param>
         /// <param name="inputLabel"></param>
         /// <returns>Returns true if string contains only numeric chars, else returns false</returns>
-        private static bool IsNumeric(string input, string inputLabel)
+        private static bool IsAlpha(string input, string inputLabel)
         {
             string letter = "";
+ 
             for (int i = 0; i < input.Length; i++)
             {
                 letter = Convert.ToString(input[i]);
                 if (int.TryParse(letter, out int result))
-                    return true;                
+                {
+                    PrintErrorMsg($"\n{inputLabel} must not be only numeric.\n");
+                    return false;
+                }
             }
 
-            PrintErrorMsg($"\n{inputLabel} must not be only numeric.\n");
-            return false;
+            return true;
 
         }//END: IsNumeric()
+
 
 
     }//END: class Program

@@ -32,13 +32,13 @@ namespace CA3
 
             if (scored > conceeded)
             {
-                Pts += 2;
+                Pts += 3;
                 Won++;
             }
 
             else if (scored == conceeded)
             {
-                Pts += 1;
+                Pts += 2;
                 Draw++;
             }
 
