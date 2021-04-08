@@ -8,13 +8,10 @@
  * -----------|-----------------------------------------------------------------------------------
  * Mods:      | x Add: goal difference to table
  *            | x Add: track number wins draws, losses and add to table
- *            |  Add: print league table in descending order (pts, then goal diff_
- *            |  Add: 
+ *            |  Add: print league table in descending order (pts, then goal diff_ 
  * -----------|-----------------------------------------------------------------------------------
- * BUGS:      | AddMatchResults() in GetScores():  stores match details for every team as if they 
- *            |                                    are the away team
- *            |  Error messaf=ge not printing id home goals is alpha
- *            |  Fix AddTeam()
+ * BUGS:      |  - Error message not printing if home goals is alpha
+ *            |  - IsPositveInt(): not printing error message when neg value entered in DecideDefaultOrCustomTeams()
  * -----------|-----------------------------------------------------------------------------------*/
 
 
@@ -43,61 +40,63 @@ namespace CA3
             string menuChoice = "";
             bool validChoice = false;
             int goalFor = 0, goalAgainst = 0;       //will take values for each game's score (pass by ref to GetScore())
-            string leagueAge = "", leagueType = "";
+            string leagueAge, leagueType;
             Team[] teams = new Team[5];
             Console.ForegroundColor = ConsoleColor.White;
 
             do
             {
                 leagueAge = DecideLeagueAge(ref validChoice);
-                if (leagueAge != QUIT && validChoice)
+            } while (!validChoice);
+
+            if (leagueAge != QUIT)
+            {
+                do
                 {
                     leagueType = DecideDefaultOrCustomTeams(ref validChoice);
-                    if (leagueType != QUIT)
+                } while (!validChoice);
+
+                if (leagueType != QUIT)
+                {
+                    BuildLeagueTable(teams, leagueType);
+                    //BuildLeagueTable(teams, leagueType, leagueAge);
+
+                    while (menuChoice != BACK)
                     {
-                        BuildLeagueTable(teams, leagueType);
-                        //BuildLeagueTable(teams, leagueType, leagueAge);
-                        menuChoice = leagueType;
+                        menuChoice = PrintMainMenu();
 
-                        while (menuChoice != QUIT && !validChoice)
+                        switch (menuChoice)
                         {
-                            menuChoice = PrintMainMenu();
+                            case "1":
+                                GetScore(ref goalFor, ref goalAgainst, teams);
+                                validChoice = false;    //reset to loop back into menu
+                                break;
+                            case "2":
+                                PrintLeagueTable(teams);
+                                validChoice = false;
+                                break;
+                            case "3":
+                                DisplayTeamNames(teams);
+                                leagueType = DecideDefaultOrCustomTeams(ref validChoice);
+                                BuildLeagueTable(teams, leagueType);
+                                break;
+                            case "4":
+                                Console.WriteLine("You chose to Exit");
+                                validChoice = true;
+                                break;
+                            default:
+                                menuChoice = PrintMainMenu();
+                                break;
 
-                            switch (menuChoice)
-                            {
-                                case "1":
-                                    int selectedTeam = GetTeamIndex(teams);  //return an index for the selected team
-                                    GetScore(ref goalFor, ref goalAgainst, selectedTeam, teams);
-                                    validChoice = false;    //reset to loop back into menu
-                                    break;
-                                case "2":
-                                    PrintLeagueTable(teams);
-                                    validChoice = false;
-                                    break;
-                                case "3":
-                                    DisplayTeamNames(teams);
-                                    leagueType = DecideDefaultOrCustomTeams(ref validChoice);
-                                    BuildLeagueTable(teams, leagueType);
-                                    break;
-                                case "4":
-                                    Console.WriteLine("You chose to Exit");
-                                    validChoice = true;
-                                    break;
-                                default:
-                                    menuChoice = PrintMainMenu();
-                                    break;
+                        }//END: switch(menuChoice)
 
-                            }//END: switch(menuChoice)
+                    }//END: while(!Quit && !valid)      
 
-                        }//END: while(!Quit && !valid)      
-                    }
-                }//END: if(  )
+                }//END: if(!valid leagueType selection)
+            }//END: if(!valid leagueAge selection)
 
-            } while (leagueAge != "3");
 
-           
-
-            }//END: Main()
+        }//END: Main()
 
 
         /// <summary>
@@ -117,7 +116,7 @@ namespace CA3
                 Console.WriteLine(INDENTED_TAB, "", "3. Exit\n");
                 Console.Write(INDENTED_TAB, "", "Choice: ");
                 input = Console.ReadLine();
-                validChoice = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 3);
+                validChoice = ValidateInput(input, 1, 3);
             } while (!validChoice);
 
             return input;
@@ -208,8 +207,7 @@ namespace CA3
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine(msg);
             Console.ForegroundColor = ConsoleColor.White;
-            Thread.Sleep(2000);
-            Console.Clear();
+            SleepAndClear(2000);
         }
 
 
@@ -222,6 +220,7 @@ namespace CA3
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(msg);
             Console.ForegroundColor = ConsoleColor.White;
+            SleepAndClear(3000);
         }
 
         /// <summary>
@@ -241,11 +240,22 @@ namespace CA3
                 Console.WriteLine(INDENTED_TAB, "", "3. Back\n");
                 Console.Write(INDENTED_TAB, "", "Choice:");
                 input = Console.ReadLine();
-                isValid = IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", 1, 3);
+                isValid = ValidateInput(input, 1, 3);
             } while (!isValid);
 
             return input;
         }//END: DecideCustomOrDefault()
+
+
+        /// <summary>
+        /// Methods checks that an input string is not null / empty & is a positve number & is within a given range
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>True if all tsts are passes, else returns false</returns>
+        private static bool ValidateInput(string input, int minRange, int maxRange)
+        {
+            return IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", minRange, maxRange);
+        }
 
 
         /// <summary>
@@ -267,84 +277,142 @@ namespace CA3
             Console.Read();
         }
 
-
-        /// <summary>
-        /// Method gets validated scores for the home and away team
-        /// </summary>
-        /// <param name="goalFor"></param>
-        /// <param name="goalAgainst"></param>
-        /// <param name="homeTeam"></param>
-        /// <param name="awayTeam"></param>
-        private static void GetScore(ref int goalFor, ref int goalAgainst, int selected, Team[] teams)
+        private static void GetScore(ref int goalFor, ref int goalAgainst, Team[] teams)
         {
             bool isValid;
-            string homeTeam = teams[selected - 1].Name;   //selected team's index == 1 less than the number entered by the user(option1 == teams[0])
+            
 
             for (int i = 0; i < teams.Length; i++)
             {
-                string awayTeam = teams[i].Name;          //away team is the nest team in the list(teams[i] as the number selected by the user will 
-                                                          //be the index of the next team on the list due to zero indexing
+                string homeTeam = teams[i].Name;
 
-                if (teams[i].Name != teams[selected - 1].Name)
+                for (int j = 0; j < teams.Length; j++)
                 {
-                    Console.WriteLine($"\n{homeTeam} vs {awayTeam}");
-                    Console.WriteLine(DIVIDER);
-                    Console.WriteLine("Enter Score:");
-                    
-                    do
+                    string awayTeam = teams[j].Name;
+
+                    if (teams[i].Name != teams[j].Name)
                     {
-                        Console.Write(INDENTED_TAB, "", "Home: ");
-                        string input = Console.ReadLine();
-                        isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
-                        if (isValid)
+                        DisplayCurrenFixture(homeTeam, awayTeam);
+
+                        do
                         {
-                            goalFor = Convert.ToInt32(input);
-                            do
+                            Console.Write(INDENTED_TAB, "", $"{homeTeam}: ");
+                            string input = Console.ReadLine();
+                            isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
+                            if (isValid)
                             {
-                                Console.Write(INDENTED_TAB, "", "Away: ");
-                                input = Console.ReadLine();
-                                isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
-
-                                if (isValid)
+                                goalFor = Convert.ToInt32(input);
+                                do
                                 {
-                                    goalAgainst = Convert.ToInt32(input);
+                                    Console.Write(INDENTED_TAB, "", $"{awayTeam}: ");
+                                    input = Console.ReadLine();
+                                    isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
 
-                                    Console.ForegroundColor = ConsoleColor.Green;
-                                    Console.WriteLine("\n[SUCCESS]: Result Added successfully\n");
-                                    Console.ForegroundColor = ConsoleColor.White;
-                                }
+                                    if (isValid)
+                                    {
+                                        goalAgainst = Convert.ToInt32(input);
 
-                            } while (!isValid);
-                            //while (away score !valid)
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                        Console.WriteLine("\n[SUCCESS]: Result Added\n");
+                                        Console.ForegroundColor = ConsoleColor.White;
+                                    }
 
-                        }//END: if(home == valid)
+                                } while (!isValid);
+                                //while (away score !valid)
 
-                        teams[selected - 1].AddMatchResult(goalFor, goalAgainst);
+                            }//END: if(home == valid)
 
+                            teams[i].AddMatchResult(goalFor, goalAgainst);
 
-                        /* below stores match details for every team as if they are the away team*/
+                        } while (!isValid);
 
-                        //for (int j = 0; j < teams.Length; j++)
-                        //{
-                        //    if (teams[j] != null && j != (selected - 1) && j != selected)
-                        //    {
-                        //        teams[j].AddMatchResult(goalAgainst, goalFor);
-                        //    }
-                            
-                        //}
-                        
-
-                    } while (!isValid);
-                    //while (home score !valid)
-
-                }//END: if(teams to compare are not same)                   
-
-            }//END: for(all teams in league)
-
-            Thread.Sleep(1500);
-            Console.Clear();
-
+                    }//END: if(teams not the same)
+                }//END: (for(awayteams))
+                
+            }//END: for(homeTeams
         }//END: GetScore()
+
+        private static void DisplayCurrenFixture(string homeTeam, string awayTeam)
+        {
+            Console.WriteLine($"\n{homeTeam} vs {awayTeam}");
+            Console.WriteLine(DIVIDER);
+            Console.WriteLine("Enter Score:");
+        }
+
+        ///// <summary>
+        ///// Method gets validated scores for the home and away team
+        ///// </summary>
+        ///// <param name="goalFor"></param>
+        ///// <param name="goalAgainst"></param>
+        ///// <param name="homeTeam"></param>
+        ///// <param name="awayTeam"></param>
+        //private static void GetScore(ref int goalFor, ref int goalAgainst, int selected, Team[] teams)
+        //{
+        //    bool isValid;
+        //    string homeTeam = teams[selected - 1].Name;   //selected team's index == 1 less than the number entered by the user(option1 == teams[0])
+
+        //    for (int i = 0; i < teams.Length; i++)
+        //    {
+        //        string awayTeam = teams[i].Name;          //away team is the nest team in the list(teams[i] as the number selected by the user will 
+        //                                                  //be the index of the next team on the list due to zero indexing
+
+        //        if (teams[i].Name != teams[selected - 1].Name)
+        //        {
+        //            Console.WriteLine($"\n{homeTeam} vs {awayTeam}");
+        //            Console.WriteLine(DIVIDER);
+        //            Console.WriteLine("Enter Score:");
+
+        //            do
+        //            {
+        //                Console.Write(INDENTED_TAB, "", $"{homeTeam}: ");
+        //                string input = Console.ReadLine();
+        //                isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
+        //                if (isValid)
+        //                {
+        //                    goalFor = Convert.ToInt32(input);
+        //                    do
+        //                    {
+        //                        Console.Write(INDENTED_TAB, "", $"{awayTeam}: ");
+        //                        input = Console.ReadLine();
+        //                        isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
+
+        //                        if (isValid)
+        //                        {
+        //                            goalAgainst = Convert.ToInt32(input);
+
+        //                            Console.ForegroundColor = ConsoleColor.Green;
+        //                            Console.WriteLine("\n[SUCCESS]: Result Added\n");
+        //                            Console.ForegroundColor = ConsoleColor.White;
+        //                        }
+
+        //                    } while (!isValid);
+        //                    //while (away score !valid)
+
+        //                }//END: if(home == valid)
+
+        //                teams[selected - 1].AddMatchResult(goalFor, goalAgainst);
+
+        //            } while (!isValid);
+        //            //while (home score !valid)
+
+        //        }//END: if(teams to compare are not same)                   
+
+        //    }//END: for(all teams in league)
+
+        //    SleepAndClear(1500);
+
+        //}//END: GetScore()
+
+
+        /// <summary>
+        /// Sleeps for a given time in milliseconds, then clears the console window
+        /// </summary>
+        /// <param name="time"></param>
+        private static void SleepAndClear(int time)
+        {
+            Thread.Sleep(time);
+            Console.Clear();
+        }
 
 
         /// <summary>
@@ -364,7 +432,7 @@ namespace CA3
             {
                 Console.Write(INPUT_TAB, "Select a team to enter results for", ": ");
                 input = Console.ReadLine();
-                validChoice = IsPresent(input, "Team Number") && IsPostiveInt(input, "Selection") && IsInRange(input, "Team Number", 1, 5) && int.TryParse(input, out teamNum);
+                validChoice = IsPresent(input, "Team Name") && int.TryParse(input, out teamNum);
                 if (validChoice)
                 {
                     teamNum = Convert.ToInt32(input);
@@ -416,7 +484,7 @@ namespace CA3
                 Console.WriteLine("\n");
                 Console.Write(INDENTED_TAB, "", "Select option: ");
                 choice = Console.ReadLine();
-                isValid = IsPresent(choice, "Menu Choice") && IsPostiveInt(choice, "Menu Choice") && IsInRange(choice, "Menu Choice", 1, 4);
+                isValid = ValidateInput(choice, 1, 4);
 
             } while (!isValid);
 
@@ -477,12 +545,11 @@ namespace CA3
         {
             bool isPositive = false;
 
-            if (int.TryParse(textIn, out int num) == true) 
-            {                
-                isPositive = num >= 0 ? true : false;
-                if(!isPositive)
-                    PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number greater than zero.\n");
-            }
+            if (int.TryParse(textIn, out int num) == true)                            
+                isPositive = num >= 0 ? true : false;                
+            
+            else
+                PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number greater than zero.\n");
 
             return isPositive;
         }//END:  IsInt()
