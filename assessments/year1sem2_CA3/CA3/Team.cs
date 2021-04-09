@@ -52,7 +52,7 @@ namespace CA3
         private int _lost;
 
         //static variable used to generae unique team ID's
-        static int teamCounter = 0;
+        static int teamCounter = 1;
 
 
         //properties

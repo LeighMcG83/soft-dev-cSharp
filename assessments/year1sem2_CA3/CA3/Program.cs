@@ -31,7 +31,6 @@ namespace CA3
         const string INDENTED_TAB = "{0, 10}{1, -20}";
         const string DISPLAY_TAB = "{0, -5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}";
 
-
         static void Main(string[] args)
         {
             //setup
@@ -40,89 +39,84 @@ namespace CA3
             string menuChoice = "";
             bool validChoice = false;
             int goalFor = 0, goalAgainst = 0;       //will take values for each game's score (pass by ref to GetScore())
-            string leagueAge, leagueType;
+            string leagueAge  = "1", leagueType;
             Team[] teams = new Team[5];
             Console.ForegroundColor = ConsoleColor.White;
 
             do
             {
                 leagueAge = DecideLeagueAge(ref validChoice);
-            } while (!validChoice);
 
-            if (leagueAge != QUIT)
-            {
-                do
+                if (leagueAge != QUIT)
                 {
                     leagueType = DecideDefaultOrCustomTeams(ref validChoice);
-                } while (!validChoice);
 
-                if (leagueType != QUIT)
-                {
-                    BuildLeagueTable(teams, leagueType);
-                    //BuildLeagueTable(teams, leagueType, leagueAge);
-
-                    while (menuChoice != BACK)
+                    if (leagueType != QUIT)
                     {
-                        menuChoice = PrintMainMenu();
+                        BuildLeagueTable(teams, leagueType);
+                        //BuildLeagueTable(teams, leagueType, leagueAge);
 
-                        switch (menuChoice)
+                        while (menuChoice != BACK)
                         {
-                            case "1":
-                                GetScore(ref goalFor, ref goalAgainst, teams);
-                                validChoice = false;    //reset to loop back into menu
-                                break;
-                            case "2":
-                                PrintLeagueTable(teams);
-                                validChoice = false;
-                                break;
-                            case "3":
-                                DisplayTeamNames(teams);
-                                leagueType = DecideDefaultOrCustomTeams(ref validChoice);
-                                BuildLeagueTable(teams, leagueType);
-                                break;
-                            case "4":
-                                Console.WriteLine("You chose to Exit");
-                                validChoice = true;
-                                break;
-                            default:
-                                menuChoice = PrintMainMenu();
-                                break;
+                            menuChoice = PrintMainMenu();
 
-                        }//END: switch(menuChoice)
+                            switch (menuChoice)
+                            {
+                                case "1":
+                                    GetScore(ref goalFor, ref goalAgainst, teams);
+                                    //validChoice = false;    //reset boolean state to false so control will re-enter loop
+                                    break;
+                                case "2":
+                                    PrintLeagueTable(teams);
+                                    //validChoice = false;
+                                    break;
+                                case "3":
+                                    leagueType = ModifyTeams(ref validChoice, teams);
+                                    break;
+                                case "4":
+                                    PrintExitMsg("Returning to League Setup");
+                                    //validChoice = true;
+                                    break;
+                                default:
+                                    menuChoice = PrintMainMenu();
+                                    break;
 
-                    }//END: while(!Quit && !valid)      
+                            }//END: switch(menuChoice)
 
-                }//END: if(!valid leagueType selection)
-            }//END: if(!valid leagueAge selection)
+                        }//END: while(!Quit && !valid)      
 
+                    }//END: if(!valid leagueType selection)
+
+
+                    else
+                        continue; //reload mainMenu
+                    
+
+                }//END: if(!valid leagueAge selection)            
+                else
+                    PrintExitMsg();
+
+            } while (leagueAge != QUIT);
 
         }//END: Main()
 
 
+        /*---------------   LEAGUE TABLE METHODS    ---------------*/
+
         /// <summary>
-        /// Method prompts the user to enter teams to compete in the league
+        /// 
         /// </summary>
-        /// <returns>A validated string for league choice</returns>
-        private static string DecideLeagueAge(ref bool validChoice)
+        /// <param name="validChoice"></param>
+        /// <param name="teams"></param>
+        /// <returns></returns>
+        private static string ModifyTeams(ref bool validChoice, Team[] teams)
         {
-            string input = "";
-            do
-            {
-                Console.WriteLine(DIVIDER);
-                Console.WriteLine(INDENTED_TAB, "", "What type of League do you want to create?");
-                Console.WriteLine(DIVIDER);
-                Console.WriteLine(INDENTED_TAB, "", "1. Senior League");
-                Console.WriteLine(INDENTED_TAB, "", "2. Junior League");
-                Console.WriteLine(INDENTED_TAB, "", "3. Exit\n");
-                Console.Write(INDENTED_TAB, "", "Choice: ");
-                input = Console.ReadLine();
-                validChoice = ValidateInput(input, 1, 3);
-            } while (!validChoice);
-
-            return input;
-        }//END: DecideLeagueAge()
-
-
+            string leagueType;
+            DisplayTeamNames(teams);
+            leagueType = DecideDefaultOrCustomTeams(ref validChoice);
+            BuildLeagueTable(teams, leagueType);
+            return leagueType;
+        }
 
         /// <summary>
         /// Method creates a league table. Takes parameters for the teams to enter and league type, default or custom
@@ -146,7 +140,6 @@ namespace CA3
                     break;
             }
         }//END:BuildLeagueTable()
-
 
         /// <summary>
         /// Method ceates a leagefrom predetermind array of teams
@@ -197,32 +190,6 @@ namespace CA3
 
         }//END: CreateCustomLeague()
 
-
-        /// <summary>
-        /// Prints a message that the action was successful. Takes a message string as param 
-        /// </summary>
-        /// <param name="msg"></param>
-        private static void PrintSuccessMessage(string msg)
-        {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine(msg);
-            Console.ForegroundColor = ConsoleColor.White;
-            SleepAndClear(2000);
-        }
-
-
-        /// <summary>
-        /// Prints a color-coded error message to console window. Takes the string to display as message as param.
-        /// </summary>
-        /// <param name="msg"></param>
-        private static void PrintErrorMsg(string msg)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(msg);
-            Console.ForegroundColor = ConsoleColor.White;
-            SleepAndClear(3000);
-        }
-
         /// <summary>
         /// Method ask the user to use default teams or enter customised team names
         /// </summary>
@@ -232,9 +199,10 @@ namespace CA3
             string input;
             do
             {
-                Console.WriteLine(DIVIDER);
+                Console.Clear();
+                Console.WriteLine(INDENTED_TAB, "", DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "League Teams Setup");
-                Console.WriteLine(DIVIDER);
+                Console.WriteLine(INDENTED_TAB, "", DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "1. Use Default Teams");
                 Console.WriteLine(INDENTED_TAB, "", "2. Create Custom League");
                 Console.WriteLine(INDENTED_TAB, "", "3. Back\n");
@@ -246,18 +214,6 @@ namespace CA3
             return input;
         }//END: DecideCustomOrDefault()
 
-
-        /// <summary>
-        /// Methods checks that an input string is not null / empty & is a positve number & is within a given range
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns>True if all tsts are passes, else returns false</returns>
-        private static bool ValidateInput(string input, int minRange, int maxRange)
-        {
-            return IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", minRange, maxRange);
-        }
-
-
         /// <summary>
         /// Method displays the league table
         /// </summary>
@@ -265,23 +221,32 @@ namespace CA3
         private static void PrintLeagueTable(Team[] teams)
         {
             Console.Clear();
-            Console.WriteLine("\n" + DIVIDER);
-            Console.WriteLine(INDENTED_TAB, "", "League Table");
             Console.WriteLine(DIVIDER);
-            Console.WriteLine(DISPLAY_TAB, "ID", "Team Name", "Pld", "Won", "Drawn", "Lost", "For", "Agst", "+/-", "Pts");
+            Console.WriteLine("League Table");
+            Console.WriteLine(DIVIDER);
+            Console.Write(DISPLAY_TAB, "ID", "Team Name", "Pld", "Won", "Drawn", "Lost", "For", "Agst", "+/-", "Pts");
+            Console.WriteLine();
 
-            foreach (var team in teams)            
+            foreach (var team in teams)
                 Console.WriteLine(team.ToString());
 
-            Console.WriteLine(INDENTED_TAB, "", "\nPress Enter key to return to Main Menu");
+            Console.Write(INDENTED_TAB, "", "\nPress Enter key to return to Main Menu...");
             Console.Read();
         }
 
+
+        /*---------------   MENU AND PROGRAM FUNCTIONALITY METHODS    ---------------*/
+
+        /// <summary>
+        /// Method gets the score form the user
+        /// </summary>
+        /// <param name="goalFor"></param>
+        /// <param name="goalAgainst"></param>
+        /// <param name="teams"></param>
         private static void GetScore(ref int goalFor, ref int goalAgainst, Team[] teams)
         {
             bool isValid;
             
-
             for (int i = 0; i < teams.Length; i++)
             {
                 string homeTeam = teams[i].Name;
@@ -293,7 +258,6 @@ namespace CA3
                     if (teams[i].Name != teams[j].Name)
                     {
                         DisplayCurrenFixture(homeTeam, awayTeam);
-
                         do
                         {
                             Console.Write(INDENTED_TAB, "", $"{homeTeam}: ");
@@ -307,113 +271,38 @@ namespace CA3
                                     Console.Write(INDENTED_TAB, "", $"{awayTeam}: ");
                                     input = Console.ReadLine();
                                     isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
-
                                     if (isValid)
                                     {
                                         goalAgainst = Convert.ToInt32(input);
-
                                         Console.ForegroundColor = ConsoleColor.Green;
                                         Console.WriteLine("\n[SUCCESS]: Result Added\n");
                                         Console.ForegroundColor = ConsoleColor.White;
                                     }
-
                                 } while (!isValid);
                                 //while (away score !valid)
-
                             }//END: if(home == valid)
 
                             teams[i].AddMatchResult(goalFor, goalAgainst);
+                            //teams[j].AddMatchResult(goalAgainst, goalFor);  //use to add both home and away stats (may not need this
 
                         } while (!isValid);
 
                     }//END: if(teams not the same)
-                }//END: (for(awayteams))
-                
+                }//END: (for awayteams)                
             }//END: for(homeTeams
         }//END: GetScore()
 
+        /// <summary>
+        /// Method displays the current fixture being entered.
+        /// </summary>
+        /// <param name="homeTeam"></param>
+        /// <param name="awayTeam"></param>
         private static void DisplayCurrenFixture(string homeTeam, string awayTeam)
         {
-            Console.WriteLine($"\n{homeTeam} vs {awayTeam}");
-            Console.WriteLine(DIVIDER);
-            Console.WriteLine("Enter Score:");
+            Console.WriteLine(INDENTED_TAB, "", $"\n{homeTeam} vs {awayTeam}");
+            Console.WriteLine(INDENTED_TAB, "", DIVIDER);
+            Console.WriteLine(INDENTED_TAB, "", "Enter Score:");
         }
-
-        ///// <summary>
-        ///// Method gets validated scores for the home and away team
-        ///// </summary>
-        ///// <param name="goalFor"></param>
-        ///// <param name="goalAgainst"></param>
-        ///// <param name="homeTeam"></param>
-        ///// <param name="awayTeam"></param>
-        //private static void GetScore(ref int goalFor, ref int goalAgainst, int selected, Team[] teams)
-        //{
-        //    bool isValid;
-        //    string homeTeam = teams[selected - 1].Name;   //selected team's index == 1 less than the number entered by the user(option1 == teams[0])
-
-        //    for (int i = 0; i < teams.Length; i++)
-        //    {
-        //        string awayTeam = teams[i].Name;          //away team is the nest team in the list(teams[i] as the number selected by the user will 
-        //                                                  //be the index of the next team on the list due to zero indexing
-
-        //        if (teams[i].Name != teams[selected - 1].Name)
-        //        {
-        //            Console.WriteLine($"\n{homeTeam} vs {awayTeam}");
-        //            Console.WriteLine(DIVIDER);
-        //            Console.WriteLine("Enter Score:");
-
-        //            do
-        //            {
-        //                Console.Write(INDENTED_TAB, "", $"{homeTeam}: ");
-        //                string input = Console.ReadLine();
-        //                isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
-        //                if (isValid)
-        //                {
-        //                    goalFor = Convert.ToInt32(input);
-        //                    do
-        //                    {
-        //                        Console.Write(INDENTED_TAB, "", $"{awayTeam}: ");
-        //                        input = Console.ReadLine();
-        //                        isValid = IsPresent(input, "Goals") && IsPostiveInt(input, "Goals");
-
-        //                        if (isValid)
-        //                        {
-        //                            goalAgainst = Convert.ToInt32(input);
-
-        //                            Console.ForegroundColor = ConsoleColor.Green;
-        //                            Console.WriteLine("\n[SUCCESS]: Result Added\n");
-        //                            Console.ForegroundColor = ConsoleColor.White;
-        //                        }
-
-        //                    } while (!isValid);
-        //                    //while (away score !valid)
-
-        //                }//END: if(home == valid)
-
-        //                teams[selected - 1].AddMatchResult(goalFor, goalAgainst);
-
-        //            } while (!isValid);
-        //            //while (home score !valid)
-
-        //        }//END: if(teams to compare are not same)                   
-
-        //    }//END: for(all teams in league)
-
-        //    SleepAndClear(1500);
-
-        //}//END: GetScore()
-
-
-        /// <summary>
-        /// Sleeps for a given time in milliseconds, then clears the console window
-        /// </summary>
-        /// <param name="time"></param>
-        private static void SleepAndClear(int time)
-        {
-            Thread.Sleep(time);
-            Console.Clear();
-        }
-
 
         /// <summary>
         /// Method displays the list oof teams in the league and asks user to select one
@@ -442,8 +331,6 @@ namespace CA3
             return teamNum;
         }//END: GetTeamToEnterResultsFor()
 
-
-
         /// <summary>
         /// Display all the teams in the league
         /// </summary>
@@ -451,16 +338,15 @@ namespace CA3
         private static void DisplayTeamNames(Team[] teams)
         {
             Console.Clear();
-            Console.WriteLine(DIVIDER);
+            Console.WriteLine(INDENTED_TAB, "", DIVIDER);
             Console.WriteLine(INDENTED_TAB, "", "Currently entered teams");
-            Console.WriteLine(DIVIDER);
+            Console.WriteLine(INDENTED_TAB, "",DIVIDER);
             for (int i = 0; i < teams.Length; i++)
             {
                 Console.WriteLine(INDENTED_TAB, "", $"{i + 1}. " +  teams[i].Name);
             }
             Console.WriteLine();
         }
-
 
         /// <summary>
         /// Method displays the main menu options
@@ -470,39 +356,133 @@ namespace CA3
         {
             bool isValid;
             string choice; 
-
             do
             {
                 Console.Clear();
-                Console.WriteLine("\n" + DIVIDER);
+                Console.WriteLine(INDENTED_TAB, "", DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "MAIN MENU");
-                Console.WriteLine(DIVIDER);
+                Console.WriteLine(INDENTED_TAB, "", DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "1. Add Results");
                 Console.WriteLine(INDENTED_TAB, "", "2. View League Table");
                 Console.WriteLine(INDENTED_TAB, "", "3. Modify Entered Teams");
-                Console.WriteLine(INDENTED_TAB, "", "4. Exit");
+                Console.WriteLine(INDENTED_TAB, "", "4. Back to League Type Selection ");
                 Console.WriteLine("\n");
                 Console.Write(INDENTED_TAB, "", "Select option: ");
                 choice = Console.ReadLine();
                 isValid = ValidateInput(choice, 1, 4);
-
             } while (!isValid);
 
             return choice;
-           
+        }//END: PrintMainMenu()
+
+        /// <summary>
+        /// Method prompts the user to enter teams to compete in the league
+        /// </summary>
+        /// <returns>A validated string for league choice</returns>
+        private static string DecideLeagueAge(ref bool validChoice)
+        {
+            string input = "";
+            do
+            {
+                Console.Clear();
+                Console.WriteLine(INDENTED_TAB, "", DIVIDER);
+                Console.WriteLine(INDENTED_TAB, "", "What type of League do you want to create?");
+                Console.WriteLine(INDENTED_TAB, "", DIVIDER);
+                Console.WriteLine(INDENTED_TAB, "", "1. Senior League");
+                Console.WriteLine(INDENTED_TAB, "", "2. Junior League");
+                Console.WriteLine(INDENTED_TAB, "", "3. Exit\n");
+                Console.Write(INDENTED_TAB, "", "Choice: ");
+                input = Console.ReadLine();
+                validChoice = ValidateInput(input, 1, 3);
+            } while (!validChoice);
+
+            return input;
+        }//END: DecideLeagueAge()
+
+
+        /*---------------   NOTIFICATION METHODS    ---------------*/
+
+        /// <summary>
+        /// Prints a message that the action was successful. Takes a message string as param 
+        /// </summary>
+        /// <param name="msg"></param>
+        private static void PrintSuccessMessage(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.White;
+            SleepAndClear(2000);
+        }
+
+        /// <summary>
+        /// Prints a color-coded error message to console window. Takes the string to display as message as param.
+        /// </summary>
+        /// <param name="msg"></param>
+        private static void PrintErrorMsg(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.White;
+            SleepAndClear(3000);
+        }
+
+        /// <summary>
+        /// Sleeps for a given time in milliseconds, then clears the console window
+        /// </summary>
+        /// <param name="time"></param>
+        private static void SleepAndClear(int time)
+        {
+            Thread.Sleep(time);
+            Console.Clear();
         }
 
 
+        /// <summary>
+        /// Method prints a message informing user that application is closing
+        /// </summary>
+        private static void PrintExitMsg()
+        {
+            Console.WriteLine("\n" + DIVIDER);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("Closing program");
+            for (int i = 0; i < 5; i++)
+            {
+                Console.Write(".");
+                Thread.Sleep(250);
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\n" + DIVIDER);
+        }//END: PrintExitMsg()
+
+        /// <summary>
+        /// Method prints a message informing user that application is returning to start menu
+        /// </summary>
+        private static void PrintExitMsg(string msg)
+        {
+            Console.WriteLine("\n" + DIVIDER);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(msg);
+            for (int i = 0; i < 5; i++)
+            {
+                Console.Write(".");
+                Thread.Sleep(250);
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\n" + DIVIDER);
+        }//END: PrintExitMsg()
+
+
+        /*---------------   VALIDATION METHODS  ---------------*/
 
         /// <summary>
         /// Method check if the passed string argument id an empty string
         /// Takes 1 parameter no overloads
         /// </summary>
-        /// <param name="menuChoice"></param>
+        /// <param name="input"></param>
         /// <returns>True if string is not empty, or false if it is</returns>
-        private static bool IsPresent(string menuChoice, string inputLabel)
+        private static bool IsPresent(string input, string inputLabel)
         {
-            if (menuChoice != String.Empty)
+            if (input != String.Empty)
                 return true;            
             else
             { 
@@ -510,7 +490,6 @@ namespace CA3
                 return false;
             }
         }//END: IsPresent();
-
 
         /// <summary>
         /// Method validates a user input by checking it is between a min and max value (inclusive)
@@ -532,7 +511,6 @@ namespace CA3
             return isValid;
         }//END: IsInRange()
 
-
         /// <summary>
         /// Method checks if a string input can be converted to an integer,
         /// takes string input and string label for the input.
@@ -545,11 +523,15 @@ namespace CA3
         {
             bool isPositive = false;
 
-            if (int.TryParse(textIn, out int num) == true)                            
-                isPositive = num >= 0 ? true : false;                
-            
+            if (int.TryParse(textIn, out int num) == true)
+            {
+                isPositive = num >= 0 ? true : false;
+                if(!isPositive)
+                    PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number greater than zero.\n");
+            }
+
             else
-                PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number greater than zero.\n");
+                PrintErrorMsg($"\n[ERROR]: {inputLabel} must be a number.\n");
 
             return isPositive;
         }//END:  IsInt()
@@ -578,6 +560,15 @@ namespace CA3
 
         }//END: IsNumeric()
 
+        /// <summary>
+        /// Method calls validation methods that check that an input string is not null / empty & is a positve number & is within a given range
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>True if all tsts are passes, else returns false</returns>
+        private static bool ValidateInput(string input, int minRange, int maxRange)
+        {
+            return IsPresent(input, "Choice") && IsPostiveInt(input, "Choice") && IsInRange(input, "Choice", minRange, maxRange);
+        }
 
 
     }//END: class Program
