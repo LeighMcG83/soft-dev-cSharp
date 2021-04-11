@@ -17,6 +17,11 @@ namespace CA3
 
         }
 
+        public JuniorTeam(string range)
+        {
+            _ageRange = range;
+        }
+
         public JuniorTeam(string name,int scored,int conceeded, string ageRange):base(name, scored, conceeded )
         {
             _ageRange = ageRange;
@@ -50,8 +55,8 @@ namespace CA3
 
         public override string ToString()
         {
-            const string DISPLAY_TAB = "{0,-5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}{10,-5}";
-            return String.Format(DISPLAY_TAB, $"{base.ToString()}", $"{_ageRange}");
+            //const string DISPLAY_TAB = "{0,-5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}{10,-5}";
+            return base.ToString() + _ageRange;
         }
     }
 }
