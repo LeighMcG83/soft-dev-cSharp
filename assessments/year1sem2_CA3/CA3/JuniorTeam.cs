@@ -9,7 +9,13 @@ namespace CA3
         //attributes
         private string _ageRange;
 
-   
+
+        //property
+        public string AgeRange
+        {
+            get { return _ageRange; }
+            set { _ageRange = value; }
+        }
 
         //constructors
         public JuniorTeam():base()
@@ -17,15 +23,16 @@ namespace CA3
 
         }
 
-        public JuniorTeam(string range)
+        public JuniorTeam(string name, string range):base(name)
         {
             _ageRange = range;
         }
 
-        public JuniorTeam(string name,int scored,int conceeded, string ageRange):base(name, scored, conceeded )
-        {
-            _ageRange = ageRange;
-        }
+        //public JuniorTeam(string name, int scored, int conceeded, string ageRange):base(name, scored, conceeded)
+        //{
+
+        //    _ageRange = ageRange;
+        //}
 
 
 
@@ -37,7 +44,7 @@ namespace CA3
 
             if (scored > conceeded)
             {
-                Pts += 3;
+                Pts += 4;
                 Won++;
             }
 
@@ -56,7 +63,7 @@ namespace CA3
         public override string ToString()
         {
             //const string DISPLAY_TAB = "{0,-5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}{10,-5}";
-            return base.ToString() + _ageRange;
+            return string.Format("{0}{1,25}", base.ToString(), $"Age Group:  {_ageRange}");
         }
     }
 }

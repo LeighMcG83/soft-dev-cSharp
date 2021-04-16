@@ -174,10 +174,8 @@ namespace CA3
 
         public override string ToString()       
         {
-            const string DIVIDER = "---------------------------------------------------------------";
             const string DISPLAY_TAB = "{0,-5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}";
-
-            Console.WriteLine(DIVIDER);
+                        
             return String.Format(DISPLAY_TAB, $"[{_teamID}]", $" {_name}", $" {_gamesPlayed}", $" {_won}", $" {_draw}", $" {_lost}", 
                                               $" {_scored}", $" {_conceeded}", $" {Get_GoalDifference()}", $" {_pts}");
         }

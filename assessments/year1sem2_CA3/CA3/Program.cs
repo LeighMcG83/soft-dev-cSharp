@@ -10,13 +10,7 @@
  *            | x Add: track number wins draws, losses and add to table
  *            |  Add: print league table in descending order (pts, then goal diff)
  * -----------|-----------------------------------------------------------------------------------
- * BUGS:      |  - Need to specify junior / senior in CreateJuniorLeague() & CreateSeniorLeague()
- *            |     - "access an element as a type incompatible with the array" Exception 
- *            |  - MainMenu option4 quits instead of back to previous menu
- *            |  - League Teams Setup menu: quit option doesnt quit
- *            |  - Select Age Menu: option 5 breaks
- * -----------|-----------------------------------------------------------------------------------*/
-
+*/
 
 // Library Imports.
 using System;
@@ -34,10 +28,11 @@ namespace CA3
         const string INPUT_TAB = "{0, -35}{1, 5}";
         const string INDENTED_TAB = "{0, 10}{1, -20}";
         const string DISPLAY_TAB = "{0, -5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}";
+        static string[] teamNames = { "Rep. of Ireland", "Oman", "Brazil", "Scotland", "England" };
         static JuniorTeam[] juniorTeams = new JuniorTeam[5];
         static Team[] teams = new Team[5];
+
         const string QUIT = "3";
-        const string BACK = "4";
         const string SENIOR = "1";                 //menu option for senior team league
         const string JUNIOR = "2";
 
@@ -49,52 +44,88 @@ namespace CA3
             int goalFor = 0, goalAgainst = 0;       //will take values for each game's score (pass by ref to GetScore())
             string leagueAge = "", leagueType = "";
 
-            GetLeagueType(ref validChoice, ref leagueType, ref leagueAge);
-
-            if (leagueAge != QUIT)
+            for (int i = 0; i < teams.Length; i++)
             {
-                DecideSeniorOrJuniorLeafue(leagueAge, leagueType);
+                teams[i] = new Team();
+            }
 
-                while (menuChoice != BACK)//REFACTOR ThIS CODE BLOCK INTO METHOD
+            do
+            {
+                leagueAge = DecideLeagueAge(ref validChoice);
+
+                if (leagueAge == JUNIOR) 
                 {
-                    menuChoice = PrintMainMenu();   
-
-                    switch (menuChoice)
+                    string age = GetAgeGroup();
+                    
+                    for (int i = 0; i < teams.Length; i++)
                     {
-                        case "1":
-                            GetScore(ref goalFor, ref goalAgainst, teams);
-                            //validChoice = false;          //reset boolean state to false so control will re-enter loop
-                            break;
-                        case "2":
-                            PrintLeagueTable(teams);
-                            //validChoice = false;
-                            break;
-                        case "3":
-                            leagueType = ModifyTeams(ref validChoice, teams);
-                            break;
-                        case "4":
-                            PrintExitMsg("Returning to League Setup");
-                            //validChoice = true;
-                            break;
-                        default:
-                            menuChoice = PrintMainMenu();   //change to an error message???
-                            break;
+                        teams[i] = new JuniorTeam(teamNames[i],age);
+                    }                   
+                }
 
-                    }//END: switch(menuChoice)
+                if (leagueAge != QUIT)
+                {
+                    leagueType = ChooseDefaultOrCustomTeams(ref validChoice);
+                    BuildLeagueTable(leagueType, leagueAge);
 
-                }//END: while(!Quit && !valid)      
+                    while (menuChoice != QUIT)//REFACTOR ThIS CODE BLOCK INTO METHOD
+                    {
+                        menuChoice = PrintMainMenu();
+
+                        switch (menuChoice)
+                        {
+                            case "1":
+                                GetScores(ref goalFor, ref goalAgainst, teams);
+                                break;
+                            case "2":
+                                PrintLeagueTable(teams);
+                                break;
+                            case "3":
+                                PrintExitMsg("Returning to League Setup");
+                                break;
+                            default:
+                                menuChoice = PrintMainMenu();   //change to an error message???
+                                break;
+
+                        }//END: switch(menuChoice)
+
+                    }//END: while(!Quit && !valid)   
+
+                }//END: if(!valid leagueAge selection)            
+                else
+                {
+                    PrintExitMsg();
+                    break;
+                }
 
 
-            }//END: if(!valid leagueAge selection)            
-            else
-                PrintExitMsg();
+                //if (IsInRange(ageGroup, "Age Group", 1, 4))             //if selection is an ageGroup (1 to 4)
+                //    return juniorAges[Convert.ToInt32(ageGroup)];       //return that ageGroup
+                //else
+                //    return ageGroup;                                    //else return 5 to quit menu
+
+            } while (leagueAge != QUIT);
 
         }//END: Main()
 
 
 
 
-        /*---------------   LEAGUE SETUP METHODS    ---------------*/
+
+
+            /*---------------   LEAGUE SETUP METHODS    ---------------*/
+
+
+        /// <summary>
+        /// Method instantiates the object array and populates Name of all objs
+        /// </summary>
+        private static void InitialiseTeamNames()
+        {
+            for (int i = 0; i < teams.Length; i++)
+            {
+                teams[i] = new Team(teamNames[i], 0, 0);    //initialise with name, scored and conceeded
+            }
+        }//END: InitialiseTeamsArray()
 
         /// <summary>
         /// Method modifies the age range and the teams in the league
@@ -112,49 +143,27 @@ namespace CA3
             return leagueType;
         }
 
-        /// <summary>
-        /// Method creates a league table. Takes parameters for the teams to enter and league type, default or custom
         /// </summary>
         /// <param name="teams"></param>
         /// <param name="leagueType"></param>
         private static void BuildLeagueTable(string leagueType, string leagueAge)
-        {
-            if (leagueAge == SENIOR)
+        {            
+            switch (leagueType)
             {
-                switch (leagueType)
-                {
-                    case "1":
-                        CreateDefaultLeague(leagueAge);
-                        break;
-                    case "2":
-                        CreateCustomLeague(leagueAge);
-                        break;
-                    default:
-                        PrintErrorMsg("\n[ERROR]: Teams setup error.\n");
-                        Console.WriteLine("Closing Program");
-                        Thread.Sleep(3000);
-                        break;
-                }
-            }//END: if(SENIOR)
-            else if (leagueAge == JUNIOR)       //repetitive - can cast teams-> juniorTeams?
-            {
-                switch (leagueType)
-                {
-                    case "1":
-                        CreateDefaultLeague(leagueAge);
-                        break;
-                    case "2":
-                        CreateCustomLeague(leagueAge);
-                        break;
-                    default:
-                        PrintErrorMsg("\n[ERROR]: Teams setup error.\n");
-                        Console.WriteLine("Closing Program");
-                        Thread.Sleep(3000);
-                        break;
-                }
-            }// END: if(JUNIOR)
-
-        }//END:BuildLeagueTable()
+                case "1":
+                    CreateDefaultLeague(leagueAge);
+                    break;
+                case "2":
+                    CreateCustomLeague(leagueAge);
+                    break;
+                default:
+                    PrintErrorMsg("\n[ERROR]: Teams setup error.\n");
+                    //Console.WriteLine("Closing Program");
+                    Thread.Sleep(3000);
+                    break;
+            }
+           
+        }//END: BuildLeagueTable()
 
         /// <summary>
         /// Method ceates a leagefrom predetermind array of teams
@@ -180,9 +189,9 @@ namespace CA3
                     juniorTeams[i].Name = teamNames[i];
                 }
             }
-            
+
             PrintSuccessMessage("\n[SUCCESS]: All teams entered in league\n");
-        }
+        }//END: CreateDefaultLeague()
 
         /// <summary>
         /// Method creates a league made of user entered teams
@@ -248,22 +257,44 @@ namespace CA3
         /// <param name="validChoice"></param>
         /// <param name="leagueType"></param>
         /// <returns>The age range of the league beung used.</returns>
-        private static string GetLeagueType(ref bool validChoice, ref string leagueType, ref string leagueAge)
+        private static string ChooseLeagueAge(ref bool validChoice, ref string leagueType, string age)
         {
             do
             {
-                leagueAge = DecideLeagueAge(ref validChoice);
-            } while (leagueAge != QUIT && !IsInRange(leagueAge, "League Age", 1, 2));     //will not iterate if 1 or 2 selected in menu
+                age = DecideLeagueAge(ref validChoice);
+            } while (age != QUIT && !IsInRange(age, "League Age", 1, 2));     //will not iterate if 1 or 2 selected in menu           
 
-            if (leagueAge != QUIT)
+            return age;
+        }
+
+        /// <summary>
+        /// Method prompts user to enter a type of league until a valid input is entered
+        /// </summary>
+        /// <param name="validChoice"></param>
+        /// <param name="type"></param>
+        /// <param name="leagueAge"></param>
+        private static string ChooseDefaultOrCustomTeams(ref bool validChoice)
+        {
+            string input;
+            bool isValid;
+            Console.Clear();
+            do
             {
-                do
-                {
-                    leagueType = DecideDefaultOrCustomTeams(ref validChoice);
-                } while (leagueAge != QUIT && !IsInRange(leagueAge, "League Age", 1, 2));
-            }
+                Console.WriteLine(INDENTED_TAB, "", DIVIDER);
+                Console.WriteLine(INDENTED_TAB, "", "League Teams Setup");
+                Console.WriteLine(INDENTED_TAB, "", DIVIDER);
+                Console.WriteLine(INDENTED_TAB, "", "1. Use Default Teams");
+                Console.WriteLine(INDENTED_TAB, "", "2. Create Custom League");
+                Console.WriteLine(INDENTED_TAB, "", "3. Back\n");
+                Console.Write(INDENTED_TAB, "", "Choice: ");
+                input = Console.ReadLine();
+                isValid = ValidateInput(input, 1, 3);
+                
+            } while (!isValid && input != QUIT); 
+            
+            validChoice = isValid;
 
-            return leagueAge;
+            return input;
         }
 
         /// <summary>
@@ -275,7 +306,7 @@ namespace CA3
             string age = GetAgeGroup();
             for (int i = 0; i < juniorTeams.Length; i++)
             {
-                juniorTeams[i] = new JuniorTeam(age);
+                juniorTeams[i] = new JuniorTeam(teamNames[i], age);
             }
         }//END: InitialiseJuniorTeamLeague()
 
@@ -287,7 +318,7 @@ namespace CA3
         {
             bool isValid;
             string ageGroup;
-            string[] ranges = { "", "U10", "U12", "U15", "18" };        //1st elem empty -> index will == menu choice
+            string[] ranges = { "", "U10", "U12", "U15", "U18" };        //1st elem empty -> index will == menu choice
             do
             {
                 Console.WriteLine(INDENTED_TAB, "", DIVIDER);
@@ -300,9 +331,9 @@ namespace CA3
                 Console.WriteLine(INDENTED_TAB, "", "5. Back");
                 Console.Write(INPUT_TAB, "", "Choice: ");
                 ageGroup = Console.ReadLine();
-                isValid = ValidateInput(ageGroup, 1, 5);                
+                isValid = ValidateInput(ageGroup, 1, 5);
             } while (!isValid);
-            return ageGroup;
+            return ranges[Convert.ToInt32(ageGroup)];
         }//END: EnterAgeRange()
 
         /// <summary>
@@ -315,26 +346,7 @@ namespace CA3
             {
                 teams[i] = new Team();
             }
-        }
-
-        /// <summary>
-        /// Method checks tehe age group and creates appropriate league table
-        /// </summary>
-        /// <param name="leagueAge"></param>
-        /// <param name="leagueType"></param>
-        private static void DecideSeniorOrJuniorLeafue(string leagueAge, string leagueType)
-        {
-            if (leagueAge == SENIOR)
-            {
-                InitialiseSeniorTeamLeague();
-                BuildLeagueTable(leagueType, leagueAge);
-            }
-            else if (leagueAge == JUNIOR)
-            {
-                InitialiseJuniorTeamLeague();
-                BuildLeagueTable(leagueType, leagueAge);
-            }
-        }
+        }   
 
 
         /*---------------   MENU AND PROGRAM FUNCTIONALITY METHODS    ---------------*/
@@ -345,7 +357,7 @@ namespace CA3
         /// <param name="goalFor"></param>
         /// <param name="goalAgainst"></param>
         /// <param name="teams"></param>
-        private static void GetScore(ref int goalFor, ref int goalAgainst, Team[] teams)
+        private static void GetScores(ref int goalFor, ref int goalAgainst, Team[] teams)
         {
             bool isValid;
             
@@ -466,12 +478,12 @@ namespace CA3
                 Console.WriteLine(INDENTED_TAB, "", DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "1. Add Results");
                 Console.WriteLine(INDENTED_TAB, "", "2. View League Table");
-                Console.WriteLine(INDENTED_TAB, "", "3. Modify Entered Teams");
-                Console.WriteLine(INDENTED_TAB, "", "4. Back to League Type Selection ");
+                //Console.WriteLine(INDENTED_TAB, "", "3. Modify Entered Teams");
+                Console.WriteLine(INDENTED_TAB, "", "3. Back");
                 Console.WriteLine("\n");
                 Console.Write(INDENTED_TAB, "", "Select option: ");
                 choice = Console.ReadLine();
-                isValid = ValidateInput(choice, 1, 4);
+                isValid = ValidateInput(choice, 1, 3);
             } while (!isValid);
 
             return choice;
@@ -490,9 +502,10 @@ namespace CA3
             Console.Write(DISPLAY_TAB, "ID", "Team Name", "Pld", "Won", "Drawn", "Lost", "For", "Agst", "+/-", "Pts");
             Console.WriteLine();
 
-            foreach (var team in teams)
-                //Console.WriteLine(team.ToString());
-                Console.WriteLine(team);
+            for (int i = 0; i < teams.Length; i++)
+            {
+                Console.WriteLine(teams[i].ToString());
+            }
 
             Console.Write(INDENTED_TAB, "", "\nPress Enter key to return to Main Menu...");
             Console.Read();
@@ -508,6 +521,8 @@ namespace CA3
             do
             {
                 Console.Clear();
+                Console.WriteLine(INDENTED_TAB, "", DIVIDER);
+                Console.WriteLine(INDENTED_TAB, "", "START MENU");
                 Console.WriteLine(INDENTED_TAB, "", DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "What type of League do you want to create?");
                 Console.WriteLine(INDENTED_TAB, "", DIVIDER);
@@ -535,12 +550,12 @@ namespace CA3
             {
                 if (teams[i] != null)
                 {
-                    if (name == teams[i].Name)                    
-                        return i;                    
+                    if (name == teams[i].Name)
+                        return i;
                     else
                         PrintErrorMsg($"[ERROR]: {teams[i].Name} was not found in the league");
                 }
-            }            
+            }
             return -1;
         }
 
