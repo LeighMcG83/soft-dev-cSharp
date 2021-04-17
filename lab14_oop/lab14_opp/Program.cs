@@ -113,25 +113,19 @@ namespace lab14_opp
 
             for (int i = 0; i < AllEmployees2.Length; i++)
             {
-                if (i < 3)
-                {
+                
                     string gender = GetGender();
                     string name = GetEmployeeName();
                     decimal rate = GetHourlyRate();
                     int hours = GetHoursWorked();
-                    AllEmployees2[i] = new PartTimeEmployee(gender, name, rate, hours);
-                }
+                if (i < 3)                
+                    AllEmployees2[i] = new PartTimeEmployee(gender, name, rate, hours);                
                 else
-                {
-                    string gender = GetGender();
-                    string name = GetEmployeeName();
-                    decimal rate = GetHourlyRate();
-                    int hours = GetHoursWorked();
                     AllEmployees2[i] = new Employee(gender, name, rate, hours);
-                }
+                
             }
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < AllEmployees2.Length; i++)
             {
                 Console.WriteLine(AllEmployees2[i].ToString());
                 Console.WriteLine("Your pay = " + AllEmployees2[i].CalcPay());
