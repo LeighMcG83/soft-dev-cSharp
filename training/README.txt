@@ -1,0 +1,1 @@
+A collection of applications written in C#, using Visual Studio. These applications were written astraining exercises while studying for college
