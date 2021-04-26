@@ -12,6 +12,7 @@ namespace eurostat
         private double _riskLevel;
 
 
+
         //props
         public int Year
         {
@@ -32,6 +33,8 @@ namespace eurostat
         }
 
 
+
+
         //ctors
         public RiskStat()
         {
@@ -46,7 +49,7 @@ namespace eurostat
         }
 
 
-
+       
         //methods
         public override string ToString()
         {

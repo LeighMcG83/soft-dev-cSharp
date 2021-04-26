@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using static DataValidationLibrary.ValidationClass;
+//using static DataValidationLibrary;
 
 namespace eurostat
 {
@@ -31,7 +31,6 @@ namespace eurostat
         const string PATH = @"./eurostat.csv";
         //static FileStream sr;
         static bool isValid = false;
-
 
 
 
@@ -47,6 +46,7 @@ namespace eurostat
             {
                 CreateStreamAndReader(PATH, out StreamReader sr, out string lineFromFile);
                 CreateObjListFromFile(ref count, risksList, sr, ref lineFromFile);
+                sr.Close();
 
                 //testprint
                 Console.WriteLine("Objects read from file");
@@ -57,6 +57,10 @@ namespace eurostat
             catch (FileNotFoundException ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                //general error msg
             }
             
             //get valid menu choice and use switch to call correct method()
@@ -70,10 +74,40 @@ namespace eurostat
                     switch (menuChoice)
                     {
                         case "1":
-                            GetValidCountryPrintTrend(risksList, ref isValid);
+                            do
+                            {
+                                menuChoice = GetValidCountryChoice(MENU_TAB, ref isValid);
+                            } while (!isValid && menuChoice != "4");
+                            
+                            int countryIndex = GetCountryChoice(menuChoice, countries);
+                            DisplayTrendTable(countryIndex, countries, risksList);                            
                             break;
                         case "2":
-                            Console.WriteLine($"Option {menuChoice} chose - 2");
+                            Console.WriteLine($"Option {menuChoice} chosen - 2");
+                            double averageRisk = 0;
+
+                            try
+                            {
+                                Console.WriteLine($"{"Country", -10}{"Average Poverty Risk", 20}");
+                                for (int i = 0; i < risksList.Count; i++)
+                                {
+                                    for (int j = 0; j < countries.Length; i++)
+                                    {
+                                        if (risksList[i] != null)
+                                        { 
+                                            if(risksList[i].Country == countries[j])
+                                                averageRisk += risksList[j].RiskLevel;
+                                        }                                        
+                                    }
+                                    Console.WriteLine($"{risksList[i].Country, -10}{averageRisk, 20}");
+                                }
+                                averageRisk /= risksList.Count;
+                            }
+                            catch (ArgumentOutOfRangeException ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+
                             break;
                         case "3":
                             Console.WriteLine($"Option {menuChoice} chosen - 3 To Quit");
@@ -128,6 +162,7 @@ namespace eurostat
             return menuChoice;
         }
 
+
         /// <summary>
         /// Method switches on a menu choice and calls chosen method
         /// </summary>
@@ -137,7 +172,22 @@ namespace eurostat
             switch (menuChoice)
             {
                 case "1":
-                    menuChoice = GetValidCountryPrintTrend(risks, ref isValid);
+                    menuChoice = "";
+                    int countryIndex = 0;
+                    do
+                    {
+                        do
+                        {
+                            menuChoice = GetValidCountryChoice(MENU_TAB, ref isValid);
+                        } while (!isValid && menuChoice != "4");
+
+                        if (isValid && menuChoice != "4")
+                        {
+                            countryIndex = GetCountryChoice(menuChoice, countries);
+                            DisplayTrendTable(countryIndex, countries, risks);
+                        }
+                    } while (menuChoice != "4");
+
                     break;
                 case "2":
                     Console.WriteLine($"Option {menuChoice} chose - 2");
@@ -151,6 +201,8 @@ namespace eurostat
             }
         }
 
+
+
         private static void GetValidCountryPrintTrend(List<RiskStat> risks, ref bool isValid)
         {
             string menuChoice;
@@ -162,7 +214,7 @@ namespace eurostat
 
             if (isValid && menuChoice != "4")
             {
-                countryIndex = GetCountryChoice(countries, risks);
+                countryIndex = GetCountryChoice(menuChoice, countries);
                 DisplayTrendTable(countryIndex, countries, risks);
             }
             //testprint
@@ -175,21 +227,23 @@ namespace eurostat
         /// <param name="countries"></param>
         /// <param name="risks"></param>
         /// <returns>The index of the name in the list of objs, else returns -1</returns>
-        private static int GetCountryChoice(string[] countries, List<RiskStat> risks)
+        private static int GetCountryChoice(string input, string[] countries)
         {
-            for (int i = 0; i < risks.Count; i++)
-            {
-                for (int j = 0; j < countries.Length; j++)
-                {
-                    if (risks[i].Country == countries[j])
-                        return i;
-                }
+            for (int i = 0; i < countries.Length; i++)
+            {                
+                if (countries[i] == countries[Convert.ToInt32(input) - 1] )
+                    return i;                
             }
             return -1;
         }
 
 
-
+        /// <summary>
+        /// Method displays the trends for all years for a given country
+        /// </summary>
+        /// <param name="countryIndex"></param>
+        /// <param name="countries"></param>
+        /// <param name="risks"></param>
         private static void DisplayTrendTable(int countryIndex, string[] countries, List<RiskStat> risks)
         {
             string country = countries[countryIndex];
@@ -262,7 +316,7 @@ namespace eurostat
             return input;
 
         }
-
+    
         /// <summary>
         /// Method gets a valid menu choice from the user, loops until valid input received
         /// </summary>
@@ -343,7 +397,6 @@ namespace eurostat
                     lines[i] = sr.ReadLine();
             }
             sr.Close();
-            fs.Close();
         }
 
 
@@ -365,6 +418,65 @@ namespace eurostat
             return -1;
         }
 
+
+        static public bool IsInteger(string textIn, string name)
+        {
+            //int num;
+
+            if (int.TryParse(textIn, out int num))
+                return true;
+            else
+            {
+                Console.WriteLine("{0} must be of type integer", name);
+
+                return false;
+            }
+
+
+        }
+
+
+        /// Method takes a string and checks if it is of a valid len, which is also passedas an arg.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="len"></param>
+        /// <returns>True id length is correct, or else prints appropriate message to user and returns false</returns>
+        private static bool IsValidLen(string input, int len)
+        {
+            if (input.Length == len)
+                return true;
+            else
+            {
+                Console.WriteLine($"{input} should be {len} chars long.");
+                return false;
+            }
+        }//END: ISValidLen()
+
+
+        static public bool IsPresent(string textIn, string name)
+        {
+            if (textIn == "")
+            {
+                Console.WriteLine("{0} must be present", name);
+                return false;
+            }
+            else
+                return true;
+
+        }
+
+
+        static public bool IsWithInRange(string textIn, string name, int min, int max)
+        {
+            int number = int.Parse(textIn);
+            if (number < min || number > max)
+            {
+                Console.WriteLine("{0} must be within range {1} and{2}", name, min, max);
+                return false;
+            }
+            else
+                return true;
+        }
 
     }//END: class Program
 }
