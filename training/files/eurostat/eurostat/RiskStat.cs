@@ -11,8 +11,7 @@ namespace eurostat
         private string _country;
         private double _riskLevel;
 
-
-
+        
         //props
         public int Year
         {
@@ -33,8 +32,6 @@ namespace eurostat
         }
 
 
-
-
         //ctors
         public RiskStat()
         {
@@ -53,6 +50,7 @@ namespace eurostat
         //methods
         public override string ToString()
         {
+            Console.WriteLine();
             return $"{_year, 8} {_country, 12} {_riskLevel, 8}";
         }
 

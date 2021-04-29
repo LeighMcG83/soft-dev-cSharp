@@ -33,12 +33,11 @@ namespace eurostat
         static bool isValid = false;
 
 
-
         static void Main(string[] args)
-        {
+        {         
             int count = 0;
             bool validInput = false;
-            string menuChoice = string.Empty;
+            string menuChoice = "";
             List<RiskStat> risksList = new List<RiskStat>();
 
             //open file and read fields to object[]
@@ -60,14 +59,16 @@ namespace eurostat
             }
             catch (Exception ex)
             {
-                //general error msg
+                Console.WriteLine(ex.Message);
             }
-            
+
+
+
             //get valid menu choice and use switch to call correct method()
             do
             {
                 menuChoice = GetValidMainMenuChoice(MENU_TAB, ref validInput); //pass validInput by ref to evaluate next if()
-                if (validInput) 
+                if (validInput)
                 {
                     //ActivateMenuChoice(menuChoice, risksList, ref isValid);  
                     //contains same code as switch(menuChoice)
@@ -78,9 +79,9 @@ namespace eurostat
                             {
                                 menuChoice = GetValidCountryChoice(MENU_TAB, ref isValid);
                             } while (!isValid && menuChoice != "4");
-                            
+
                             int countryIndex = GetCountryChoice(menuChoice, countries);
-                            DisplayTrendTable(countryIndex, countries, risksList);                            
+                            DisplayTrendTable(countryIndex, countries, risksList);
                             break;
                         case "2":
                             Console.WriteLine($"Option {menuChoice} chosen - 2");
@@ -88,19 +89,22 @@ namespace eurostat
 
                             try
                             {
-                                Console.WriteLine($"{"Country", -10}{"Average Poverty Risk", 20}");
+                                Console.WriteLine($"{"Country",-10}{"Average Poverty Risk",20}");
                                 for (int i = 0; i < risksList.Count; i++)
                                 {
                                     for (int j = 0; j < countries.Length; i++)
                                     {
                                         if (risksList[i] != null)
-                                        { 
-                                            if(risksList[i].Country == countries[j])
+                                        {
+                                            if (risksList[i].Country == countries[j])
+
                                                 averageRisk += risksList[j].RiskLevel;
-                                        }                                        
+                                        }
                                     }
-                                    Console.WriteLine($"{risksList[i].Country, -10}{averageRisk, 20}");
+
+                                    Console.WriteLine($"{risksList[i].Country,-10}{(double)0,20}");
                                 }
+                               
                                 averageRisk /= risksList.Count;
                             }
                             catch (ArgumentOutOfRangeException ex)
@@ -129,7 +133,7 @@ namespace eurostat
 
 
         /// <summary>
-        /// eMethos creates FileStream and StreamReader objects to a passed in file path
+        /// Method creates FileStream and StreamReader objects to a passed in file path
         /// </summary>
         /// <param name="PATH"></param>
         /// <param name="sr"></param>
@@ -230,9 +234,9 @@ namespace eurostat
         private static int GetCountryChoice(string input, string[] countries)
         {
             for (int i = 0; i < countries.Length; i++)
-            {                
-                if (countries[i] == countries[Convert.ToInt32(input) - 1] )
-                    return i;                
+            {
+                if (countries[i] == countries[Convert.ToInt32(input) - 1])
+                    return i;
             }
             return -1;
         }
@@ -254,6 +258,7 @@ namespace eurostat
                 {
                     if (risks[i].Country == country)
                     {
+                        //add pele to pele
                         Console.WriteLine($"{risks[i].Year,15}{risks[i].RiskLevel,15}");
                     }
                 }
@@ -316,7 +321,7 @@ namespace eurostat
             return input;
 
         }
-    
+
         /// <summary>
         /// Method gets a valid menu choice from the user, loops until valid input received
         /// </summary>
