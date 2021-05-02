@@ -30,29 +30,26 @@ namespace CA3
         const string INDENTED_TAB = "{0, 10}{1, -20}";
         const string DISPLAY_TAB = "{0, -5}{1, -20}{2, -5}{3, -5}{4, -5}{5, -5}{6, -5}{7, -5}{8, -5}{9, -5}";
         //static string[] teamNames = { "Rep. of Ireland", "Oman", "Brazil", "Scotland", "England" };  //use file instead
-        static JuniorTeam[] juniorTeams = new JuniorTeam[5];
+        //static JuniorTeam[] juniorTeams = new JuniorTeam[5];
         static Team[] teams = new Team[5];
+        static Team[] teamsInFile = new Team[4];
 
-        const string QUIT = "3";
-        const string SENIOR = "1";                 //menu option for senior team league
-        const string JUNIOR = "2";
+        private const string QUIT = "3";
+        private const string SENIOR = "1";                 //menu option for senior team league
+        private const string JUNIOR = "2";
 
-        private const string PATH_TEAM_NAMES = @"./teams.txt";
-        private const string PATH_RESULTS = @"./results.txt";
+        private const string PATH_TEAM_NAMES = @"teams.txt";
+        private const string PATH_RESULTS = @"results.csv";
+        private const string PATH_TABLE = @"table.txt";
 
         static void Main(string[] args)
         {
             //setup
-            string menuChoice = "";
+            string menuChoice;
             bool validChoice = false;
-            int goalFor = 0, goalAgainst = 0;       //will take values for each game's score (pass by ref to GetScore())
+            int goalFor = 0, goalAgainst = 0;                //will take values for each game's score (pass by ref to GetScore())
             string leagueAge = "", leagueType = "";
-            FileStream fs;
-            StreamReader fileInput;
             string[] teamNames = File.ReadAllLines(PATH_TEAM_NAMES);
-            
-            for (int i = 0; i < teamNames.Length; i++)
-                teams[i] = new Team();
 
             leagueAge = DecideLeagueAge(ref validChoice);
 
@@ -60,49 +57,51 @@ namespace CA3
             {
                 try
                 {
-                    ReadTeamsData(out fs, out fileInput, out teamNames, leagueAge);
-                    fileInput.Close();
-                    fs.Close();
+                    ReadTeamsData(out teamNames, leagueAge);            //do not need out
                 }
                 catch (FileNotFoundException ex)
                 {
-                    Console.WriteLine($"{ex.FileName} not found when attempting to open file");
+                    Console.WriteLine($"{ex.FileName} not found when attempting to open file in ReadTeamsData() call.");
                 }
-
-                do
+                catch (Exception ex)
                 {
-                    if (leagueAge != QUIT)
-                    {
-                        leagueType = ChooseDefaultOrCustomTeams(ref validChoice);
-                        try
-                        {
-                            BuildLeagueTable(leagueType, leagueAge, teamNames);
-                        }
-                        catch (InvalidCastException ex)
-                        {
-                            //tried an illegal cast with team/juniorteam
-                            Console.WriteLine(ex.Message);
-                        }
-                        catch (NullReferenceException ex)
-                        {
-                            //tried to access a null object
-                            Console.WriteLine(ex.Message);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            MainMenu(ref menuChoice, ref goalFor, ref goalAgainst);
-                        }
-                    }//END: if(leagueAge != QUIT)            
-                    else
-                    {
-                        PrintExitMsg();
-                        break;
-                    }
+                    Console.WriteLine("Exception other than FileNotFoundException occured\n" + ex.Message + "\n");
+                }
+                
+                leagueType = ChooseDefaultOrCustomTeams(ref validChoice);
 
-                } while (leagueAge != QUIT);
-            }
+                if (validChoice) //was assigned in ChooseDefaultOrCustomTeams() and passsed by ref
+                {
+                    try
+                    {
+                        BuildLeagueTable(leagueType, leagueAge, teamNames);
+                    }
+                    catch (InvalidCastException ex)
+                    {
+                        //tried an illegal cast with team/juniorteam
+                        Console.WriteLine(ex.Message);
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        //tried to access a null object
+                        Console.WriteLine(ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Exception other than InvalidCastException or NullReferenceException thrown by BuildLeagueTable()\n" + ex.Message);
+                    }
+                }//END: if (validChoice)
+                                            
+                menuChoice = GetMainMenuChoice();
+                ActivateMainMenuChoice(ref menuChoice, ref goalFor, ref goalAgainst);
+
+            }//END: if(leagueAge != QUIT)
             
+            else
+            {
+                PrintExitMsg();
+            }
+
         }//END: Main()
 
 
@@ -112,27 +111,29 @@ namespace CA3
         /// Method opens the names file and creates a Team[] or JuniorTeam[] of objects with the names from the file
         /// </summary>
         /// <param name="fs"></param>
-        /// <param name="fileInput"></param>
+        /// <param name="sr"></param>
         /// <param name="teamNames"></param>
         /// <param name="leagueAge"></param>
-        private static void ReadTeamsData(out FileStream fs, out StreamReader fileInput, out string[] teamNames, string leagueAge)
+        private static void ReadTeamsData(out string[] teamNames, string leagueAge)
         {           
-            fs = new FileStream(PATH_TEAM_NAMES, FileMode.Open, FileAccess.Read);
-            fileInput = new StreamReader(fs);
+            FileStream fs = new FileStream(PATH_TEAM_NAMES, FileMode.Open, FileAccess.Read);
+            StreamReader sr = new StreamReader(fs);
             teamNames = File.ReadAllLines(PATH_TEAM_NAMES);
 
             if (leagueAge == JUNIOR)
             {
                 string age = GetAgeGroup();
 
-                for (int i = 0; i < teams.Length; i++)
-                    teams[i] = new JuniorTeam(teamNames[i], age);
+                for (int i = 0; i < teamsInFile.Length; i++)
+                    teamsInFile[i] = new JuniorTeam(teamNames[i], age);
             }
             else if (leagueAge == SENIOR)
             {
-                for (int i = 0; i < teams.Length; i++)
-                    teams[i] = new Team(teamNames[i], 0, 0);
-            }                   
+                for (int i = 0; i < teamsInFile.Length; i++)
+                    teamsInFile[i] = new Team(teamNames[i], 0, 0);
+            }
+            sr.Close();
+            fs.Close();
 
         }//END: ReadTeamsData()
 
@@ -180,10 +181,10 @@ namespace CA3
             }
             else
             {
-                for (int i = 0; i < juniorTeams.Length; i++)
+                for (int i = 0; i < teams.Length; i++)
                 {
-                    juniorTeams[i] = new JuniorTeam();
-                    juniorTeams[i].Name = names[i];
+                    teams[i] = new JuniorTeam();
+                    teams[i].Name = names[i];
                 }
             }
 
@@ -290,25 +291,27 @@ namespace CA3
         /// <param name="menuChoice"></param>
         /// <param name="goalFor"></param>
         /// <param name="goalAgainst"></param>
-        private static void MainMenu(ref string menuChoice, ref int goalFor, ref int goalAgainst)
+        private static void ActivateMainMenuChoice(ref string menuChoice, ref int goalFor, ref int goalAgainst)
         {
-            while (menuChoice != QUIT)//REFACTOR ThIS CODE BLOCK INTO METHOD
+            while (menuChoice != QUIT)
             {
-                menuChoice = PrintMainMenu();
+                menuChoice = GetMainMenuChoice();
 
                 switch (menuChoice)
                 {
                     case "1":
-                        GetScores(ref goalFor, ref goalAgainst, teams);
+                        GetScores(ref goalFor, ref goalAgainst, teamsInFile);
                         break;
                     case "2":
-                        PrintLeagueTable(teams);
+                        //PrintLeagueTable();
+                        PrintOutTable();                //to console
+                        OutputTableToFile(); //to file
                         break;
-                    case "3":
+                    case "3":   //QUIT
                         PrintExitMsg("Returning to League Setup");
                         break;
                     default:
-                        menuChoice = PrintMainMenu();   //change to an error message???
+                        Console.WriteLine("error message");
                         break;
 
                 }//END: switch(menuChoice)
@@ -316,25 +319,101 @@ namespace CA3
             }//END: while(menuchoice != Quit)   
         }
 
+        private static void OutputTableToFile()
+        {
+            //FileStream fs = new FileStream(PATH_TABLE, FileMode.OpenOrCreate, FileAccess.Write);
+            //StreamWriter sw = new StreamWriter(fs);
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(PATH_TABLE, true))
+                {
+                    for (int i = 0; i < teamsInFile.Length; i++)
+                    {
+                        sw.WriteLine(teamsInFile[i].ToString());
+                    }
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message + "\nFile not found when writing table to file");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified exception thrown when writing table to file.");
+            }
+            
+
+            
+            //sw.Close;
+        }
+
+
+        /// <summary>
+        /// Method prints the table to console after reading from file
+        /// </summary>
+        private static void PrintOutTable()
+        {
+            FileStream fs = new FileStream(PATH_RESULTS, FileMode.Open, FileAccess.Read);
+            StreamReader sr = new StreamReader(fs);
+            string lineIn = sr.ReadLine();
+
+            while (lineIn != null)
+            {
+                string[] fields = lineIn.Split(',');
+                if (fields.Length == 4) //4 cols in file
+                {
+                    int homeIndex = 0;
+                    int awayIndex = 0;
+                    for (int i = 0; i < teamsInFile.Length; i++)
+                    {
+                        if (teamsInFile[i].Name == fields[0])
+                        {
+                            homeIndex = i;
+                        }
+                        if (teamsInFile[i].Name == fields[1])
+                        {
+                            awayIndex = i;
+                        }
+                    }
+                    teamsInFile[homeIndex].AddMatchResult(Convert.ToInt32(fields[2]), Convert.ToInt32(fields[3]));
+                    teamsInFile[awayIndex].AddMatchResult(Convert.ToInt32(fields[3]), Convert.ToInt32(fields[2]));
+                }
+                lineIn = sr.ReadLine();                
+            }
+
+            Console.WriteLine(DISPLAY_TAB, "ID", "TeamName", "Pld", "Won", "Draw", "Lost", "For", "Against", "+/-", "Pts");
+
+            for (int i = 0; i < teamsInFile.Length; i++)
+            {
+                //Console.WriteLine($"{teamsInFile[i], 6}{teamsInFile[i].GamesPlayed, 8}{teamsInFile[i].Scored, 8}{teamsInFile[i].Conceeded, 10}{teamsInFile[i].Pts, 8}");
+                Console.WriteLine(teamsInFile[i].ToString());
+            }
+        }
+
+
         /// <summary>
         /// Method gets the score form the user
         /// </summary>
         /// <param name="goalFor"></param>
         /// <param name="goalAgainst"></param>
         /// <param name="teams"></param>
-        private static void GetScores(ref int goalFor, ref int goalAgainst, Team[] teams)
+        private static void GetScores(ref int goalFor, ref int goalAgainst, Team[] teamsInFile)
         {
             bool isValid;
             
-            for (int i = 0; i < teams.Length; i++)
+            for (int i = 0; i < teamsInFile.Length; i++)
             {
-                string homeTeam = teams[i].Name;
+                string homeTeam = teamsInFile[i].Name;
 
-                for (int j = 0; j < teams.Length; j++)
+                for (int j = 0; j < teamsInFile.Length; j++)
                 {
-                    string awayTeam = teams[j].Name;
+                    string awayTeam = teamsInFile[j].Name;
 
-                    if (teams[i].Name != teams[j].Name)
+                    if (teamsInFile[i].Name != teamsInFile[j].Name)
                     {
                         DisplayCurrenFixture(homeTeam, awayTeam);
                         do
@@ -354,21 +433,15 @@ namespace CA3
                                     {
                                         goalAgainst = Convert.ToInt32(input);
                                         Console.ForegroundColor = ConsoleColor.Green;
-                                        Console.WriteLine("\n[SUCCESS]: Result Added\n");
+                                        Console.WriteLine("\n[SUCCESS]: Result Added to array\n");
                                         Console.ForegroundColor = ConsoleColor.White;
                                     }
-                                } while (!isValid);
-                                //while (away score !valid)
+                                } while (!isValid); //while (away score !valid)
                             }//END: if(home == valid)
 
                             teams[i].AddMatchResult(goalFor, goalAgainst);
                             teams[j].AddMatchResult(goalAgainst, goalFor);  //use to add both home and away stats (may not need this
-                            FileStream fs = new FileStream(PATH_RESULTS, FileMode.Open, FileAccess.Write);
-                            StreamWriter sw = new StreamWriter(fs);
-                            sw.WriteLine($"{homeTeam}, {awayTeam}, {goalFor}, {goalAgainst}");
-
-                            /*test print file contents here */
-
+                            UpdateTeamResults(goalFor, goalAgainst, homeTeam, awayTeam);
 
                         } while (!isValid);
 
@@ -376,6 +449,40 @@ namespace CA3
                 }//END: (for awayteams)                
             }//END: for(homeTeams
         }//END: GetScore()
+
+
+
+        /// <summary>
+        /// Method writes a result to file. Takes params for goals scored and conceedded and the name of home and away teams
+        /// </summary>
+        /// <param name="goalFor"></param>
+        /// <param name="goalAgainst"></param>
+        /// <param name="homeTeam"></param>
+        /// <param name="awayTeam"></param>
+        private static void UpdateTeamResults(int goalFor, int goalAgainst, string home, string away)
+        {
+            try
+            {
+                FileStream fs = new FileStream(PATH_RESULTS, FileMode.Append, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs);
+                sw.WriteLine($"{home}, {away}, {goalFor}, {goalAgainst}");
+                PrintSuccessMessage("[SUCCESS]: Result written to file.");
+                sw.Close();
+            }
+            catch (FileNotFoundException ex)
+            {
+                PrintErrorMsg(ex.Message + "\nFile not found when writing results to file");
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                PrintErrorMsg(ex.Message + "\nTried to write result to a directory that didnot exist");
+            }
+            catch (Exception ex)
+            {
+                PrintErrorMsg(ex.Message + "\nUnspecified exception thrown while adding match results.");
+            }
+            
+        }
 
         /// <summary>
         /// Method displays the current fixture being entered.
@@ -436,13 +543,13 @@ namespace CA3
         /// Method displays the main menu options
         /// </summary>
         /// <returns>A string of valid menu choice</returns>
-        private static string PrintMainMenu()
+        private static string GetMainMenuChoice()
         {
             bool isValid;
             string choice = " "; 
             do
             {
-                Console.Clear();
+                //Console.Clear();  //is clearing the table printed to console
                 Console.WriteLine(INDENTED_TAB, "", DIVIDER);
                 Console.WriteLine(INDENTED_TAB, "", "MAIN MENU");
                 Console.WriteLine(INDENTED_TAB, "", DIVIDER);
@@ -463,7 +570,7 @@ namespace CA3
         /// Method displays the league table
         /// </summary>
         /// <param name="teams"></param>
-        private static void PrintLeagueTable(Team[] teams)
+        private static void PrintLeagueTable()
         {
             Console.Clear();
             Console.WriteLine(DIVIDER);
@@ -472,9 +579,9 @@ namespace CA3
             Console.Write(DISPLAY_TAB, "ID", "Team Name", "Pld", "Won", "Drawn", "Lost", "For", "Agst", "+/-", "Pts");
             Console.WriteLine();
 
-            for (int i = 0; i < teams.Length; i++)
+            for (int i = 0; i < teamsInFile.Length; i++)
             {
-                Console.WriteLine(teams[i].ToString());
+                Console.WriteLine(teamsInFile[i].ToString());
             }
 
             Console.Write(INDENTED_TAB, "", "\nPress Enter key to return to Main Menu...");
@@ -566,7 +673,6 @@ namespace CA3
             Console.Clear();
         }
 
-
         /// <summary>
         /// Method prints a message informing user that application is closing
         /// </summary>
@@ -613,13 +719,15 @@ namespace CA3
         /// <returns>True if string is not empty, or false if it is</returns>
         private static bool IsPresent(string input, string inputLabel)
         {
+            bool isValid = false;
             if (input != String.Empty)
-                return true;            
+                isValid = true;
             else
-            { 
+            {
                 PrintErrorMsg($"\n[ERROR]: {inputLabel} cannot be blank\n");
-                return false;
+                isValid = false;
             }
+            return isValid;
         }//END: IsPresent();
 
         /// <summary>
