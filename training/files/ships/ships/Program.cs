@@ -1,4 +1,20 @@
-﻿using System;
+﻿/* ==============================================================================================
+ * Worksheet: |  ships question 
+ * Program:   |  ships.cs
+ * Author:    |  Leigh McGuinness - s00183063
+ * Created:   |  02/05/21
+ * -----------|-----------------------------------------------------------------------------------
+ * Purpose:   |  Read data from a text file and create Ship-type obj's. 
+ *            |  Write a method to print all vessels' data on file.
+ *            |  Write method to view vessels over 3500 ton by location
+ *            |  Write method to search a vessel and print its location if found
+ * -----------|-----------------------------------------------------------------------------------
+ * Mods:      |  Changed SearchVessels() to ID num search as names contain special chars
+ * -----------|-----------------------------------------------------------------------------------
+ * BUGS:      |  No Validation added
+ * ==============================================================================================*/
+
+]using System;
 using System.IO;
 using System.Collections.Generic;
 
