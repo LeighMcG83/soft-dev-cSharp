@@ -76,7 +76,7 @@ namespace ships
                 {
                     if (ships[i].ID == id)
                     {
-                        Console.WriteLine($"Location: {locations[i]}");
+                        Console.WriteLine($"Location: {locations[ships[i].Location - 1]}"); //locations[] starts at zero, ship.Location starts at 1
                         isFound = true;
                     }
                 }
