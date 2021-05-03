@@ -7,6 +7,13 @@ namespace ships
     class Program
     {
         private const string PATH = @"./FrenchMF.TXT";
+        private static string[] locations = {
+                "The Pacific",
+                "The Atlantic",
+                "The Mediterranean",
+                "The Indian Ocean",
+                "The Other Seas"
+            };
 
         static void Main(string[] args)
         {
@@ -31,11 +38,11 @@ namespace ships
                         PrintVesselReport(vessels);
                         break;
                     case "2":
+                        Console.WriteLine($"{"Location", -20}{"Vessel Count"}");
                         PrintLocationAnalysisReport(vessels);
-
                         break;
                     case "3":
-                        //SearchVessels();
+                        SearchVessels(vessels);
 
                         break;
                     case "4":
@@ -51,38 +58,63 @@ namespace ships
 
         }//END: Main()
 
+
+
+        private static void SearchVessels(List<Ship> ships)
+        {
+            Console.WriteLine("enter a vessel name to search for: ");
+            string name = Console.ReadLine();
+
+            for (int i = 0; i < ships.Count; i++)
+            {
+                if (ships[i].Name == name)                
+                    Console.WriteLine($"Location: {ships[i].Location}");                
+                else
+                    Console.WriteLine($"{name} not found. Check your spelling.");
+            }
+        }
+
+
+        /// <summary>
+        /// Method prints the location report of all vessels to the console.
+        /// </summary>
+        /// <param name="vessels"></param>
         private static void PrintLocationAnalysisReport(List<Ship> vessels)
         {
-            int[] regions = new int[6]; //count the occurances of each region
+            int[] regions = new int[6]; //keep a count of the occurances of each region
             int index = 0;
-           
+            int[] locationCounts = new int[5];
 
             for (int i = 0; i < vessels.Count; i++)
             {
                 index = FindLocationIndex(vessels[i]);
-
-
+                locationCounts[index]++;            //accumulate the count in each region
+            }
+            for (int i = 0; i < locations.Length; i++)
+            {
+                Console.WriteLine($"{locations[i], -20}{locationCounts[i], -14}");
             }
         }
 
+        /// <summary>
+        /// Method searches a ships location in an array of locations.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns>>The index position of the locatin in the array if found, else returns -1</returns>
         private static int FindLocationIndex(Ship s)
         {
-            string[] locations = {
-                "The Pacific",
-                "The Atlantic",
-                "The Mediterranean",
-                "The Indian Ocean",
-                "The Other Seas"
-            };
-
-            for (int i = 0; i < locations.Length; i++)
+           for (int i = 0; i < locations.Length; i++)
             {
-                if (i == s.Location)
+                if (i + 1  == s.Location)
                     return i;                
             }
             return -1;
         }
 
+        /// <summary>
+        /// Method prints all the objects in List of vessels, passed as param, to the console. 
+        /// </summary>
+        /// <param name="vessels"></param>
         private static void PrintVesselReport(List<Ship> vessels)
         {
             for (int i = 0; i < vessels.Count; i++)
@@ -93,6 +125,11 @@ namespace ships
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Method reads all vessels in a file passed as an arg, and creates a Ship obj from each line on the file.
+        /// </summary>
+        /// <param name="PATH"></param>
+        /// <param name="vessels"></param>
         private static void ReadVesselsFromFile(string PATH, ref List<Ship> vessels)
         {
             FileStream fs = new FileStream(PATH, FileMode.Open, FileAccess.Read);
