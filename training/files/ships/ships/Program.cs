@@ -7,7 +7,7 @@ namespace ships
     class Program
     {
         private const string PATH = @"./FrenchMF.TXT";
-        private static string[] locations = {
+        private static readonly string[] locations = {
                 "The Pacific",
                 "The Atlantic",
                 "The Mediterranean",
@@ -23,7 +23,7 @@ namespace ships
             string input;
             do
             {
-                Console.WriteLine("Menu");
+                Console.WriteLine("\nMenu\n");
                 Console.WriteLine("1. Vessel Report");
                 Console.WriteLine("2. Location Analysis Report");
                 Console.WriteLine("3. Search for a vessel");
@@ -38,12 +38,11 @@ namespace ships
                         PrintVesselReport(vessels);
                         break;
                     case "2":
-                        Console.WriteLine($"{"Location", -20}{"Vessel Count"}");
+                        Console.WriteLine($"{"\n"}{"Location", -20}{"Vessel Count"}");
                         PrintLocationAnalysisReport(vessels);
                         break;
                     case "3":
-                        SearchVessels(vessels);
-
+                        SearchVessels(vessels, locations);
                         break;
                     case "4":
                         System.Environment.Exit(0); 
@@ -59,19 +58,40 @@ namespace ships
         }//END: Main()
 
 
-
-        private static void SearchVessels(List<Ship> ships)
+        
+        private static void SearchVessels(List<Ship> ships, string[] locations)
         {
-            Console.WriteLine("enter a vessel name to search for: ");
-            string name = Console.ReadLine();
-
-            for (int i = 0; i < ships.Count; i++)
+            Console.WriteLine($"{"Ship ID", -10}{"Name", -15}");
+            foreach (Ship s in ships)
             {
-                if (ships[i].Name == name)                
-                    Console.WriteLine($"Location: {ships[i].Location}");                
-                else
-                    Console.WriteLine($"{name} not found. Check your spelling.");
+                Console.WriteLine($"{s.ID, -10}{s.Name, -15}");
             }
+
+            Console.Write("\nEnter a vessel ID to search for: ");
+            int id = Convert.ToInt32(Console.ReadLine());
+            try
+            {
+                bool isFound = false;
+                for (int i = 0; i < ships.Count; i++)
+                {
+                    if (ships[i].ID == id)
+                    {
+                        Console.WriteLine($"Location: {locations[i]}");
+                        isFound = true;
+                    }
+                }
+                if (!isFound)                
+                    Console.WriteLine($"\nShip number {id} not found.");                
+            }
+            catch(IndexOutOfRangeException ex)
+            {
+                Console.WriteLine("\n" + ex.Message + "\nSearch went out of bounds while searching for the vessel name");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("\nUspecified error occured when searching for the vessel name.");
+            }
+            
         }
 
 
@@ -81,19 +101,31 @@ namespace ships
         /// <param name="vessels"></param>
         private static void PrintLocationAnalysisReport(List<Ship> vessels)
         {
-            int[] regions = new int[6]; //keep a count of the occurances of each region
             int index = 0;
-            int[] locationCounts = new int[5];
+            int[] locationCounts = new int[5];  //keep a count of the occurances of each region
 
-            for (int i = 0; i < vessels.Count; i++)
+            try
             {
-                index = FindLocationIndex(vessels[i]);
-                locationCounts[index]++;            //accumulate the count in each region
+                for (int i = 0; i < vessels.Count; i++)
+                {
+                    index = FindLocationIndex(vessels[i]);
+                    //accumulate the count in each region - refactor: can pass index using the method call instead assigning to 'index'?
+                    locationCounts[index]++;            
+                }
+                for (int i = 0; i < vessels.Count; i++)
+                {
+                    Console.WriteLine($"{locations[i],-20}{locationCounts[i],-14}");
+                }
             }
-            for (int i = 0; i < locations.Length; i++)
+            catch (IndexOutOfRangeException ex)
             {
-                Console.WriteLine($"{locations[i], -20}{locationCounts[i], -14}");
+                Console.WriteLine(ex.Message + "Search error - out of bounds while finding the index or printing the Analysis Report.");
             }
+            catch (Exception)
+            {
+                Console.WriteLine("Uspecified error occured when searching for the vessel index.");
+            }
+
         }
 
         /// <summary>
@@ -103,11 +135,23 @@ namespace ships
         /// <returns>>The index position of the locatin in the array if found, else returns -1</returns>
         private static int FindLocationIndex(Ship s)
         {
-           for (int i = 0; i < locations.Length; i++)
+            try
             {
-                if (i + 1  == s.Location)
-                    return i;                
+                for (int i = 0; i < locations.Length; i++)
+                {
+                    if (i + 1 == s.Location)
+                        return i;
+                }
             }
+            catch(IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "Search out of bounds while searching the vessels location.");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified Error ehile searching the vessels location.");
+            }
+          
             return -1;
         }
 
@@ -132,23 +176,42 @@ namespace ships
         /// <param name="vessels"></param>
         private static void ReadVesselsFromFile(string PATH, ref List<Ship> vessels)
         {
-            FileStream fs = new FileStream(PATH, FileMode.Open, FileAccess.Read);
-            StreamReader sr = new StreamReader(fs);
-            string lineIn = sr.ReadLine();
-           
-            while ((lineIn = sr.ReadLine()) != null)
+            FileStream fs = null;
+            StreamReader sr = null;
+            try
             {
-                string[] fields = lineIn.Split(',');
-                if (fields.Length == 5)
-                {
-                    Ship newShip = new Ship(fields[0], Convert.ToInt32(fields[1]), Convert.ToInt32(fields[2]), Convert.ToInt32(fields[3]), Convert.ToInt32(fields[4]));
-                    vessels.Add(newShip);
-                }
-                lineIn = sr.ReadLine();
-            }
+                fs = new FileStream(PATH, FileMode.Open, FileAccess.Read);
+                sr = new StreamReader(fs);
+                string lineIn = sr.ReadLine();
 
-            sr.Close();
-            fs.Close();
+                while ((lineIn = sr.ReadLine()) != null)
+                {
+                    string[] fields = lineIn.Split(',');
+                    if (fields.Length == 5)
+                    {
+                        Ship newShip = new Ship(fields[0], Convert.ToInt32(fields[1]), Convert.ToInt32(fields[2]), Convert.ToInt32(fields[3]), Convert.ToInt32(fields[4]));
+                        vessels.Add(newShip);
+                    }
+                    lineIn = sr.ReadLine();
+                }
+            }//End: try block
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message + "\nError reading data from file");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex.Message + "\nError reading data from file");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Uspecified error occured when reading from file.");
+            }
+            finally
+            {
+                sr?.Close();
+                fs?.Close();
+            }            
         }
 
 

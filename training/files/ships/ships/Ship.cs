@@ -12,7 +12,9 @@ namespace ships
         private int _tonnage;
         private int _crew;
         private int _location;
+        private int _id;
 
+        private static int idCounter = 1;
         private static readonly int[] vesselCosts = { 2610, 2359, 2050, 999, 2550, 2510 };
         private static readonly string[] vesselFunctions = { 
             "Aircraft carrier",
@@ -34,11 +36,14 @@ namespace ships
         //props
 
         /*can these properties have private setters?? */
-
+        public int ID
+        {
+            get { return _id; }
+        }
         public int Location
         {
             get { return _location; }
-            set { _location = value; }
+            //set { _location = value; }
         }
 
 
@@ -74,11 +79,14 @@ namespace ships
         //ctors
         public Ship()
         {
-
+            _id = idCounter;
+            idCounter++;
         }
 
         public Ship(string name, int type, int tonnage, int crew, int location)
         {
+            _id = idCounter;
+            idCounter++;
             _name = name;
             _type = type;
             _tonnage = tonnage;
