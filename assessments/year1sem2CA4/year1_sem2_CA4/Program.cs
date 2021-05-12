@@ -104,8 +104,7 @@ namespace year1_sem2_CA4
             catch(Exception ex)
             {
                 Console.WriteLine("\nError - unsoecified exception thrown while displaying graduates in DisplayGraduates().\n" + ex.Message);
-            }
-           
+            }           
         }
 
 
