@@ -24,32 +24,19 @@ namespace q5_avg_min_max
     class Program
     {
 
-        // declare class level(public) array
-        static public int[] NumberArray = new int[5];
-        static public int len = NumberArray.Length;
+        
 
         static void Main(string[] args)
         {
+
+            int[] NumberArray = new int[5];
+            
+
             // Get user to populate the array with 5 numbers
-            PopulateArray();
-
-            /*   -  implemented using user defined methods
-            int min = NumberArray.Min();
-            int max = NumberArray.Max();
-            double avg = NumberArray.Average();
-            */
-
-            // find the minimun value in the array
-            int minValue = CalculateMin();
-
-            // find the Max value in the array
-            int maxValue = CalculateMax();
-
-            // find the average of values in the array
-            double avgValue = CalculateAvg();
+            PopulateArray(NumberArray);           
 
             // display min, max and average values in the array
-            DisplayArrayStats(minValue, maxValue, avgValue);
+            DisplayArrayStats(NumberArray);
 
         } // end of Main()
 
@@ -58,70 +45,73 @@ namespace q5_avg_min_max
         /********** User Defined Methods *************/
 
         // Method to populate the array
-        static public void PopulateArray()
+        static public void PopulateArray(int[] NumberArray)
         {
-            int num = 0;
+            int num;
+            string input;
 
             for (int i = 0; i < 5; i++)
             {
                 Console.Write("Enter a number : ");
-                num = int.Parse(Console.ReadLine());
-                NumberArray[i] = num;                
+                input = Console.ReadLine();
+                if (int.TryParse(input, out num))                
+                    NumberArray[i] = num;                
             }
         }
        
 
         // methid to Calculate min value in array
-        static public int CalculateMin()
+        static public int CalculateMin(int[] NumberArray)
         {
             int min = NumberArray[0];
+            int len = NumberArray.Length;
+
             for (int i = 0; i < len; i++)
             {
-                if (NumberArray[i] < min) 
-                {                    
-                    min = NumberArray[i]; 
-                }
+                if (NumberArray[i] < min)                    
+                    min = NumberArray[i];                 
             }
             return min;
         } // end of CalculateMin()
         
 
         // method to Calculate max value in array
-        static public int CalculateMax()
+        static public int CalculateMax(int[] NumberArray)
         {
             int max = 0;
+            int len = NumberArray.Length;
+
             // find the Max value in the array
             for (int i = 0; i < len; i++)
             {
-                if (NumberArray[i] > max) { max = NumberArray[i]; }
+                if (NumberArray[i] > max) 
+                    max = NumberArray[i];
             }
             return max;
         }  // end of CalculateMax()
 
 
         // methid to Calculate average of values in array
-        static public double CalculateAvg()
+        static public double CalculateAvg(int[] NumberArray)
         {
             // find the average of values in the array
             int total = 0;
-            double avg = 0;
-            for (int i = 0; i < len; i++) 
-            { 
-                total += NumberArray[i];
-            }
-            avg = total / len;
+            int len = NumberArray.Length;
 
-            return avg;
+            for (int i = 0; i < len; i++)              
+                total += NumberArray[i];            
+
+            return total / len; 
         } // end of CalculateAvg()
 
 
         // method to diplay array stats
-        static public void DisplayArrayStats(int minValue, int maxValue, double avgValue)
+        static public void DisplayArrayStats(int[] NumberArray)
         {
             // display the min, max and avg values in the array
-            Console.WriteLine($"\nMinimum : {minValue}");
-            Console.WriteLine($"Maximum : {maxValue}");
-            Console.WriteLine($"Average : {avgValue}");
+            Console.WriteLine($"\nMinimum : {CalculateMin(NumberArray)}");
+            Console.WriteLine($"Maximum : {CalculateMax(NumberArray)}");
+            Console.WriteLine($"Average : {CalculateAvg(NumberArray)}");
         } // end of DisplayArrayStats()
 
     }
