@@ -66,16 +66,17 @@ namespace Part2_q2_bookDelivery
 
                 double baseCost = GetBaseCost(weight, weightCat);   // calculate base cost of delivery
 
-                if (expressType != 0)
-                {
-                    // call delivery cost calculation method
-                    deliveryCost = ExpressDelCost(expressType, baseCost, weight);
-                }
-                else
-                {
-                    deliveryCost = baseCost;    
-                }
-                
+                //if (expressType != 0)
+                //{
+                //    // call delivery cost calculation method
+                //    deliveryCost = ExpressDelCost(expressType, baseCost, weight);
+                //}
+                //else
+                //{
+                //    deliveryCost = baseCost;    
+                //}
+                deliveryCost = (expressType != 0) ? deliveryCost = ExpressDelCost(expressType, baseCost, weight): deliveryCost = baseCost;
+
                 DisplayCost(deliveryCost);  // Display the cost of the delivery
 
                 response = ' ';
@@ -85,10 +86,13 @@ namespace Part2_q2_bookDelivery
                     {
                         Console.Write(INPUTTAB, "\n\nWould you like to calculuate another (y/n)", ": ");
                         response = Convert.ToChar(Console.ReadLine().ToUpper());
-                        if (response == 'N')
-                        {
-                            askAgain = false;
-                        }
+
+                        //if (response == 'N')
+                        //{
+                        //    askAgain = false;
+                        //}
+                        askAgain = (response == 'N') ? false : true;
+
                     } // END: while(respone !=)
                 }
                 catch (Exception)
@@ -109,6 +113,7 @@ namespace Part2_q2_bookDelivery
         {            
             Console.Write(INPUTTAB, "\nEnter the weight of book", ": ");
             double weight = double.Parse(Console.ReadLine());
+
             //// test
             //Console.WriteLine($"\nweight : {weight}");
 
@@ -126,8 +131,10 @@ namespace Part2_q2_bookDelivery
                 Console.WriteLine("\nEnter the delivery method");
                 Console.Write(INPUTTAB, "(R = Regulaer, X = eXpress)", ": ");
                 deliveryType = char.Parse(Console.ReadLine().ToUpper());
+
                 ////Test
                 //Console.WriteLine($"\ndelType : {deliveryType}");
+
             } // end while (!= R && != X)
 
             return deliveryType;
@@ -162,11 +169,11 @@ namespace Part2_q2_bookDelivery
             double baseCost = 0;
 
             if (weightCat == 'A')
-                { baseCost = weight * REGULAR_UNDER_2000; }
+                baseCost = weight * REGULAR_UNDER_2000; 
             else if (weightCat == 'B')
-                { baseCost = (weight * REGULAR_UNDER_2000) + ((weight - 2000) * REGULAR_2001_5000); }
+                baseCost = (weight * REGULAR_UNDER_2000) + ((weight - 2000) * REGULAR_2001_5000); 
             else
-                { baseCost = (weight * REGULAR_UNDER_2000) + ((weight - 2000) * REGULAR_2001_5000) + ((weight - 5000) * REGULAR_OVER_5000); }
+                baseCost = (weight * REGULAR_UNDER_2000) + ((weight - 2000) * REGULAR_2001_5000) + ((weight - 5000) * REGULAR_OVER_5000);
 
             ////Test
             //Console.WriteLine($"\nBaseCost : { baseCost}");
@@ -193,21 +200,15 @@ namespace Part2_q2_bookDelivery
         {
             const double EXPRESS_1 = 1.5, EXPRESS_2 = 2.5, EXPRESS_3 = 3.5;
             double total = 0;
-            // if express, add express charge
-            if (expressType == 1)
-            {
-                total = baseCost + EXPRESS_1;
-            }
-            // else-if is super-express, add supExpress charge
-            else if (expressType == 2)
-            {
-                total = baseCost + EXPRESS_2;
-            }
-            // else, apply catC charge
-            else
-            {
-                total = baseCost + EXPRESS_3;
-            }
+            
+            if (expressType == 1)       // if express, add express charge            
+                total = baseCost + EXPRESS_1;            
+            
+            else if (expressType == 2)  // else-if is super-express, add supExpress charge            
+                total = baseCost + EXPRESS_2;            
+
+            else                        // else, apply catC charge            
+                total = baseCost + EXPRESS_3;            
 
             return total;
 

@@ -33,19 +33,20 @@ namespace Part2_q1_leapYear
                 }
 
                 else if (year % 100 == 0 &&
-                        year % 400 == 0 &&
-                        year % 4 == 0)
-                { Console.WriteLine($"\n{year} was a leap year"); }
-                                
-                else
+                         year % 400 == 0 &&
+                         year % 4 == 0)
                 { 
-                    Console.WriteLine($"\n{year} was not a leap year");
+                    Console.WriteLine($"\n{year} was a leap year");
                 }
-
+                                
+                else                 
+                    Console.WriteLine($"\n{year} was not a leap year");
+                
                 Console.Write("\nWould you like to ask again?    : ");
                 string response = Console.ReadLine().ToUpper();
 
-                if(response == "N") { goAgain = false; }
+                //if(response == "N") { goAgain = false; }
+                goAgain = (response == "N") ? false : true;
             }
            
 

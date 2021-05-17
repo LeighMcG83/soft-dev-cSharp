@@ -37,8 +37,6 @@ namespace Part2_q4_taxes
             //const double TAX_BAND_1 = 8000;
             char again = ' ';
 
-
-
             // Promt user to inout marutal status and earnings           
             do
             {
@@ -50,7 +48,7 @@ namespace Part2_q4_taxes
                 Console.Write(DISPLAYTAB, "What are your earnings", ": ");
                 earnings = double.Parse(Console.ReadLine());
 
-                ////Teset
+                ////Test
                 //Console.WriteLine(maritalStatus);
                 //Console.WriteLine(taxableIncome);
 

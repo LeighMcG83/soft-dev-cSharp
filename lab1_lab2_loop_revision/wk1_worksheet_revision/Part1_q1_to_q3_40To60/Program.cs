@@ -77,6 +77,7 @@ namespace semester1_revision
                     Console.Write(i + " ");
                     total += i;
                 }
+
             }
             Console.WriteLine($"\nTotal of ints between 40 and 60 (except 46 and 48) = {total}\n");
 
@@ -85,7 +86,6 @@ namespace semester1_revision
             Console.WriteLine("List of ints between 60 and 40 (decending order):");
             total = 0;
             for (int i = 60; i >= 40; i--)
-
             {
                 Console.Write(i + " ");
             }

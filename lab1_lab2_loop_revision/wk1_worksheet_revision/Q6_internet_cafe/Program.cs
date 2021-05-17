@@ -34,10 +34,11 @@ namespace Q6_internet_cafe
         static double subtotal = 0, additional_cost = 0, additionalHours = 0, currentCustomer = 0;
         const int END_PROGRAM = -999, BASIC_HOURS = 3;
 
-        // declare public display tables
+        // declare class level display tables
         const string INPUTTAB = "{0, -25}{1, -4}";
         const string OUTPUTTAB = "{0, -25}{1, -5}";
         const string OUTPUT_2_TAB = "{0, -25}{1, -5}{2, 10}";
+
         static void Main(string[] args)
         {
             int hoursUsed;
@@ -65,32 +66,38 @@ namespace Q6_internet_cafe
             Console.Write(INPUTTAB, "Enter number of hours used (or -999 to quit)", ":");
             double hours = double.Parse(Console.ReadLine());
 
-            if (hours % 1 != 0)     // if there is a remainder
-            { hours = (Convert.ToInt32(hours)) + 1; }
-            else
-            { hours = Convert.ToInt32(hours); }
+            //if (hours % 1 != 0)     // if there is a remainder
+            //    { hours = (Convert.ToInt32(hours)) + 1; }
+            //else
+            //    { hours = Convert.ToInt32(hours); }
+
+            hours = (hours % 1 != 0) ? hours = (Convert.ToInt32(hours)) + 1 : hours = Convert.ToInt32(hours);
 
             /* test */
             //Console.WriteLine("Rounded hours : " + /*hours*/);
             return hours;
+
 
         } // END OF GetHoursUsed()
 
         // Method to calculate this customers charge
         static public double CalculateCurrentCust(int hoursUsed)
         {
-            if (hoursUsed < BASIC_HOURS)
-            {
-                currentCustomer = STANDARD_RATE;
-            }
-            else
-            {
-                additionalHours = hoursUsed - BASIC_HOURS;
-                /* test */
-                //Console.WriteLine("Calculated additionalHours:" + additionalHours);
-                additional_cost = (additionalHours * ADDITIONAL_RATE);
-                currentCustomer = STANDARD_RATE + (additional_cost);
-            }
+            //if (hoursUsed < BASIC_HOURS)
+            //{
+            //    currentCustomer = STANDARD_RATE;
+            //}
+            //else
+            //{
+            //    additionalHours = hoursUsed - BASIC_HOURS;
+            //    /* test */
+            //    //Console.WriteLine("Calculated additionalHours:" + additionalHours);
+            //    additional_cost = (additionalHours * ADDITIONAL_RATE);
+            //    currentCustomer = STANDARD_RATE + (additional_cost);
+            //}
+
+            currentCustomer = (hoursUsed < BASIC_HOURS) ? currentCustomer = STANDARD_RATE : currentCustomer = STANDARD_RATE + ((hoursUsed - BASIC_HOURS) * ADDITIONAL_RATE);
+
             return currentCustomer;
         } // END OF CalculateCurrentCust()
 

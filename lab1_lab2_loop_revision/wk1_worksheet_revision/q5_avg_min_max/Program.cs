@@ -23,14 +23,9 @@ namespace q5_avg_min_max
 {
     class Program
     {
-
-        
-
         static void Main(string[] args)
         {
-
-            int[] NumberArray = new int[5];
-            
+            int[] NumberArray = new int[5];            
 
             // Get user to populate the array with 5 numbers
             PopulateArray(NumberArray);           
@@ -39,7 +34,6 @@ namespace q5_avg_min_max
             DisplayArrayStats(NumberArray);
 
         } // end of Main()
-
 
 
         /********** User Defined Methods *************/
