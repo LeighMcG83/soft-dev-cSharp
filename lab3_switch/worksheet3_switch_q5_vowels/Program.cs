@@ -38,6 +38,7 @@ namespace worksheet3_switch_q5_vowels
                     {
                         vowelCount++;                           // increment the counter
                     }
+
                 } //END: for(vowel in array)         
             } //END: for(letter in string)
 

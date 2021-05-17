@@ -40,7 +40,7 @@ namespace worksheet3_switch_q6_tempConv
             for (int cel = 0; cel <= 100; cel += 10)     // increment celcius by 10 degrees on each iteration
             {               
                 int fah = (cel * 9 / 5) + 32;            // convert cel. to fah.
-                Console.WriteLine($"{cel}\t\t{fah}");    // write cel and fah (to 0 places) to console
+                Console.WriteLine($"{cel, 10}{fah, 10}");// write cel and fah (to 0 places) to console
             } //END: for()
             
         }// END: Main()

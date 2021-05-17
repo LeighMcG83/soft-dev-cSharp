@@ -48,10 +48,8 @@ namespace worksheet3_switch_q4_cards
                 string cardSuit = GetCardSuit(card);      // pass the card to the get suit method and assign to string
 
                 if (isValid)
-                {
                     Console.WriteLine($"Your card was the {cardValue} of {cardSuit}");  // display the entered card if input ws validvalid
-                }
-               
+                               
                 Console.WriteLine("\n\nDo you want to ask again?");
                 askAgain = char.Parse(Console.ReadLine().ToUpper());    
 

@@ -20,20 +20,10 @@ namespace week2_switch_q2_orderCost
             decimal total = 0m;
             string[] Products = 
             {
-                "ASD",
-                "THF",
-                "TYG",
-                "GHT",
-                "YUR",
-                "UIT",
-                "HIP",
-                "UIP",
-                "RRT",
-                "JJk",
-                "IOP"
+                "ASD","THF","TYG","GHT",
+                "YUR","UIT","HIP","UIP",
+                "RRT","JJk","IOP"
             };
-
-            total = 0m;
 
             Console.WriteLine("Enter a Product   :");
             string product = Console.ReadLine();
@@ -76,6 +66,8 @@ namespace week2_switch_q2_orderCost
             {
                 total /= 1.1m;
             }
+
+            total = total <= 500 ? total : total /= 1.1m;
 
             Console.WriteLine($"Total of this order is {total:c2}");
 
