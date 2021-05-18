@@ -37,44 +37,41 @@ namespace worksheet3_advLoops_q2_rainfall
             const string PROG_TITLE = "--------- Monthly & Annual Rainfall Calculator ----------";
 
             // declare variables
-            int years = 0, months = 0;
-            double monthlyRain = 0, yearlyRain = 0, avgRain = 0, subtotalRain = 0;
-            string input;
-                        
-            Console.WriteLine(PROG_TITLE);                          // write program title to console
+            double subtotalRain = 0;
+            int years;
 
-            Console.Write(INPUTTAB, "Enter number of years", ": "); // ask user to input number of years
-            input = Console.ReadLine();
-
-            /* validate user input for years : try to parse 
-             * 'input' and assign to years if succeeds */
-            int.TryParse(input, out years);  
+            Console.WriteLine(PROG_TITLE);
             
-            //Console.WriteLine(years.GetType());                   // Test- check datatype of years
-                      
-            months = years * 12;                                    // calculate the number of months           
+            do
+            {
+                Console.Write(INPUTTAB, "Enter number of years to enter rainfall for", ": ");
+                string input = Console.ReadLine();
+                years = int.TryParse(input, out years) ? years = int.Parse(input) : -1;
+            } while (years == -1);
 
-            // outer for-loop loops while < number of years
-            for (int i = 1; i <= years; i++)            
+            // Test- check datatype of years
+            //Console.WriteLine(years.GetType());                   
+
+            int months = years * 12;                                    // calculate the number of months           
+
+            for (int i = 1; i <= years; i++)
             {
                 // inner for-loop loops while < number of months
                 for (int monthNumber = 1; monthNumber <= months; monthNumber++)
                 {
-                    // ask for this months rainfall
-                    Console.Write(INPUTTAB, "Enter this months rainfall in inches", ": ");
-                    input = Console.ReadLine();
-
-                    // validate rainfall
-                    double.TryParse(input, out monthlyRain);
+                    double monthlyRain;
+                    do
+                    {
+                        Console.Write(INPUTTAB, $"Enter {GetMonthName(monthNumber, years)}'s rainfall in inches", ": ");
+                        string input = Console.ReadLine();
+                        monthlyRain = double.TryParse(input, out monthlyRain) ? monthlyRain = double.Parse(input) : -1;
+                    } while (monthlyRain == -1);
 
                     // accumulate monthly rainfall
                     subtotalRain += monthlyRain;
 
                     // display monthly rainfall
-                    Console.WriteLine($"\nThe rainfall for this month is {monthlyRain}");
-
-                    // display the cuurent month number and get the name from method
-                    //Console.WriteLine($"The month number is {monthNumber} ({GetMonthName(monthNumber, years)})");
+                    Console.WriteLine($"\nThe rainfall for {GetMonthName(monthNumber, years)} is {monthlyRain}");
 
                     // display the cuurent month number and get the name from method
                     Console.WriteLine($"The month number is {monthNumber}\n");
@@ -82,29 +79,30 @@ namespace worksheet3_advLoops_q2_rainfall
                 } // END: inner for()
 
             } // END: outer for()
-            
-            avgRain = subtotalRain / months;                                                 // Calculate the average rainfall            
-            yearlyRain = subtotalRain / years;                                               // calculate the avg rain per year
 
-            Console.WriteLine($"The number of months was {months}");                         // Display total number of months
-            Console.WriteLine($"Tha average rainfall per month was {avgRain} inches");       // Display the average rainfall per month
-            Console.WriteLine($"Tha average rainfall per year was {yearlyRain} inches");     // Display the average rainfall per year
-            Console.WriteLine($"The total rainfall over {months} months was {subtotalRain}");// Display the total rainfall
+            double avgRain = subtotalRain / months;
+            double yearlyRain = subtotalRain / years;
+
+            DisplayResults(months, yearlyRain, avgRain, subtotalRain);
 
         }// END: Main()
 
-        //*********** USER DEFINED METHODS ************/
+        private static void DisplayResults(int months, double yearlyRain, double avgRain, double subtotalRain)
+        {
+            Console.WriteLine($"The number of months was {months}");                            
+            Console.WriteLine($"Tha average rainfall per month was {avgRain:f2} inches");      
+            Console.WriteLine($"Tha average rainfall per year was {yearlyRain:f2} inches");     
+            Console.WriteLine($"The total rainfall over {months} months was {subtotalRain} inches");
+        }
 
         // Method to get the name of the month
         static public string GetMonthName(int monthNumber, int years)
         {            
-            string month = "";               // declare and initial ize local variable for month
+            string month = "";               
 
-            if (monthNumber > 12)            // if the month number passed is in 2nd, 3rd, 4th etc. year 
-            {
-                monthNumber -= (12 * years); // will reset to a number < 12. 
-            }
-            
+            if (monthNumber > 12)            // if the month number passed is in 2nd, 3rd, 4th etc. year             
+                monthNumber -= (12 * years); // will reset to a number < 12. i.e month 13 == January            
+           
             // checj the number of the month and assign its name to 'month'
             switch (monthNumber)
             {
@@ -121,10 +119,11 @@ namespace worksheet3_advLoops_q2_rainfall
                 case 11: month = "November";break;
                 case 12: month = "December";break;
                 default:
-                    month = "Oops, there was an error calculating the name of the month";
+                    Console.WriteLine("Error getting month name");
                     break;
             } //END: switch(monthNumber)
-            return month;   // returns the name of the month, or a error msg of month number was out of range
+
+            return month;  
 
         }// END: GetNameMonth()
 

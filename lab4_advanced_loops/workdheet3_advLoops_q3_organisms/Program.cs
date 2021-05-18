@@ -40,7 +40,7 @@ namespace workdheet3_advLoops_q3_organisms
             Console.Write("Enter the number of days  :  ");
             days = Convert.ToInt32(Console.ReadLine());
 
-            // llop for number of days entered by user
+            // loop for number of days entered by user
             for (int i = 1; i < days; i++)
             {
                 if (i == 1)
@@ -53,6 +53,7 @@ namespace workdheet3_advLoops_q3_organisms
                     // for all iterations after day1 acuumulate onto subtotalled value
                     finalOrganisms += finalOrganisms * (1 + pct);
                 }                    
+                
             }
 
             // display the final amount of organisms

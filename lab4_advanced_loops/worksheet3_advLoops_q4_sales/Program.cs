@@ -52,27 +52,27 @@ namespace worksheet3_advLoops_q4_sales
         {
             for (int i = 0; i < numStores; i++)                        // loop 5 times for the 5 stores 
             {
-                Console.Write(DISPLAYTAB, $"Enter the sales for store {i}", ": ");// prompt user to input sales figures
+                Console.Write(DISPLAYTAB, $"Enter the sales for store {i + 1}", ": ");// prompt user to input sales figures
                 string input = Console.ReadLine();
-                double.TryParse(input, out double sales);      // try to Parse the string to double, assign by ref to sales if succeeds
-                salesFigs[i] = sales;                          // assign the sales figure to the array of sales              
-            } //END: for(numStores)
+                if (double.TryParse(input, out double sales))                    
+                    salesFigs[i] = sales;                
+            } 
         }// END: PopulateSalesArray()
 
         //method prints the barchart for store sales - takes params for 
         static public void PrintBarchart(double[] salesFigs)
         {
-            int length = salesFigs.Length;                     // assign the lengthof the array pass as arg to length
-            for (int i = 0; i < length; i++)                   // iterate for over the array elements
+            int length = salesFigs.Length;                     
+            for (int i = 0; i < length; i++)                  
             {
-                int numHashes = (int)salesFigs[i] / 100;       // convert the value of sales to int and calculate the number of#'s to print
-                Console.Write(DISPLAYTAB, $"Store {i}", " ");  // write current store number to console
+                int numHashes = (int)salesFigs[i] / 100;       // convert the value of sales to int and calculate the number of #'s to print
+                Console.Write(DISPLAYTAB, $"Store {i + 1}", " "); 
                 for (int j = 0; j < numHashes; j++)
                 {
-                    Console.Write("#");                        // print '#' for every €100.00
-                } //END: for(numHashes)
+                    Console.Write("#");                        
+                } 
 
-                Console.WriteLine("\n");                       // go to new line for next store
+                Console.WriteLine("\n");                      
             } //END: for(sale in salesFigs)
         } //END: PrintBarchart()
 
