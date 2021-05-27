@@ -16,6 +16,8 @@
  * Bugs:        Display the DateTime of a stat with 'date only' (no time)
  *              
  *              Not displaying all stats in the file
+ *              
+ *              _population type conversion is untidy. 
  */              
 
 
@@ -38,14 +40,21 @@ namespace Covid_Analysis
             {
                 fs = new FileStream(PATH, FileMode.Open, FileAccess.Read);
                 sr = new StreamReader(fs);
-                sr.ReadLine();          // will discard the row containing headers
+                sr.ReadLine();                  // will discard the row containing headers
+
                 string lineIn = sr.ReadLine();
                 while(lineIn != null)
                 {
                     string[] fields = lineIn.Split(',');
 
+                    //for (int i = 0; i < fields.Length; i++)
+                    //{
+                    //    if (fields[i] == null)
+                    //        fields[i] = ;
+                    //}
+
                     Statistic stat = new Statistic(Convert.ToInt32(fields[0]), Convert.ToInt32(fields[1]), Convert.ToInt32(fields[2]),
-                        Convert.ToInt32(fields[3]), Convert.ToInt32(fields[4]), fields[5], fields[6], Convert.ToInt32(fields[7]),
+                        Convert.ToInt32(fields[3]), Convert.ToInt32(fields[4]), fields[5], fields[6], fields[7],
                         fields[8], Convert.ToDouble(fields[9]));
 
                     StatsList.Add(stat);
@@ -57,10 +66,10 @@ namespace Covid_Analysis
             {
                 Console.WriteLine($"[ERROR] reading from file - File: {PATH} not found.\n{ex.Message}\n");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ooops....something went wrong while opening {PATH}\n{ex.Message}\n");
-            }
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"Ooops....something went wrong while opening {PATH}\n{ex.Message}\n");
+            //}
 
             finally
             {

@@ -49,69 +49,75 @@ namespace year1sem2_arrays_lab7_v2._0
                 Console.WriteLine(ex.Message + "\nUnknown error occurred while filling the array of numbers.");
             }
 
-            Console.WriteLine("\nThe maximum value in the array is " + GetMax(intArr));
-            Console.WriteLine("\nThe minimum value in the array is " + GetMin(intArr));
-            Console.WriteLine("\nThe numbers were generated in ascending order: " + CheckIsAscending(intArr));
-
-            //int[] testAscendingTrue = { 1, 2, 3, 4, 5 };
-            //int[] testAscendingFalse = { 2, 1, 4, 5, 6 };
-            //int[] testRepeatsAscend = { 1, 1, 2, 3, 4 };
-            //int[] testRepeatsDescend = { 4, 4, 3, 2, 1 };
-
-            int[,] testMultiArray =
-            {
-                { 1, 2, 3, 4, 5 },
-                { 2, 1, 4, 5, 6 },
-                { 1, 1, 2, 3, 4 },
-                { 4, 4, 3, 2, 1 }
-            };
-
-            Console.WriteLine($"\nThe numbers were generated in ascending order: {CheckIsAscending(testMultiArray)}");
-
-
+            DisplayArrayStats(intArr);
 
         }//END: Main()
 
-        public static void PrintArray(int[] arr)
+        private static void DisplayArrayStats(int[] intArr)
+        {
+            try
+            {
+                Console.WriteLine("\nThe maximum value in the array is " + GetMax(intArr));
+                Console.WriteLine("\nThe minimum value in the array is " + GetMin(intArr));
+                Console.WriteLine("\nThe numbers were generated in ascending order: " + CheckIsAscending(intArr));
+                Console.WriteLine("\nThe average of every third elem starting at [0] is: " + AverageOfThirdElements(intArr));
+                Console.WriteLine("\nStandard Dev. of array elements: " + CalcStandDev(intArr));
+            }
+            catch(IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "Error while filling the arrey");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + "\nUnknown error occurred while filling the array of numbers.");
+            }            
+        }
+
+        private static double CalcStandDev(int[] intArr)
+        {
+            double total = 0;
+
+            foreach (int num in intArr)
+                total += num;
+            return Math.Sqrt(total / intArr.Length);
+        }
+
+        private static double AverageOfThirdElements(int[] intArr)
+        {
+            double avg = 0;
+            int count = 0;
+
+            for (int i = 0; i < intArr.Length; i += 3)
+            {
+                avg += intArr[i];
+                count++;
+            }
+            return avg / count;
+        }
+
+        private static void PrintArray(int[] arr)
         {            
             foreach (int num in arr)
                 Console.Write(num + " ");            
         }
 
-
-        public static bool CheckIsAscending(int[,] arr)
-        {            
-            for (int row = 0; row < arr.Length; row++)
-            {
-                int k = 1;  //k will be the next element in the current row
-                for (int col = 1; col < arr.Length; col++, k++)
-                {
-                    while (row < arr.Length && row != col && col < arr.Length - 1)   //do not want to check on last element as the next would not exist
-                    {
-                        if (arr[row,col] > arr[row,k])
-                            return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-
-        public static bool CheckIsAscending(int[] arr)
+        private static bool CheckIsAscending(int[] arr)
         {
-            for (int i = 0; i < arr.Length; i++)
+            int length = arr.Length;
+
+            for (int i = 0; i < length; i++)
             {
-                while (i < arr.Length)   //do not want to check on last element as the next would not exist
-                {                    
-                    if (arr[i] > arr[i+1])                        
-                        return false;                   
-                }
-            }
+                if (i < (length - 1))           // only check if i will not send search out of bounds
+                {
+                    if (arr[i] > arr[i + 1])    // if current value > next value                    
+                        return false;                    
+                }//END: if()   
+            } // END: for()
             return true;
         }
 
 
-        public static int GetMin(int[] arr)
+        private static int GetMin(int[] arr)
         {
             int min = arr[0];
 
@@ -130,7 +136,7 @@ namespace year1sem2_arrays_lab7_v2._0
         }
 
 
-        public static int GetMax(int[] arr)
+        private static int GetMax(int[] arr)
         {
             int max = arr[0];
 
