@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Shop
+namespace Shop_v2
 {
     class Program
     {
@@ -9,7 +9,7 @@ namespace Shop
             const string QUIT = "-999";
             double[] sales = new double[100];
             int[] SalesInRanges = new int[5];      //keeps count of the instances of each sales range
-            int count = 0;
+            int count = 0;                         //track position in sales[] to add the inputted sale to
             double saleAmount = 0;
             string input;
             string[] Ranges = { "000-99.99", "100-199.99", "200-399.99", "400-599.99", "600+" };
@@ -24,7 +24,7 @@ namespace Shop
 
             PrintSalesReport(SalesInRanges, Ranges);
 
-        }//END: MAin()
+        }//END: Main()
 
         private static void CatagorizeSale(double[] sales, int[] SalesInRanges, ref int count, double saleAmount)
         {
@@ -54,7 +54,7 @@ namespace Shop
                     Console.WriteLine("Sale not recorded - negative value");
                     break;
             }
-            count++;
+            count++;    //increment the position to add add the next sale to in sales[]
         }
 
         private static void PrintSalesReport(int[] SalesInRanges, string[] Ranges)
