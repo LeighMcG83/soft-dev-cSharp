@@ -6,25 +6,16 @@ namespace Lab8_q1_v2._0
     {
         static void Main(string[] args)
         {
-            Random rnd = new Random();
             int[,] NumberArray = new int[2, 20];
 
-            Console.WriteLine("Rows: " + NumberArray.GetLength(0));
-            Console.WriteLine("Columns : " + NumberArray.GetLength(1));
+            //Console.WriteLine("Rows: " + NumberArray.GetLength(0));
+            //Console.WriteLine("Columns : " + NumberArray.GetLength(1));
 
-            for (int i = 0; i < 1; i++)         // fill 1st row with random nums
-            {
-                for (int j = 0; j < NumberArray.GetLength(1); j++)
-                {
-                    NumberArray[i, j] = rnd.Next(0, 9);
-                }
-            }
+            //FillFirstRow(NumberArray);
+            //DisplayMultiArray(NumberArray);
 
-            DisplayMultiArray(NumberArray);
-
-            //Q1.(a)
-            GetFirstOccurance(NumberArray, 7);
-
+            ////Q1.(a)
+            //GetFirstOccurance(NumberArray, 7);
 
             //Q1.(b)
             /*
@@ -33,6 +24,11 @@ namespace Lab8_q1_v2._0
              *    the number of times that the fist occurrence 
              *    of a 7 in the array is at that position
              */
+            int[,] NumberArray100 = new int[100, 20];
+            GetAllOccurance(NumberArray100, 7);
+
+            DisplayMultiArray(NumberArray100);
+
 
             //NumberArray[1, (NumberArray[i, j] % 10) - 1]++;
 
@@ -40,8 +36,50 @@ namespace Lab8_q1_v2._0
 
         }//END: Main()
 
+
         /// <summary>
-        /// Method takes a parameter a multi-dimensional array to display
+        /// Method takes as parameters a multi-dimensional array and an integer number to search for
+        /// and records the number of occuraces of the searched number at each location in the array
+        /// </summary>
+        /// <param name="NumberArray100"></param>
+        /// <param name="searchNum"></param>
+        private static void GetAllOccurance(int[,] NumberArray100, int searchNum)
+        {
+            Random rnd = new Random();
+
+            for (int i = 0; i < 99; i++)
+            {
+                for (int j = 0; j < NumberArray100.GetLength(1); j++)
+                {
+                    NumberArray100[i, j] = rnd.Next(0, 9);
+                    if (NumberArray100[i, j] == searchNum)
+                    {
+                        NumberArray100[99, j]++;
+                    }
+                }
+
+            }
+        }
+
+
+        /// <summary>
+        /// Method takes as a parameter, a multi-dimensional array and populates the first row with random integers between 0 and 9
+        /// </summary>
+        /// <param name="NumberArray"></param>
+        private static void FillFirstRow(int[,] NumberArray)
+        {
+            Random rnd = new Random();
+            for (int i = 0; i < 1; i++)         // fill 1st row with random nums
+            {
+                for (int j = 0; j < NumberArray.GetLength(1); j++)
+                {
+                    NumberArray[i, j] = rnd.Next(0, 9);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method takes as a parameter a multi-dimensional array to display
         /// </summary>
         /// <param name="NumberArray"></param>
         private static void DisplayMultiArray(int[,] NumberArray)
@@ -57,6 +95,12 @@ namespace Lab8_q1_v2._0
                     Console.Write(NumberArray[i, j] + " ");
                 }
                 Console.WriteLine();
+                if (i == 98)
+                {
+                    Console.WriteLine("----------------------------------------");
+
+                }
+                
             }
         }
 
