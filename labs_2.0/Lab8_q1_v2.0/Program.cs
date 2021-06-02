@@ -8,14 +8,15 @@ namespace Lab8_q1_v2._0
         {
             int[,] NumberArray = new int[2, 20];
 
-            //Console.WriteLine("Rows: " + NumberArray.GetLength(0));
-            //Console.WriteLine("Columns : " + NumberArray.GetLength(1));
+            Console.WriteLine("Rows: " + NumberArray.GetLength(0));
+            Console.WriteLine("Columns : " + NumberArray.GetLength(1));
 
-            //FillFirstRow(NumberArray);
-            //DisplayMultiArray(NumberArray);
+            FillFirstRow(NumberArray);
+            DisplayMultiArray(NumberArray);
 
-            ////Q1.(a)
-            //GetFirstOccurance(NumberArray, 7);
+            //Q1.(a)
+            GetFirstOccurance(NumberArray, 7);
+            Console.WriteLine("\n\n");
 
             //Q1.(b)
             /*
@@ -24,10 +25,10 @@ namespace Lab8_q1_v2._0
              *    the number of times that the fist occurrence 
              *    of a 7 in the array is at that position
              */
-            int[,] NumberArray100 = new int[100, 20];
+            int[,] NumberArray100 = new int[101, 20];   //101 rows as last row will containt the count of occurances
             GetAllOccurance(NumberArray100, 7);
-
             DisplayMultiArray(NumberArray100);
+            Console.WriteLine("\n\n");
 
 
             //NumberArray[1, (NumberArray[i, j] % 10) - 1]++;
@@ -47,14 +48,14 @@ namespace Lab8_q1_v2._0
         {
             Random rnd = new Random();
 
-            for (int i = 0; i < 99; i++)
+            for (int i = 0; i < 100; i++)
             {
                 for (int j = 0; j < NumberArray100.GetLength(1); j++)
                 {
                     NumberArray100[i, j] = rnd.Next(0, 9);
                     if (NumberArray100[i, j] == searchNum)
                     {
-                        NumberArray100[99, j]++;
+                        NumberArray100[100, j]++;
                     }
                 }
 
@@ -95,12 +96,12 @@ namespace Lab8_q1_v2._0
                     Console.Write(NumberArray[i, j] + " ");
                 }
                 Console.WriteLine();
-                if (i == 98)
+                if (i == 99)
                 {
                     Console.WriteLine("----------------------------------------");
 
                 }
-                
+
             }
         }
 
