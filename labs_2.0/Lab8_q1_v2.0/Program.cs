@@ -50,19 +50,23 @@ namespace Lab8_q1_v2._0
             {
                 switch (num)
                 {
-                    case 0: CountOccuraces[0,0]++; break;
-                    case 1: CountOccuraces[0,1]++; break;
-                    case 2: CountOccuraces[0,2]++; break;
-                    case 3: CountOccuraces[0,3]++; break;
-                    case 4: CountOccuraces[0,4]++; break;
+                    case 0: CountOccuraces[0, 0]++; break;
+                    case 1: CountOccuraces[0, 1]++; break;
+                    case 2: CountOccuraces[0, 2]++; break;
+                    case 3: CountOccuraces[0, 3]++; break;
+                    case 4: CountOccuraces[0, 4]++; break;
                     default:
-                        Console.WriteLine("Array Error - examined num out of range");
+                        Console.WriteLine("Array Error - examined num was out of range (0-4)");
                         break;
                 }
             }
-            for (int i = 1; i < CountOccuraces.GetLength(1); i++)
+            for (int i = 1; i < CountOccuraces.GetLength(0); i++)
             {
-                CountOccuraces[1, i] = (CountOccuraces[0, i] / RandomNums.Length) * 100;
+                for (int j = 0; j < CountOccuraces.GetLength(1); j++)
+                {
+                    CountOccuraces[1, j] = CountOccuraces[0, j] / 100;
+                }
+                
             }
             DisplayMultiArray(CountOccuraces);
 
