@@ -38,14 +38,46 @@ namespace Lab8_q1_v2._0
              */
             int[] RandomNums = new int[10000];
             FillWithRandoms(RandomNums, 4);
-            double[,] CountOccuraces = new double[2,4];
+            double[,] CountOccuraces = new double[2, 4];
 
-            /* check logic:
-             * 
-             * switch()
-             * FillWithRandoms()
-             * CountOccurances()
-             */
+            CalculateOccuraceTotals(RandomNums, CountOccuraces);
+            CalculatePectentagesOfOccurances(CountOccuraces);
+            DisplayMultiArray(CountOccuraces);
+
+        }//END: Main()
+
+
+        /// <summary>
+        /// Method calculates percentage of occurances of random numbers in a multi-dimensional array, takes the array of random nums and array to store the counts in as parameteres
+        /// </summary>
+        /// <param name="CountOccuraces"></param>
+        private static void CalculatePectentagesOfOccurances(double[,] CountOccuraces)
+        {
+            try
+            {
+                for (int i = 1; i < CountOccuraces.GetLength(0); i++)
+                {
+                    for (int j = 0; j < CountOccuraces.GetLength(1); j++)
+                        CountOccuraces[1, j] = CountOccuraces[0, j] / 100;
+                }
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "\nIndex out of range - CalculatePectentagesOfOccurances()");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified error thrown - CalculatePectentagesOfOccurances()");
+            }
+        }
+
+        /// <summary>
+        /// Method calculates the number of occurances of each random number in a multi-dimensional array, takes the array of random nums and array to store the counts in as parameteres
+        /// </summary>
+        /// <param name="RandomNums"></param>
+        /// <param name="CountOccuraces"></param>
+        private static void CalculateOccuraceTotals(int[] RandomNums, double[,] CountOccuraces)
+        {
             foreach (var num in RandomNums)
             {
                 switch (num)
@@ -60,17 +92,7 @@ namespace Lab8_q1_v2._0
                         break;
                 }
             }
-            for (int i = 1; i < CountOccuraces.GetLength(0); i++)
-            {
-                for (int j = 0; j < CountOccuraces.GetLength(1); j++)
-                {
-                    CountOccuraces[1, j] = CountOccuraces[0, j] / 100;
-                }
-                
-            }
-            DisplayMultiArray(CountOccuraces);
-
-        }//END: Main()
+        }
 
 
         /// <summary>
@@ -80,10 +102,19 @@ namespace Lab8_q1_v2._0
         private static void FillWithRandoms(int[] RandomNums, int maxValue)
         {
             Random rnd = new Random();
-            for (int i = 0; i < RandomNums.Length; i++)
+            try
             {
-                RandomNums[i] = rnd.Next(maxValue);
+                for (int i = 0; i < RandomNums.Length; i++)                
+                    RandomNums[i] = rnd.Next(maxValue);                
             }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "\nIndex out of range - FillWithRandoms()");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified error thrown - FillWithRandoms()");
+            }           
         }
 
         /// <summary>
@@ -106,18 +137,27 @@ namespace Lab8_q1_v2._0
         private static void GetAllOccurance(int[,] NumberArray100, int searchNum)
         {
             Random rnd = new Random();
-
-            for (int i = 0; i < 100; i++)
+            try
             {
-                for (int j = 0; j < NumberArray100.GetLength(1); j++)
+                for (int i = 0; i < 100; i++)
                 {
-                    NumberArray100[i, j] = rnd.Next(0, 9);
-                    if (NumberArray100[i, j] == searchNum)
+                    for (int j = 0; j < NumberArray100.GetLength(1); j++)
                     {
-                        NumberArray100[100, j]++;
+                        NumberArray100[i, j] = rnd.Next(0, 9);
+                        if (NumberArray100[i, j] == searchNum)
+                        {
+                            NumberArray100[100, j]++;
+                        }
                     }
                 }
-
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "\nIndex out of range - GetAllOccurance()");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified error thrown - GetAllOccurance()");
             }
         }
 
@@ -148,19 +188,26 @@ namespace Lab8_q1_v2._0
             int cols = arr.GetLength(1);
 
             //display the multi dimensional array
-            for (int i = 0; i < rows; i++)
+            try
             {
-                for (int j = 0; j < cols; j++)
+                for (int i = 0; i < rows; i++)
                 {
-                    Console.Write(arr[i, j] + " ");
+                    for (int j = 0; j < cols; j++)
+                    {
+                        Console.Write(arr[i, j] + " ");
+                    }
+                    Console.WriteLine();
+                    if (i == 99)
+                        Console.WriteLine("----------------------------------------");
                 }
-                Console.WriteLine();
-                if (i == 99)
-                {
-                    Console.WriteLine("----------------------------------------");
-
-                }
-
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "\nIndex out of range - DisplayMultiArray()");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified error thrown - DisplayMultiArray()");
             }
         }
 
@@ -175,13 +222,24 @@ namespace Lab8_q1_v2._0
             int cols = arr.GetLength(1);
 
             //display the multi dimensional array
-            for (int i = 0; i < rows; i++)
+            try
             {
-                for (int j = 0; j < cols; j++)
+                for (int i = 0; i < rows; i++)
                 {
-                    Console.Write($"{arr[i, j]:f2} ");
+                    for (int j = 0; j < cols; j++)
+                    {
+                        Console.Write($"{arr[i, j]:f2} ");
+                    }
+                    Console.WriteLine();
                 }
-                Console.WriteLine();
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "\nIndex out of range - DisplayMultiArray()");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified error thrown - DisplayMultiArray()");
             }
         }
 
@@ -193,16 +251,27 @@ namespace Lab8_q1_v2._0
         private static void GetFirstOccurance(int[,] NumberArray, int searchNum)
         {
             int cols = NumberArray.GetLength(1);
-            for (int i = 0; i < 1; i++)
+            try
             {
-                for (int j = 0; j < cols; j++)
+                for (int i = 0; i < 1; i++)
                 {
-                    if (NumberArray[i, j] == searchNum)
+                    for (int j = 0; j < cols; j++)
                     {
-                        Console.WriteLine($"{searchNum} occured first at index position: " + j);
-                        break;
+                        if (NumberArray[i, j] == searchNum)
+                        {
+                            Console.WriteLine($"{searchNum} occured first at index position: " + j);
+                            break;
+                        }
                     }
                 }
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "\nIndex out of range - GetFirstOccurance()");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified error thrown - GetFirstOccurance()");
             }
         }
 
