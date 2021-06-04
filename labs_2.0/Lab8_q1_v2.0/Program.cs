@@ -6,17 +6,37 @@ namespace Lab8_q1_v2._0
     {
         static void Main(string[] args)
         {
-            int[,] NumberArray = new int[2, 20];
+            const string QUIT = "q";
+            string menuChoice;
+            do
+            {
+                menuChoice = GetMenuChoice();
+                switch (menuChoice)
+                {
+                    case "1a":
+                        RunQ1a();
+                        break;
+                    case "1b":
+                        RunQ1b();
+                        break;
+                    case "2":
+                        RunQ2();
+                        break;
+                    case "3":
+                        double[,] RegionalSales = new double[5, 3];
+                        GetSalesFigures(RegionalSales);
+                        DisplayMultiArray(RegionalSales);
+                        //get average for each store
+                        //get national average
+                        break;
 
-            //Console.WriteLine("Rows: " + NumberArray.GetLength(0));
-            //Console.WriteLine("Columns : " + NumberArray.GetLength(1));
+                    default:
+                        Console.WriteLine("Please choose a valid option e.g. '1a' or '2' and press ENTER/RETURN");
+                        break;
+                }
 
-            //FillFirstRow(NumberArray);
-            //DisplayMultiArray(NumberArray);
 
-            //Q1.(a)
-            //GetFirstOccurance(NumberArray, 7);
-            //Console.WriteLine("\n\n");
+            } while (menuChoice.ToLower() != QUIT);
 
             //Q1.(b)
             /*
@@ -25,26 +45,133 @@ namespace Lab8_q1_v2._0
              *    the number of times that the fist occurrence 
              *    of a 7 in the array is at that position
              */
-            //int[,] NumberArray100 = new int[101, 20];   //101 rows as last row will store the count of occurances
-            //GetAllOccurance(NumberArray100, 7);
-            //DisplayMultiArray(NumberArray100);
-            //Console.WriteLine("\n\n");
-
 
             /* Q2 
              * Generate an array of 10,000 random numbers from zero to four.
              * Report the percentage of each of the numbers, zero, one, two, 
              * three and four in the array
              */
-            int[] RandomNums = new int[10000];
-            FillWithRandoms(RandomNums, 4);
-            double[,] CountOccuraces = new double[2, 4];
 
+            /* Q3
+             * A company has three regions, with five stores in each region. Input the weekly sales for 
+             * each store. Find the average weekly sales for each region and for the whole company.
+             */
+            
+
+        }//END: Main()
+
+
+        /// <summary>
+        /// Method gets the sales figures for all stores in all regions
+        /// </summary>
+        /// <param name="RegionalSales"></param>
+        private static void GetSalesFigures(double[,] RegionalSales)
+        {
+            for (int i = 0; i < RegionalSales.GetLength(0); i++)
+            {
+                Console.WriteLine("Region " + (i + 1) + "\n");
+                for (int j = 0; j < RegionalSales.GetLength(1); j++)
+                {
+                    bool isValid = false;
+                    do
+                    {
+                        Console.WriteLine($"Enter sales for store {j}: ");
+                        if (double.TryParse(Console.ReadLine(), out double validSaleFigure)) ;
+                        {
+                            isValid = true;
+                            RegionalSales[i, j] = validSaleFigure;
+                        }
+                    } while (!isValid);
+                }
+            }
+        }
+
+        private static void TestPrintMultiArrayDimensions(int[,] arr)
+        {
+            Console.WriteLine("Rows: " + arr.GetLength(0));
+            Console.WriteLine("Columns : " + arr.GetLength(1));
+        }
+
+        private static void TestPrintMultiArrayDimensions(double[,] arr)
+        {
+            Console.WriteLine("Rows: " + arr.GetLength(0));
+            Console.WriteLine("Columns : " + arr.GetLength(1));
+        }
+
+        private static void RunQ2()
+        {
+            int[] RandomNums = new int[10000];
+            //fill RandomNums[] with numbers between 0 and 4
+            FillWithRandoms(RandomNums, 4);
+            double[,] CountOccuraces = new double[2, 4];    //row[0] == total occurances, row[1] == percentage that value occured
             CalculateOccuraceTotals(RandomNums, CountOccuraces);
             CalculatePectentagesOfOccurances(CountOccuraces);
             DisplayMultiArray(CountOccuraces);
+            Console.WriteLine("\n\n");
+        }
 
-        }//END: Main()
+        private static void RunQ1b()
+        {
+            int[,] NumberArray100 = new int[101, 20];   //101 rows as last row will store the count of occurances
+            GetAllOccurance(NumberArray100, 7);
+            DisplayMultiArray(NumberArray100);
+            Console.WriteLine("\n\n");
+        }
+
+        private static void RunQ1a()
+        {
+            int[,] NumberArray = new int[2, 20];
+            FillFirstRow(NumberArray);
+            DisplayMultiArray(NumberArray);
+            GetFirstOccurance(NumberArray, 7);
+            Console.WriteLine("\n\n");
+        }
+
+
+        /// <summary>
+        /// Method Displays Main Menu to user and returns a validated string input
+        /// </summary>
+        /// <returns>The users input when valid</returns>
+        private static string GetMenuChoice()
+        {
+            string input;
+            bool validChoice;
+            do
+            {
+                Console.WriteLine("MAIN MENU");
+                Console.WriteLine("1a. Question 1 (a)");
+                Console.WriteLine("1b. Question 1 (b)");
+                Console.WriteLine("2. Question 2");
+                Console.WriteLine("3. Question 3");
+                Console.WriteLine("4. Question 4");
+                Console.WriteLine("Q. Quit");
+                input = Console.ReadLine();
+                validChoice = CheckInputIsValid(input);
+            } while (!validChoice);
+            return input;
+        }
+
+
+        /// <summary>
+        /// Method checks the user input from Main menu is a valid choice
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>true if the user's choice is a valid choice, else returns false</returns>
+        private static bool CheckInputIsValid(string input)
+        {
+            string[] ValidMenuChoices = { "1a", "1b", "2", "3", "4", "5", "6", "7", "8", "9", "q" };
+
+            bool validChoice = false;
+            for (int i = 0; i < ValidMenuChoices.Length; i++)
+            {
+                if (input == ValidMenuChoices[i])
+                {
+                    validChoice = true;
+                    break;
+                }
+            }
+            return validChoice;
+        }
 
 
         /// <summary>
@@ -58,7 +185,7 @@ namespace Lab8_q1_v2._0
                 for (int i = 1; i < CountOccuraces.GetLength(0); i++)
                 {
                     for (int j = 0; j < CountOccuraces.GetLength(1); j++)
-                        CountOccuraces[1, j] = CountOccuraces[0, j] / 100;
+                        CountOccuraces[1, j] = (CountOccuraces[0, j] / 10000) * 100; 
                 }
             }
             catch (IndexOutOfRangeException ex)
@@ -104,8 +231,8 @@ namespace Lab8_q1_v2._0
             Random rnd = new Random();
             try
             {
-                for (int i = 0; i < RandomNums.Length; i++)                
-                    RandomNums[i] = rnd.Next(maxValue);                
+                for (int i = 0; i < RandomNums.Length; i++)
+                    RandomNums[i] = rnd.Next(maxValue);
             }
             catch (IndexOutOfRangeException ex)
             {
@@ -114,7 +241,7 @@ namespace Lab8_q1_v2._0
             catch (Exception)
             {
                 Console.WriteLine("Unspecified error thrown - FillWithRandoms()");
-            }           
+            }
         }
 
         /// <summary>
@@ -123,8 +250,8 @@ namespace Lab8_q1_v2._0
         /// <param name="RandomNums"></param>
         private static void Display1Darray(int[] RandomNums)
         {
-            foreach (var num in RandomNums)            
-                Console.Write(num + " ");  
+            foreach (var num in RandomNums)
+                Console.Write(num + " ");
         }
 
 
