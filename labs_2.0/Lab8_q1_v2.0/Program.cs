@@ -52,7 +52,11 @@ namespace Lab8_q1_v2._0
                     case "5":       //store the goals that 11 players scored in 5 different matches.
                         RunQ5();    
                         break;
-                        
+                    case "6":
+
+
+
+                        break;
                     case "q":
                         Console.WriteLine("Exiting program");
                         break;
@@ -71,27 +75,27 @@ namespace Lab8_q1_v2._0
 
         private static void RunQ5()
         {
+            string[] PlayerNames = { "Karl", "Leigh", "Bryan", "Kealan", "Packets", "Paco", "David", "Sean", "Daniel", "Paul", "Simon" };
             int[,] PlayerStats = new int[11, 5];
             //TestPrintMultiArrayDimensions(PlayerStats);
-            GetGoalsStats(PlayerStats);
-            DisplayPlayerStats(PlayerStats);
+            GetGoalsStats(PlayerStats, PlayerNames);
+            DisplayPlayerStats(PlayerStats, PlayerNames);
         }
 
         /// <summary>
         /// Method prompts user to enter goal stats for all players
         /// </summary>
         /// <param name="PlayerStats"></param>
-        private static void GetGoalsStats(int[,] PlayerStats)
+        private static void GetGoalsStats(int[,] PlayerStats, string[] names)
         {
             int rows = PlayerStats.GetLength(0);
             int cols = PlayerStats.GetLength(1);
-            int playerNumber = 1;
             string input = "";
             try
             {
                 for (int i = 0; i < rows; i++)
                 {
-                    Console.WriteLine($"\nPlayer {playerNumber}:");
+                    Console.WriteLine($"\n{names[i]}:");
                     for (int j = 0; j < cols; j++)
                     {
                         Console.Write($"Enter Goals scored on match {j + 1}: ");
@@ -103,7 +107,6 @@ namespace Lab8_q1_v2._0
                         else
                             Console.WriteLine("\nGoals must be a whole integer number\n");
                     }
-                    playerNumber++;
                 }
             }
             catch (IndexOutOfRangeException ex)
@@ -120,17 +123,18 @@ namespace Lab8_q1_v2._0
         /// Method takes an array of player goals scored and displays them in console
         /// </summary>
         /// <param name="arr"></param>
-        private static void PrintPlayerGoals(int[,] arr)
+        private static void PrintPlayerGoals(int[,] arr, string[] names)
         {
             int rows = arr.GetLength(0);
             int cols = arr.GetLength(1);
+            
             Console.WriteLine();
             //display the multi dimensional array
             try
             {
                 for (int i = 0; i < rows; i++)
                 {
-                    Console.Write($"{i + 1, -8}");  //display the player id number
+                    Console.Write($"{names[i], -8}");  //display the player id number
                     for (int j = 0; j < cols; j++)
                     {
                         Console.Write($"{arr[i, j], -8}");
@@ -152,18 +156,19 @@ namespace Lab8_q1_v2._0
         /// Method siplays player goals header and stats
         /// </summary>
         /// <param name="PlayerStats"></param>
-        private static void DisplayPlayerStats(int[,] PlayerStats)
+        private static void DisplayPlayerStats(int[,] PlayerStats, string[] names)
         {
+            
             int numPlayers = PlayerStats.GetLength(1);
-            PrintStatsHeader(numPlayers);
-            PrintPlayerGoals(PlayerStats);
+            PrintStatsHeader(numPlayers, names);
+            PrintPlayerGoals(PlayerStats, names);
         }
 
         /// <summary>
         /// Method prints the goal stats for the team, takes as param the number of players
         /// </summary>
         /// <param name="numPlayers"></param>
-        private static void PrintStatsHeader(int numPlayers)
+        private static void PrintStatsHeader(int numPlayers, string[] names)
         {
             Console.Write($"{"\nPlayer",-8}");
             for (int i = 0; i < numPlayers; i++)
