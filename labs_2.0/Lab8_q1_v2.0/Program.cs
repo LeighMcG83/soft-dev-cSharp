@@ -52,6 +52,7 @@ namespace Lab8_q1_v2._0
                     case "5":       //store the goals that 11 players scored in 5 different matches.
                         RunQ5();    
                         break;
+                        
                     case "q":
                         Console.WriteLine("Exiting program");
                         break;
@@ -72,13 +73,22 @@ namespace Lab8_q1_v2._0
         {
             int[,] PlayerStats = new int[11, 5];
             //TestPrintMultiArrayDimensions(PlayerStats);
+            GetGoalsStats(PlayerStats);
+            DisplayPlayerStats(PlayerStats);
+        }
+
+        /// <summary>
+        /// Method prompts user to enter goal stats for all players
+        /// </summary>
+        /// <param name="PlayerStats"></param>
+        private static void GetGoalsStats(int[,] PlayerStats)
+        {
             int rows = PlayerStats.GetLength(0);
             int cols = PlayerStats.GetLength(1);
             int playerNumber = 1;
             string input = "";
             try
             {
-
                 for (int i = 0; i < rows; i++)
                 {
                     Console.WriteLine($"\nPlayer {playerNumber}:");
@@ -90,6 +100,8 @@ namespace Lab8_q1_v2._0
                         {
                             PlayerStats[i, j] = validGoals;
                         }
+                        else
+                            Console.WriteLine("\nGoals must be a whole integer number\n");
                     }
                     playerNumber++;
                 }
@@ -102,10 +114,12 @@ namespace Lab8_q1_v2._0
             {
                 Console.WriteLine("Unspecifed Exception thorn while filling golas scored array" + ex.Message);
             }
-
-            DisplayPlayerStats(PlayerStats);
         }
 
+        /// <summary>
+        /// Method takes an array of player goals scored and displays them in console
+        /// </summary>
+        /// <param name="arr"></param>
         private static void PrintPlayerGoals(int[,] arr)
         {
             int rows = arr.GetLength(0);
@@ -132,11 +146,12 @@ namespace Lab8_q1_v2._0
             {
                 Console.WriteLine("Unspecified error thrown - DisplayMultiArray()");
             }
-        }
+        }        
 
-
-        
-
+        /// <summary>
+        /// Method siplays player goals header and stats
+        /// </summary>
+        /// <param name="PlayerStats"></param>
         private static void DisplayPlayerStats(int[,] PlayerStats)
         {
             int numPlayers = PlayerStats.GetLength(1);
@@ -144,6 +159,10 @@ namespace Lab8_q1_v2._0
             PrintPlayerGoals(PlayerStats);
         }
 
+        /// <summary>
+        /// Method prints the goal stats for the team, takes as param the number of players
+        /// </summary>
+        /// <param name="numPlayers"></param>
         private static void PrintStatsHeader(int numPlayers)
         {
             Console.Write($"{"\nPlayer",-8}");
@@ -222,6 +241,12 @@ namespace Lab8_q1_v2._0
             Console.WriteLine("\nNational Average: " + nationalAverage);
         }
 
+        /// <summary>
+        /// Method calulates the national sales average of all stores in all regions
+        /// </summary>
+        /// <param name="RegionalSales"></param>
+        /// <param name="nationalAverage"></param>
+        /// <returns></returns>
         private static double CalculateNationalAverage(double[,] RegionalSales, double nationalAverage)
         {
             for (int i = 0; i < RegionalSales.GetLength(0); i++)
