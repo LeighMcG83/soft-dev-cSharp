@@ -34,19 +34,23 @@ namespace Lab8_q1_v2._0
                 menuChoice = GetMenuChoice();
                 switch (menuChoice)
                 {
-                    case "1a":
+                    case "1a":      //Generate an array of 20 random integers from zero to nine. Search for the first occurrence, if any, of the number 7,
                         RunQ1a();
                         break;
-                    case "1b":
+                    case "1b":      //Repeat the computation of part a 100 times, and for each position in the array, report the number of times that the fist occurrence of a 7 in the array is at that position
                         RunQ1b();
                         break;
-                    case "2":
+                    case "2":       //Generate an array of 10,000 random numbers from zero to four. Report the percentage of each of the numbers, zero, one, two, three and four in the array
                         RunQ2();
                         break;
-                    case "3":
+                    case "3":       //generate sales for 5 stores in 3 regions, calc and display regional and national avg's
                         RunQ3();
                         break;
-                    case "4":
+                    case "4":       //add 2 3x3 matrices
+                        RunQ4();
+                        break;
+                    case "5":       //store the goals that 11 players scored in 5 different matches.
+
 
                         break;
                     case "q":
@@ -65,15 +69,70 @@ namespace Lab8_q1_v2._0
 
         }//END: Main()
 
+
+
+        private static void RunQ4()
+        {
+            int[,] matrixA = new int[3, 3], matrixB = new int[3, 3];
+            int[,] resultMatrix = new int[3, 3];
+            FillWithRandoms(matrixA, 9);
+            FillWithRandoms(matrixB, 9);
+
+            for (int i = 0; i < resultMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < resultMatrix.GetLength(1); j++)                
+                    resultMatrix[i, j] = matrixA[i, j] + matrixB[i, j];                
+            }
+
+            Console.WriteLine("Matrix A:");
+            DisplayMultiArray(matrixA);
+            Console.WriteLine("Matrix B:");
+            DisplayMultiArray(matrixB);
+            Console.WriteLine("Result:");
+            DisplayMultiArray(resultMatrix);
+        }
+
+
+        /// <summary>
+        /// Method accepts a multi dimensional array to fill with random numbers as a parameter, and a max value for each random number
+        /// /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="maxValue"></param>
+        private static void FillWithRandoms(int[,] arr, int maxValue)
+        {
+            Random rnd = new Random();
+            try
+            {
+                for (int i = 0; i < arr.GetLength(0); i++)
+                {
+                    for (int j = 0; j < arr.GetLength(1); j++)
+                    {
+                        arr[i,j] = rnd.Next(maxValue);
+                    }
+                }
+                    
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "\nIndex out of range - FillWithRandoms()");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified error thrown - FillWithRandoms()");
+            }
+        }
+
         private static void RunQ3()
         {
             double[,] RegionalSales = new double[3, 5];
             GetSalesFigures(RegionalSales);
             DisplayMultiArray(RegionalSales);
+
             // get average for each store
             double[] RegionalAverages = new double[RegionalSales.GetLength(0)]; //array of length == nuber of rows(regions)
             CalculateRegionalAverages(RegionalSales, RegionalAverages);
             Display1Darray(RegionalAverages);
+
             // get national average -> total of all sales / (rows * cols) 
             double nationalAverage = 0;
             nationalAverage = CalculateNationalAverage(RegionalSales, nationalAverage);
@@ -189,16 +248,19 @@ namespace Lab8_q1_v2._0
             bool validChoice;
             do
             {
-                Console.WriteLine("MAIN MENU");
+                Console.WriteLine("\nMAIN MENU");
                 Console.WriteLine("1a. Question 1 (a)");
                 Console.WriteLine("1b. Question 1 (b)");
                 Console.WriteLine("2. Question 2");
                 Console.WriteLine("3. Question 3");
                 Console.WriteLine("4. Question 4");
+                Console.WriteLine("5. Question 5");
                 Console.WriteLine("Q. Quit");
+                Console.Write("Choice: ");
                 input = Console.ReadLine();
                 validChoice = CheckInputIsValid(input);               
             } while (input.ToLower() != "q" && !validChoice);
+            Console.WriteLine("\n");
             return input;
         }
 
