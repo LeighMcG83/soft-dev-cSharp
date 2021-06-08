@@ -50,39 +50,7 @@ namespace Lab8_q1_v2._0
                         RunQ4();
                         break;
                     case "5":       //store the goals that 11 players scored in 5 different matches.
-                        int[,] PlayerStats = new int[11, 5];
-                        //TestPrintMultiArrayDimensions(PlayerStats);
-                        int rows = PlayerStats.GetLength(0);
-                        int cols = PlayerStats.GetLength(1);
-                        int playerNumber = 1;
-                        string input = "";
-                        try
-                        {
-                            for (int i = 0; i < rows; i++)
-                            {
-                                Console.WriteLine($"Player {playerNumber}:");
-                                for (int j = 0; j < cols; j++)
-                                {
-                                    Console.Write($"Enter Goals scored on match {j + 1}: ");
-                                    input = Console.ReadLine();
-                                    if (int.TryParse(input, out int validGoals))
-                                    {
-                                        PlayerStats[i, j] = validGoals;
-                                    }
-                                }
-                                playerNumber++;
-                            }
-                        }
-                        catch(IndexOutOfRangeException ex)
-                        {
-                            Console.WriteLine("Array index out of bounds while entering goals scored\n" + ex.Message);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine("Unspecifed Exception thorn while filling golas scored array" + ex.Message);
-                        }
-                        Console.WriteLine($"{"Player", -8}{"Match1", -8}{"Match1",-8}{"Match2",-8}{"Match3",-8}{"Match4",-8}{"Match5",-8}");
-                        DisplayMultiArray(PlayerStats);
+                        RunQ5();    
                         break;
                     case "q":
                         Console.WriteLine("Exiting program");
@@ -100,7 +68,91 @@ namespace Lab8_q1_v2._0
 
         }//END: Main()
 
+        private static void RunQ5()
+        {
+            int[,] PlayerStats = new int[11, 5];
+            //TestPrintMultiArrayDimensions(PlayerStats);
+            int rows = PlayerStats.GetLength(0);
+            int cols = PlayerStats.GetLength(1);
+            int playerNumber = 1;
+            string input = "";
+            try
+            {
 
+                for (int i = 0; i < rows; i++)
+                {
+                    Console.WriteLine($"\nPlayer {playerNumber}:");
+                    for (int j = 0; j < cols; j++)
+                    {
+                        Console.Write($"Enter Goals scored on match {j + 1}: ");
+                        input = Console.ReadLine();
+                        if (int.TryParse(input, out int validGoals))
+                        {
+                            PlayerStats[i, j] = validGoals;
+                        }
+                    }
+                    playerNumber++;
+                }
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine("Array index out of bounds while entering goals scored\n" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unspecifed Exception thorn while filling golas scored array" + ex.Message);
+            }
+
+            DisplayPlayerStats(PlayerStats);
+        }
+
+        private static void PrintPlayerGoals(int[,] arr)
+        {
+            int rows = arr.GetLength(0);
+            int cols = arr.GetLength(1);
+            Console.WriteLine();
+            //display the multi dimensional array
+            try
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    Console.Write($"{i + 1, -8}");  //display the player id number
+                    for (int j = 0; j < cols; j++)
+                    {
+                        Console.Write($"{arr[i, j], -8}");
+                    }
+                    Console.WriteLine();                  
+                }
+            }
+            catch (IndexOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.Message + "\nIndex out of range - DisplayMultiArray()");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unspecified error thrown - DisplayMultiArray()");
+            }
+        }
+
+
+        
+
+        private static void DisplayPlayerStats(int[,] PlayerStats)
+        {
+            int numPlayers = PlayerStats.GetLength(1);
+            PrintStatsHeader(numPlayers);
+            PrintPlayerGoals(PlayerStats);
+        }
+
+        private static void PrintStatsHeader(int numPlayers)
+        {
+            Console.Write($"{"\nPlayer",-8}");
+            for (int i = 0; i < numPlayers; i++)
+            {
+                Console.Write($"{"Match " + (i + 1),-8}");
+            }
+            Console.WriteLine();
+        }
 
         private static void RunQ4()
         {
