@@ -1,4 +1,25 @@
-﻿using System;
+﻿/* 
+ * //Q1.(b)
+            
+    * b) Repeat the computation of part a 100 times, 
+    *    and for each position in the array, report
+    *    the number of times that the fist occurrence 
+    *    of a 7 in the array is at that position             
+
+    Q2
+    * Generate an array of 10,000 random numbers from zero to four.
+    * Report the percentage of each of the numbers, zero, one, two,
+    * three and four in the array
+ 
+
+     Q3
+     * A company has three regions, with five stores in each region. Input the weekly sales for 
+     * each store. Find the average weekly sales for each region and for the whole company
+     * 
+     * 
+     */
+
+using System;
 
 namespace Lab8_q1_v2._0
 {
@@ -23,13 +44,14 @@ namespace Lab8_q1_v2._0
                         RunQ2();
                         break;
                     case "3":
-                        double[,] RegionalSales = new double[5, 3];
-                        GetSalesFigures(RegionalSales);
-                        DisplayMultiArray(RegionalSales);
-                        //get average for each store
-                        //get national average
+                        RunQ3();
                         break;
+                    case "4":
 
+                        break;
+                    case "q":
+                        Console.WriteLine("Exiting program");
+                        break;
                     default:
                         Console.WriteLine("Please choose a valid option e.g. '1a' or '2' and press ENTER/RETURN");
                         break;
@@ -38,27 +60,56 @@ namespace Lab8_q1_v2._0
 
             } while (menuChoice.ToLower() != QUIT);
 
-            //Q1.(b)
-            /*
-             * b) Repeat the computation of part a 100 times, 
-             *    and for each position in the array, report
-             *    the number of times that the fist occurrence 
-             *    of a 7 in the array is at that position
-             */
 
-            /* Q2 
-             * Generate an array of 10,000 random numbers from zero to four.
-             * Report the percentage of each of the numbers, zero, one, two, 
-             * three and four in the array
-             */
 
-            /* Q3
-             * A company has three regions, with five stores in each region. Input the weekly sales for 
-             * each store. Find the average weekly sales for each region and for the whole company.
-             */
-            
 
         }//END: Main()
+
+        private static void RunQ3()
+        {
+            double[,] RegionalSales = new double[3, 5];
+            GetSalesFigures(RegionalSales);
+            DisplayMultiArray(RegionalSales);
+            // get average for each store
+            double[] RegionalAverages = new double[RegionalSales.GetLength(0)]; //array of length == nuber of rows(regions)
+            CalculateRegionalAverages(RegionalSales, RegionalAverages);
+            Display1Darray(RegionalAverages);
+            // get national average -> total of all sales / (rows * cols) 
+            double nationalAverage = 0;
+            nationalAverage = CalculateNationalAverage(RegionalSales, nationalAverage);
+            Console.WriteLine("\nNational Average: " + nationalAverage);
+        }
+
+        private static double CalculateNationalAverage(double[,] RegionalSales, double nationalAverage)
+        {
+            for (int i = 0; i < RegionalSales.GetLength(0); i++)
+            {
+                for (int j = 0; j < RegionalSales.GetLength(1); j++)
+                {
+                    nationalAverage += RegionalSales[i, j];
+                }
+            }
+            nationalAverage /= (RegionalSales.GetLength(0) * RegionalSales.GetLength(1));
+            return nationalAverage;
+        }
+
+        /// <summary>
+        /// Method takes parameters for the sales array and averages array, calculates the average of each region and stores the avg's in averages array
+        /// </summary>
+        /// <param name="RegionalSales"></param>
+        /// <param name="averages"></param>
+        private static void CalculateRegionalAverages(double[,] RegionalSales, double[] averages)
+        {
+            
+            for (int i = 0; i < RegionalSales.GetLength(0); i++)
+            {
+                for (int j = 0; j < RegionalSales.GetLength(1); j++)
+                {
+                    averages[i] += RegionalSales[i, j];
+                }
+                averages[i] /= RegionalSales.GetLength(1);  //divides by the number of stores in the region
+            }
+        }
 
 
         /// <summary>
@@ -75,8 +126,8 @@ namespace Lab8_q1_v2._0
                     bool isValid = false;
                     do
                     {
-                        Console.WriteLine($"Enter sales for store {j}: ");
-                        if (double.TryParse(Console.ReadLine(), out double validSaleFigure)) ;
+                        Console.WriteLine($"Enter sales for store {j + 1}: ");
+                        if (double.TryParse(Console.ReadLine(), out double validSaleFigure));
                         {
                             isValid = true;
                             RegionalSales[i, j] = validSaleFigure;
@@ -146,8 +197,8 @@ namespace Lab8_q1_v2._0
                 Console.WriteLine("4. Question 4");
                 Console.WriteLine("Q. Quit");
                 input = Console.ReadLine();
-                validChoice = CheckInputIsValid(input);
-            } while (!validChoice);
+                validChoice = CheckInputIsValid(input);               
+            } while (input.ToLower() != "q" && !validChoice);
             return input;
         }
 
@@ -161,16 +212,23 @@ namespace Lab8_q1_v2._0
         {
             string[] ValidMenuChoices = { "1a", "1b", "2", "3", "4", "5", "6", "7", "8", "9", "q" };
 
-            bool validChoice = false;
-            for (int i = 0; i < ValidMenuChoices.Length; i++)
+            bool isValid = false;
+            if (input.ToLower() == "q")
+                return isValid;
+            else
             {
-                if (input == ValidMenuChoices[i])
+                for (int i = 0; i < ValidMenuChoices.Length; i++)
                 {
-                    validChoice = true;
-                    break;
+                    if (input == ValidMenuChoices[i])
+                        isValid = true;                    
                 }
             }
-            return validChoice;
+            if(isValid == false)
+            {
+                Console.WriteLine("Invalid choice");
+                isValid = false;
+            }
+            return isValid;
         }
 
 
@@ -185,7 +243,7 @@ namespace Lab8_q1_v2._0
                 for (int i = 1; i < CountOccuraces.GetLength(0); i++)
                 {
                     for (int j = 0; j < CountOccuraces.GetLength(1); j++)
-                        CountOccuraces[1, j] = (CountOccuraces[0, j] / 10000) * 100; 
+                        CountOccuraces[1, j] = (CountOccuraces[0, j] / 10000) * 100;
                 }
             }
             catch (IndexOutOfRangeException ex)
@@ -245,13 +303,23 @@ namespace Lab8_q1_v2._0
         }
 
         /// <summary>
-        /// Method takes as a parameter a 1 dimension array and displays its elements, space separated, on a single line
+        /// Method takes as a parameter a 1 dimensional integer array and displays its elements, space separated, on a single line
         /// </summary>
-        /// <param name="RandomNums"></param>
-        private static void Display1Darray(int[] RandomNums)
+        /// <param name="arr"></param>
+        private static void Display1Darray(int[] arr)
         {
-            foreach (var num in RandomNums)
+            foreach (var num in arr)
                 Console.Write(num + " ");
+        }
+
+        /// <summary>
+        /// Method takes as a parameter a 1 dimensional double array and displays its elements, space separated, on a single line
+        /// </summary>
+        /// <param name="arr"></param>
+        private static void Display1Darray(double[] arr)
+        {
+            foreach (var num in arr)
+                Console.WriteLine(num);
         }
 
 
