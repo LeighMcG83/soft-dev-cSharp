@@ -49,10 +49,10 @@ namespace Lab8_q1_v2._0
                     case "4":       //add 2 3x3 matrices
                         RunQ4();
                         break;
-                    case "5":       //store the goals that 11 players scored in 5 different matches.
+                    case "5":       //get and display the goals that 11 players scored in 5 different matches.
                         RunQ5();    
                         break;
-                    case "6":
+                    case "6":       //tic-tac-toe
 
 
 
@@ -72,6 +72,7 @@ namespace Lab8_q1_v2._0
 
 
         }//END: Main()
+
 
         private static void RunQ5()
         {
@@ -178,6 +179,8 @@ namespace Lab8_q1_v2._0
             Console.WriteLine();
         }
 
+
+
         private static void RunQ4()
         {
             int[,] matrixA = new int[3, 3], matrixB = new int[3, 3];
@@ -198,7 +201,6 @@ namespace Lab8_q1_v2._0
             Console.WriteLine("Result:");
             DisplayMultiArray(resultMatrix);
         }
-
 
         /// <summary>
         /// Method accepts a multi dimensional array to fill with random numbers as a parameter, and a max value for each random number
@@ -228,6 +230,8 @@ namespace Lab8_q1_v2._0
                 Console.WriteLine("Unspecified error thrown - FillWithRandoms()");
             }
         }
+
+
 
         private static void RunQ3()
         {
@@ -283,7 +287,6 @@ namespace Lab8_q1_v2._0
             }
         }
 
-
         /// <summary>
         /// Method gets the sales figures for all stores in all regions
         /// </summary>
@@ -309,17 +312,7 @@ namespace Lab8_q1_v2._0
             }
         }
 
-        private static void TestPrintMultiArrayDimensions(int[,] arr)
-        {
-            Console.WriteLine("Rows: " + arr.GetLength(0));
-            Console.WriteLine("Columns : " + arr.GetLength(1));
-        }
 
-        private static void TestPrintMultiArrayDimensions(double[,] arr)
-        {
-            Console.WriteLine("Rows: " + arr.GetLength(0));
-            Console.WriteLine("Columns : " + arr.GetLength(1));
-        }
 
         private static void RunQ2()
         {
@@ -497,7 +490,6 @@ namespace Lab8_q1_v2._0
                 Console.WriteLine(num);
         }
 
-
         /// <summary>
         /// Method takes as parameters a multi-dimensional array and an integer number to search for
         /// and records the number of occuraces of the searched number at each location in the array
@@ -530,7 +522,6 @@ namespace Lab8_q1_v2._0
                 Console.WriteLine("Unspecified error thrown - GetAllOccurance()");
             }
         }
-
 
         /// <summary>
         /// Method takes as a parameter, a multi-dimensional array and populates the first row with random integers between 0 and 9
@@ -580,7 +571,6 @@ namespace Lab8_q1_v2._0
                 Console.WriteLine("Unspecified error thrown - DisplayMultiArray()");
             }
         }
-
 
         /// <summary>
         /// Method takes as a parameter a multi-dimensional double array to display
@@ -643,6 +633,20 @@ namespace Lab8_q1_v2._0
             {
                 Console.WriteLine("Unspecified error thrown - GetFirstOccurance()");
             }
+        }
+
+
+
+        private static void TestPrintMultiArrayDimensions(int[,] arr)
+        {
+            Console.WriteLine("Rows: " + arr.GetLength(0));
+            Console.WriteLine("Columns : " + arr.GetLength(1));
+        }
+
+        private static void TestPrintMultiArrayDimensions(double[,] arr)
+        {
+            Console.WriteLine("Rows: " + arr.GetLength(0));
+            Console.WriteLine("Columns : " + arr.GetLength(1));
         }
 
 
