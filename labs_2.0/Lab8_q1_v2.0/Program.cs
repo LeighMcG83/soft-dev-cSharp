@@ -57,6 +57,17 @@ namespace Lab8_q1_v2._0
 
 
                         break;
+                    case "7":       //move the largest value in an array to the last position
+                        RunQ7();
+                        break;
+                    case "8":       //sort the array smallest to largest
+                        RunQ8();
+                        break;
+                    case "9":       //determine if an entered string is a palindrome
+
+
+
+                        break;
                     case "q":
                         Console.WriteLine("Exiting program");
                         break;
@@ -73,6 +84,54 @@ namespace Lab8_q1_v2._0
 
         }//END: Main()
 
+        private static void RunQ8()
+        {
+            int[] arr = { 4, 11, 6, 2, 3, 8, 9, 5 };
+            SortAscending(arr);
+            Display1Darray(arr);
+        }
+
+        private static void SortAscending(int[] arr)
+        {
+            int count = 0;
+            while (count < arr.Length)
+            {
+                for (int i = 0; i < arr.Length - 1; i++)
+                {
+                    if (arr[i] > arr[i + 1])
+                    {
+                        int temp = arr[i];
+                        arr[i] = arr[i + 1];
+                        arr[i + 1] = temp;
+                    }
+                }
+                count++;
+            }
+        }
+
+        private static void RunQ7()
+        {
+            int[] arr = { 4, 11, 6, 2, 3, 8, 9, 5 };
+            MoveLargestElemToEnd(arr);
+            Display1Darray(arr);
+        }
+
+        /// <summary>
+        /// Method takes an integer array as a param and moves its largest value to the last position in the array
+        /// </summary>
+        /// <param name="arr"></param>
+        private static void MoveLargestElemToEnd(int[] arr)
+        {
+            for (int i = 0; i < arr.Length - 1; i++)
+            {                
+                if (arr[i] > arr[i + 1])
+                {
+                    int temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                }                
+            }
+        }
 
         private static void RunQ5()
         {
@@ -361,6 +420,9 @@ namespace Lab8_q1_v2._0
                 Console.WriteLine("3. Question 3");
                 Console.WriteLine("4. Question 4");
                 Console.WriteLine("5. Question 5");
+                Console.WriteLine("6. Question 6");
+                Console.WriteLine("7. Question 7");
+                Console.WriteLine("8. Question 8");
                 Console.WriteLine("Q. Quit");
                 Console.Write("Choice: ");
                 input = Console.ReadLine();
