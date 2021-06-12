@@ -91,6 +91,11 @@ namespace Lab8_q1_v2._0
             Display1Darray(arr);
         }
 
+
+        /// <summary>
+        /// Method takes an integer array as a param and sorts it in ascending order
+        /// </summary>
+        /// <param name="arr"></param>
         private static void SortAscending(int[] arr)
         {
             int count = 0;
