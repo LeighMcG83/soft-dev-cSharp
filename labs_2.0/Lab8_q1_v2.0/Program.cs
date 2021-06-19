@@ -64,7 +64,18 @@ namespace Lab8_q1_v2._0
                         RunQ8();
                         break;
                     case "9":       //determine if an entered string is a palindrome
-
+                        Console.WriteLine("Enter a word: ");
+                        //string input = Console.ReadLine();
+                        bool isValid = CheckIsAlpha(Console.ReadLine());
+                        if (isValid)
+                        {
+                            string input = Console.ReadLine();
+                            string[] inputArray = new string[input.Length];
+                            foreach (var letter in inputArray)
+                            {
+                                Console.Write( letter + " ");
+                            }
+                        }
 
 
                         break;
@@ -83,6 +94,21 @@ namespace Lab8_q1_v2._0
 
 
         }//END: Main()
+
+        private static bool CheckIsAlpha(string str)
+        {
+            bool isLetter = false;
+            foreach (var c in str)
+            {
+                if ((int)c >= 65 && (int)c <= 90 || (int)c >= 97 && (int)c <= 122)
+                {
+                    isLetter = true;
+                }
+                else
+                    return false;
+            }
+            return isLetter;
+        }
 
         private static void RunQ8()
         {
@@ -425,13 +451,14 @@ namespace Lab8_q1_v2._0
                 Console.WriteLine("3. Question 3");
                 Console.WriteLine("4. Question 4");
                 Console.WriteLine("5. Question 5");
-                Console.WriteLine("6. Question 6");
+                Console.WriteLine("6. Question 6 - TicTacToe");
                 Console.WriteLine("7. Question 7");
                 Console.WriteLine("8. Question 8");
+                Console.WriteLine("9. Question 9 - Check Pallindromes");
                 Console.WriteLine("Q. Quit");
                 Console.Write("Choice: ");
                 input = Console.ReadLine();
-                validChoice = CheckInputIsValid(input);               
+                validChoice = CheckMenuChoiceIsValid(input);               
             } while (input.ToLower() != "q" && !validChoice);
             Console.WriteLine("\n");
             return input;
@@ -443,7 +470,7 @@ namespace Lab8_q1_v2._0
         /// </summary>
         /// <param name="input"></param>
         /// <returns>true if the user's choice is a valid choice, else returns false</returns>
-        private static bool CheckInputIsValid(string input)
+        private static bool CheckMenuChoiceIsValid(string input)
         {
             string[] ValidMenuChoices = { "1a", "1b", "2", "3", "4", "5", "6", "7", "8", "9", "q" };
 
